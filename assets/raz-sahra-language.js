@@ -296,6 +296,30 @@
     "برای شروع، کافی است زمینه همکاری را روشن کنیم.":"Start by clarifying the proposed collaboration.",
     "از تأمین تا ارزش‌آفرینی":"From supply to value creation","از تأمین":"From supply","ارزش‌آفرینی":"Value creation"
   });
+  Object.assign(dictionary,{
+    "برای نمایش تایپ‌فیس و تصاویر نماینده، نسخه فعلی می‌تواند منابعی را از ارائه‌دهندگان بیرونی مانند Google Fonts و Wikimedia Commons بارگذاری کند. این درخواست‌ها مستقیماً از مرورگر انجام می‌شوند و تابع سیاست‌ها و شرایط سرویس‌های مربوطه هستند. در صورت استقرار نسخه محلی فونت‌ها و تصاویر، این بخش باید به‌روزرسانی شود.":"The site may load fonts and representative images from external providers such as Google Fonts and Wikimedia Commons. Browser requests are subject to the providers’ own policies and terms. This notice should be updated if those assets are hosted locally.",
+    "این سیاست وضعیت فعلی وب‌سایت، فرم‌های محلی و نحوه استفاده از منابع تصویری را توضیح می‌دهد و باید با تغییر واقعی زیرساخت بازبینی شود.":"This policy describes the current website, local form behaviour and visual assets. It should be reviewed whenever the infrastructure changes.",
+    "استفاده شده است. تصاویر نماینده عمومی صنعت‌اند و نباید به‌عنوان تصویر تأسیسات یا دارایی اختصاصی شرکت برداشت شوند.":"is used under the stated licence. These are representative industry images and must not be taken as photographs of facilities owned by the company.",
+    "شناخت نیازهای خریداران و تأمین‌کنندگان، بررسی گزینه‌های تأمین، مذاکره درباره شرایط و طراحی چارچوب روشن معاملات.":"Understand buyer and supplier needs, assess sourcing options, negotiate terms and define a clear transaction framework.",
+    "بررسی نیاز به ابزارهای یکپارچه برای مستندسازی، مدیریت گردش کار و پشتیبانی از تصمیم‌های تجاری در مراحل بعدی.":"Assess whether integrated tools are needed to document activity, manage workflows and support commercial decisions in later stages.",
+    "بررسی نیازها و توانمندی‌های تأمین‌کنندگان، مرغداری‌ها و کسب‌وکارهای مرتبط با صنعت طیور و محصولات جانبی.":"Assess needs and capabilities among suppliers, poultry farms and related businesses across the industry.",
+    "بنر اصلی راز صحرا به‌صورت گرافیک اختصاصی برای این وب‌سایت تولید شده است. تصاویر موضوعی از منابعی مانند":"The main Raz Sahra banner is an original graphic created for this website. Editorial photographs are sourced from providers such as",
+    "بررسی مسیر تبدیل‌شدن به مجموعه‌ای هماهنگ‌تر در تجارت و زنجیره تأمین، با توسعه متناسب با ظرفیت واقعی.":"Explore a more coordinated approach to trade and supply chain, expanding only when actual capacity allows.",
+    "استفاده می‌کنند. تصویر مزرعه اردک در دشت لار اثر Mahdi Kalhor از Wikimedia Commons است و تحت":"are used for the editorial photographs. The duck-farm photo in the Lar plain is by Mahdi Kalhor on Wikimedia Commons and is used under",
+    "دیدن ارتباط میان تأمین، عملیات، توزیع و نیاز مشتری به‌جای تصمیم‌گیری جداگانه درباره هر بخش.":"View sourcing, operations, distribution and customer demand as connected elements rather than separate decisions.",
+    "با حرکت اسلایدها، تصویر بزرگ‌تر زنجیره دیده می‌شود.":"Each slide reveals another part of the wider value chain.",
+    "نگاهی منسجم به تأمین، تجارت و همکاری پایدار":"A coordinated approach to sourcing, trade and lasting partnerships",
+    "برای هماهنگی بهتر، از گفت‌وگو شروع کنیم.":"Better coordination starts with a conversation.",
+    "راز صحرا | از تأمین تا ارزش‌آفرینی":"Raz Sahra | From supply to value creation",
+    "چه چیزی پیش از توسعه بررسی می‌شود؟":"What should be assessed before expansion?",
+    "آشنایی با مدل زنجیره تأمین":"Explore the supply-chain model",
+    "دامنه فعالیت و مسیر توسعه":"Activity scope and development paths",
+    "طرح پیشنهاد همکاری":"Submit a partnership proposal",
+    "مشاهده مسیر توسعه":"Explore development paths",
+    "طرح یک نیاز تجاری":"Describe a commercial need",
+    "ابزارهای دیجیتال":"Digital tools","مجوز Unsplash":"Unsplash licence","مجوز Pexels":"Pexels licence",
+    "آشنایی بیشتر":"Learn more","تأمین و خرید":"Sourcing and purchasing","و":"and"
+  });
   var attributeDictionary={
     "باز کردن منو":"Open menu","بستن منو":"Close menu","اسلاید قبلی":"Previous slide","اسلاید بعدی":"Next slide",
     "اسلاید ۱":"Slide 1","اسلاید ۲":"Slide 2","اسلاید ۳":"Slide 3","اسلاید ۴":"Slide 4",
