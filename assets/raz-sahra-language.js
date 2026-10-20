@@ -323,6 +323,16 @@
   Object.assign(dictionary,{
     "برای نمایش تایپ‌فیس و تصاویر نماینده، نسخه فعلی می‌تواند منابعی را از ارائه‌دهندگان بیرونی مانند Google Fonts و Wikimedia Commons بارگذاری کند. این درخواست‌ها مستقیماً از مرورگر انجام می‌شوند و تابع سیاست‌ها و شرایط سرویس‌های مربوطه هستند. در صورت استقرار نسخه نهایی، می‌توان این منابع را بازبینی و در صورت نیاز به‌صورت محلی میزبانی کرد.":"The current site may load fonts and representative images from external providers such as Google Fonts and Wikimedia Commons. Browser requests are subject to those providers’ terms and policies. When the site is finalised, these resources can be reviewed and hosted locally if needed."
   });
+  Object.assign(dictionary,{
+    "لوگوی اصلی راهبران زنجیره ارزش صحرا؛ Sahra Value Chain Leaders":"Official logo of Sahra Value Chain Leaders",
+    "معرفی راهبران زنجیره ارزش صحرا":"Introducing Sahra Value Chain Leaders",
+    "مزرعه پرورش اردک در دشت لار":"Duck farm in the Lar plain",
+    "تولید تخم‌مرغ در مزرعه":"Egg production on a farm",
+    "ساختمان‌های پرورش طیور":"Poultry housing buildings",
+    "فضای سالن پرورش طیور":"Poultry production housing",
+    "ناوبری موبایل":"Mobile navigation",
+    "ناوبری اصلی":"Main navigation"
+  });
   var attributeDictionary={
     "باز کردن منو":"Open menu","بستن منو":"Close menu","اسلاید قبلی":"Previous slide","اسلاید بعدی":"Next slide",
     "اسلاید ۱":"Slide 1","اسلاید ۲":"Slide 2","اسلاید ۳":"Slide 3","اسلاید ۴":"Slide 4",
