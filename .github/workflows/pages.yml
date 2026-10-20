@@ -113,6 +113,8 @@ jobs:
               raise SystemExit("Manifest must be Persian and RTL")
           if manifest.get("icons", [{}])[0].get("src") != "/razsahra/assets/raz-sahra-symbol.webp":
               raise SystemExit("Manifest must use the exact supplied brand symbol")
+          if manifest.get("icons", [{}])[0].get("sizes") != "256x256":
+              raise SystemExit("Manifest icon dimensions must match the 256x256 symbol asset")
           if not Path("assets/raz-sahra-symbol.webp").is_file():
               raise SystemExit("Missing exact supplied brand symbol")
           if not Path("assets/raz-sahra-logo-lockup.webp").is_file():
