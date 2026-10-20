@@ -69,17 +69,12 @@
   if(mobileMenu&&mobileToggle){
     mobileMenu.querySelectorAll('a').forEach(function(link){
       link.addEventListener('click',function(){
-        mobileMenu.classList.remove('open');
-        mobileToggle.setAttribute('aria-expanded','false');
-        mobileToggle.setAttribute('aria-label',window.RSCurrentLanguage==='en'?'Open menu':'باز کردن منو');
+        if(window.RSSetMobileMenu) window.RSSetMobileMenu(false);
       });
     });
     document.addEventListener('keydown',function(event){
       if(event.key==='Escape'&&mobileMenu.classList.contains('open')){
-        mobileMenu.classList.remove('open');
-        mobileToggle.setAttribute('aria-expanded','false');
-        mobileToggle.setAttribute('aria-label',window.RSCurrentLanguage==='en'?'Open menu':'باز کردن منو');
-        mobileToggle.focus();
+        if(window.RSSetMobileMenu) window.RSSetMobileMenu(false,true);
       }
     });
   }
@@ -211,8 +206,8 @@
       }return;
     }
     if(!event.target.closest('.site-header')){
-      var menu=document.getElementById('mobile-menu'),toggle=document.querySelector('.mobile-toggle');
-      if(menu&&menu.classList.contains('open')){menu.classList.remove('open');if(toggle){toggle.setAttribute('aria-expanded','false');toggle.setAttribute('aria-label',window.RSCurrentLanguage==='en'?'Open menu':'باز کردن منو');}}
+      var menu=document.getElementById('mobile-menu');
+      if(menu&&menu.classList.contains('open')&&window.RSSetMobileMenu) window.RSSetMobileMenu(false);
     }
   });
   document.addEventListener('input',function(event){
@@ -227,7 +222,7 @@
     if(event.key==='Escape'){
       if(readerBackdrop&&readerBackdrop.classList.contains('is-open')){closeReader();return;}
       var menu=document.getElementById('mobile-menu'),toggle=document.querySelector('.mobile-toggle');
-      if(menu&&menu.classList.contains('open')){menu.classList.remove('open');if(toggle){toggle.setAttribute('aria-expanded','false');toggle.setAttribute('aria-label',window.RSCurrentLanguage==='en'?'Open menu':'باز کردن منو');toggle.focus();}}
+      if(menu&&menu.classList.contains('open')&&window.RSSetMobileMenu)window.RSSetMobileMenu(false,true);
     }
   });
   window.addEventListener('popstate',function(){
@@ -307,7 +302,8 @@
     host.insertBefore(field,host.firstChild);
   }
   function updateEmbers(){
-    if(reduce)return;
+    /* Mobile keeps the decorative hero fireball, but skips costly animated particle nodes. */
+    if(reduce || window.matchMedia('(max-width: 850px)').matches || window.matchMedia('(hover: none) and (pointer: coarse)').matches) return;
     document.querySelectorAll('.page-view,.page-view section,.site-footer,[data-hero-slider],.collaboration-carousel').forEach(function(host){
       var count=host.matches('.site-footer')?15:host.matches('.page-view')?18:host.matches('[data-hero-slider],.collaboration-carousel')?10:8;
       addEmberField(host,count);
