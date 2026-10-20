@@ -28,12 +28,23 @@
     ['pointerup','pointercancel','pointerleave'].forEach(function(evt){el.addEventListener(evt,function(){el.style.removeProperty('transform');});});
   });
 
-  // Turn the chain diagram into an accessible, keyboard-friendly exploration path.
+  // Interactive chain explorer: visitors can step through the value chain without fake metrics.
   document.querySelectorAll('.flow-item').forEach(function(item){
     item.setAttribute('tabindex','0');
-    item.setAttribute('role','group');
-    item.addEventListener('focus',function(){item.style.borderColor='rgba(183,122,83,.7)';});
-    item.addEventListener('blur',function(){item.style.removeProperty('border-color');});
+    item.setAttribute('role','button');
+    item.setAttribute('aria-pressed','false');
+    function activate(){
+      var wasActive=item.classList.contains('is-active');
+      var group=item.parentElement;
+      if(group)group.querySelectorAll('.flow-item').forEach(function(sibling){
+        sibling.classList.remove('is-active');sibling.setAttribute('aria-pressed','false');
+      });
+      if(!wasActive){item.classList.add('is-active');item.setAttribute('aria-pressed','true');}
+    }
+    item.addEventListener('click',activate);
+    item.addEventListener('keydown',function(event){
+      if(event.key==='Enter'||event.key===' '){event.preventDefault();activate();}
+    });
   });
 
   // Make outbound source-credit links safe and give image-bearing sections meaningful fallbacks.
