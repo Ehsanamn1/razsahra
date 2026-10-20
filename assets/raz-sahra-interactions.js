@@ -296,12 +296,12 @@
     var field=document.createElement('div');field.className='rs-particle-field';field.setAttribute('aria-hidden','true');
     for(var i=0;i<count;i++){
       var ember=document.createElement('span');ember.className='rs-particle';
-      ember.style.setProperty('--ember-x',(1+Math.random()*98)+'%');
-      ember.style.setProperty('--ember-y',(1+Math.random()*98)+'%');
-      ember.style.setProperty('--ember-size',(3+Math.random()*4.5)+'px');
-      ember.style.setProperty('--ember-duration',(4.6+Math.random()*6.8)+'s');
-      ember.style.setProperty('--ember-delay',(-Math.random()*12)+'s');
-      ember.style.setProperty('--ember-drift',(-50+Math.random()*100)+'px');
+      ember.style.setProperty('--ember-x',(2+Math.random()*96)+'%');
+      ember.style.setProperty('--ember-y',(4+Math.random()*92)+'%');
+      ember.style.setProperty('--ember-size',(2+Math.random()*2.2)+'px');
+      ember.style.setProperty('--ember-duration',(9+Math.random()*8)+'s');
+      ember.style.setProperty('--ember-delay',(-Math.random()*16)+'s');
+      ember.style.setProperty('--ember-drift',(-24+Math.random()*48)+'px');
       field.appendChild(ember);
     }
     host.insertBefore(field,host.firstChild);
@@ -309,7 +309,7 @@
   function updateEmbers(){
     if(reduce)return;
     document.querySelectorAll('.page-view,.page-view section,.site-footer,[data-hero-slider],.collaboration-carousel').forEach(function(host){
-      var count=host.matches('.site-footer')?42:host.matches('.page-view')?44:host.matches('[data-hero-slider],.collaboration-carousel')?20:20;
+      var count=host.matches('.site-footer')?15:host.matches('.page-view')?18:host.matches('[data-hero-slider],.collaboration-carousel')?10:8;
       addEmberField(host,count);
     });
   }
