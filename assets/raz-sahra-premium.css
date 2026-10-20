@@ -876,3 +876,102 @@ html.lang-en .route-card,html.lang-en .status-chip,html.lang-en .slide-vertical-
 .image-credit-link{font-size:10px;color:#d3b394;text-underline-offset:3px;white-space:nowrap;transition:color .25s}
 .image-credit-link:hover{color:#fff}
 @media(max-width:540px){.footer-lockup-link{width:min(100%,205px);max-width:205px}.footer-lockup-image{width:100%}.image-credit-link{white-space:normal}}
+
+
+/* Mobile reliability/performance hotfix — 2026-10-21 */
+@media (max-width: 850px) {
+  .mobile-menu,
+  .mobile-menu.open {
+    position: relative;
+    display: grid !important;
+    grid-template-rows: none !important;
+    gap: 4px;
+    width: 100%;
+    max-height: 0;
+    min-height: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    visibility: hidden;
+    opacity: 0;
+    padding: 0 14px;
+    border: 0;
+    transform: none !important;
+    transform-origin: top;
+    pointer-events: none;
+    contain: layout paint;
+    transition: max-height .22s ease, opacity .16s ease, padding .16s ease;
+    box-shadow: none;
+  }
+  .mobile-menu.open {
+    max-height: min(78vh, 640px);
+    max-height: min(78dvh, 640px);
+    visibility: visible;
+    opacity: 1;
+    padding: 12px 14px 16px;
+    border-top: 1px solid rgba(36,54,74,.1);
+    border-bottom: 1px solid rgba(36,54,74,.1);
+    pointer-events: auto;
+    box-shadow: 0 12px 24px rgba(23,43,59,.08);
+  }
+  .mobile-menu a,
+  .mobile-menu.open a {
+    min-height: 46px;
+    opacity: 1 !important;
+    transform: none !important;
+    transition: background .14s ease, color .14s ease;
+    touch-action: manipulation;
+  }
+  .mobile-toggle { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+  .mobile-toggle svg { pointer-events: none; }
+  /* Keep the subtle hero fireball; skip the expensive page-wide animated particles on phones. */
+  .rs-particle-field { display: none !important; }
+  .site-header,
+  .rs-mobile-cta,
+  .route-card,
+  .slide-index,
+  .hero-slider-controls > button,
+  .magazine-arrows button,
+  .collab-float,
+  .magazine-cover span,
+  .article-reader-backdrop,
+  .article-reader-topbar {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+  .site-header { background: rgba(244,240,232,.98); }
+  .rs-mobile-cta { box-shadow: 0 10px 25px rgba(23,43,59,.14), inset 0 1px white; }
+  .rs-reveal,
+  .rs-reveal.rs-visible,
+  .business-card.rs-visible,
+  .principle.rs-visible,
+  .flow-item.rs-visible,
+  .roadmap-item.rs-visible,
+  .chain-flow.rs-visible,
+  .chain-copy.rs-visible {
+    opacity: 1 !important;
+    filter: none !important;
+    transform: none !important;
+    animation: none !important;
+    transition: none !important;
+  }
+  .btn:before { display: none !important; }
+  .business-card:hover,
+  .content-panel:hover,
+  .flow-item:hover,
+  .roadmap-item:hover,
+  .chain-flow:hover,
+  .principle:hover,
+  .mobile-menu a:hover { transform: none; }
+  .chain-section:after { animation: none !important; }
+  .partnership-art:before,
+  .insight-main:before { transition: none !important; }
+}
+@media (max-width: 420px) {
+  .mobile-menu.open { max-height: min(76vh, 590px); max-height: min(76dvh, 590px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mobile-menu,
+  .mobile-menu.open { transition: none !important; }
+}
