@@ -4,7 +4,7 @@
   var dictionary={
     "صفحه اصلی":"Home","درباره ما":"About","حوزه‌های فعالیت":"Our fields","زنجیره تأمین":"Supply chain","همکاری با ما":"Partnerships","مجله تخصصی":"Magazine","ارتباط با ما":"Contact","حریم خصوصی":"Privacy",
     "شروع همکاری":"Start a partnership","پیشنهاد همکاری":"Partnership request","پیشنهاد همکاری تولیدکننده":"Producer partnership","ارتباط با راز صحرا":"Contact Raz Sahra",
-    "راهبران زنجیره ارزش صحرا":"Sahra Value Chain Leaders","راز صحرا":"Raz Sahra","از تأمین تا ارزش‌آفرینی":"From supply to value creation",
+    "راهبران زنجیره ارزش صحرا":"Sahra Value Chain Leaders","راز صحرا":"Raz Sahra","از تأمین تا ارزش‌آفرینی":"From supply to value creation","از تأمین":"From supply","ارزش‌آفرینی":"value creation",
     "شناخت حوزه‌های فعالیت":"Explore our fields","آغاز گفت‌وگوی همکاری":"Start a conversation","آشنایی با حوزه‌های فعالیت":"Explore our fields","درخواست همکاری":"Partnership inquiry",
     "نگاه جامع به صنعت طیور":"A connected poultry industry","مدل پیشنهادی همکاری":"Proposed collaboration model","ارتباط روشن":"Clear communication","ظرفیت قابل بررسی":"Verifiable capacity","پیگیری مسئولانه":"Accountable follow-up",
     "نگاه زنجیره‌ای":"A value-chain perspective","روابط تجاری مسئولانه":"Responsible trade","توسعه مرحله‌ای":"Phased development",
@@ -174,4 +174,5 @@
   document.addEventListener('DOMContentLoaded',function(){applyText();});
   var initial='fa';try{initial=localStorage.getItem('rs-language')||'fa';}catch(e){}
   setLanguage(initial,true);
+  if(initial==='en'&&document.querySelector('.page-view[data-page="insights"].active'))window.setTimeout(function(){if(window.RazSahraReloadArticles)window.RazSahraReloadArticles();},80);
 })();
