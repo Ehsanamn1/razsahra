@@ -320,6 +320,9 @@
     "ابزارهای دیجیتال":"Digital tools","مجوز Unsplash":"Unsplash licence","مجوز Pexels":"Pexels licence",
     "آشنایی بیشتر":"Learn more","تأمین و خرید":"Sourcing and purchasing","و":"and"
   });
+  Object.assign(dictionary,{
+    "برای نمایش تایپ‌فیس و تصاویر نماینده، نسخه فعلی می‌تواند منابعی را از ارائه‌دهندگان بیرونی مانند Google Fonts و Wikimedia Commons بارگذاری کند. این درخواست‌ها مستقیماً از مرورگر انجام می‌شوند و تابع سیاست‌ها و شرایط سرویس‌های مربوطه هستند. در صورت استقرار نسخه نهایی، می‌توان این منابع را بازبینی و در صورت نیاز به‌صورت محلی میزبانی کرد.":"The current site may load fonts and representative images from external providers such as Google Fonts and Wikimedia Commons. Browser requests are subject to those providers’ terms and policies. When the site is finalised, these resources can be reviewed and hosted locally if needed."
+  });
   var attributeDictionary={
     "باز کردن منو":"Open menu","بستن منو":"Close menu","اسلاید قبلی":"Previous slide","اسلاید بعدی":"Next slide",
     "اسلاید ۱":"Slide 1","اسلاید ۲":"Slide 2","اسلاید ۳":"Slide 3","اسلاید ۴":"Slide 4",
