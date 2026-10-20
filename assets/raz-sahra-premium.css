@@ -617,3 +617,5 @@ html.lang-en .route-card,html.lang-en .status-chip,html.lang-en .slide-vertical-
 .article-reader-brand{direction:ltr;text-align:left}
 .article-reader-content img{max-width:100%}
 @media(max-width:540px){.article-reader-progress{margin-inline:-12px}}
+
+@media(max-width:850px){.hero-slide:first-of-type .hero-slide-bg{object-position:28% center}}
