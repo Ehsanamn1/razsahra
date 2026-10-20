@@ -689,7 +689,7 @@ html.lang-en .route-card,html.lang-en .status-chip,html.lang-en .slide-vertical-
   box-shadow:0 10px 22px rgba(0,0,0,.13),inset 0 1px rgba(255,255,255,.88);
 }
 .footer-lockup-image{
-  width:147%;
+  width:138%;
   max-width:none;
   height:auto;
   aspect-ratio:1/1;
@@ -707,4 +707,4 @@ html.lang-en .route-card,html.lang-en .status-chip,html.lang-en .slide-vertical-
 .footer-lockup-link:hover{transform:translateY(-2px);box-shadow:0 13px 25px rgba(0,0,0,.16),inset 0 1px rgba(255,255,255,.88)}
 .footer-lockup-link:hover .footer-lockup-image{transform:none;filter:none}
 @media(max-width:850px){.footer-lockup-link{width:min(100%,250px);max-width:250px}}
-@media(max-width:540px){.footer-lockup-link{width:min(100%,224px);max-width:224px;aspect-ratio:4/3;padding:0}.footer-lockup-image{width:147%;max-width:none}}
+@media(max-width:540px){.footer-lockup-link{width:min(100%,224px);max-width:224px;aspect-ratio:4/3;padding:0}.footer-lockup-image{width:138%;max-width:none}}
