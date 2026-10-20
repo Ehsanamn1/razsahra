@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://ehsanamn1.github.io/razsahra/sitemap.xml
