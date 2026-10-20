@@ -597,7 +597,7 @@ html.lang-en .route-card,html.lang-en .status-chip,html.lang-en .slide-vertical-
 .magazine-home-section>.container{position:relative;z-index:2}
 .hero-slider>.rs-particle-field{z-index:1}
 .hero-slider>.hero-slide,.hero-slider>.hero-slider-footer{position:absolute}
-.hero-slider>.hero-slide.is-active{position:relative}
+
 .hero-slider>.hero-slider-footer{position:absolute}
 .footer-lockup-link{display:inline-flex;align-items:center;justify-content:flex-start;max-width:270px;margin-bottom:14px}
 .footer-lockup-image{width:min(100%,220px);height:auto;object-fit:contain;border-radius:10px;filter:drop-shadow(0 8px 15px rgba(0,0,0,.12));transition:transform .4s,filter .4s}
@@ -651,7 +651,7 @@ html.lang-en .route-card,html.lang-en .status-chip,html.lang-en .slide-vertical-
 .site-footer>.container,.cta-motion-section>.container,.magazine-home-section>.container{position:relative;z-index:2}
 .hero-slider>.rs-particle-field,.collaboration-carousel>.rs-particle-field{z-index:0}
 .hero-slider>.hero-slide,.hero-slider>.hero-slider-footer{position:absolute}
-.hero-slider>.hero-slide.is-active{position:relative}.hero-slider>.hero-slider-footer{position:absolute}
+.hero-slider>.hero-slider-footer{position:absolute}
 .collaboration-carousel>.collaboration-slide,.collaboration-carousel>.collaboration-controls{position:relative;z-index:2}
 .collaboration-carousel>.collaboration-slide{position:absolute}.collaboration-carousel>.collaboration-slide.is-active{position:relative;z-index:2}
 /* Purposeful motion for the activity cards, value chain, principles and roadmap. */
