@@ -12,7 +12,7 @@ permissions:
 
 concurrency:
   group: "pages"
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   deploy:
@@ -22,6 +22,29 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
+      - name: Validate HTML, required routes, and sitemap
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          import xml.etree.ElementTree as ET
+
+          html = Path("index.html").read_text(encoding="utf-8")
+          expected = {"home", "about", "business", "supply", "partnerships", "contact", "insights", "privacy"}
+          found = set(re.findall(r'data-page="([^"]+)"', html))
+          missing = expected - found
+          if missing:
+              raise SystemExit("Missing page views: " + ", ".join(sorted(missing)))
+          scripts = re.findall(r"<script>([\s\S]*?)</script>", html)
+          if len(scripts) != 1:
+              raise SystemExit("Expected one inline application script")
+          Path("/tmp/raz-sahra-app.js").write_text(scripts[0], encoding="utf-8")
+          ET.parse("sitemap.xml")
+          if 'lang="fa"' not in html or 'dir="rtl"' not in html:
+              raise SystemExit("Persian language and RTL direction must be set")
+          print("Static checks passed: all 8 page views, Persian RTL, and sitemap XML.")
+          PY
+          node --check /tmp/raz-sahra-app.js
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
       - name: Upload static site
