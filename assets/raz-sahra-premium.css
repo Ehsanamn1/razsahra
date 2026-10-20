@@ -708,3 +708,36 @@ html.lang-en .route-card,html.lang-en .status-chip,html.lang-en .slide-vertical-
 .footer-lockup-link:hover .footer-lockup-image{transform:none;filter:none}
 @media(max-width:850px){.footer-lockup-link{width:min(100%,250px);max-width:250px}}
 @media(max-width:540px){.footer-lockup-link{width:min(100%,224px);max-width:224px;aspect-ratio:4/3;padding:0}.footer-lockup-image{width:138%;max-width:none}}
+
+/* About-page logo framing: preserve supplied artwork, trim excess canvas and keep a clean inset. */
+.brand-lockup-panel{overflow:hidden}
+.brand-lockup-image-frame{
+  width:min(100%,420px);
+  aspect-ratio:4/3;
+  overflow:hidden;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin:0 auto 14px;
+  border-radius:10px;
+  background:linear-gradient(145deg,#faf6ed,#eee6d8);
+}
+.brand-lockup-image-frame img{
+  display:block;
+  width:138%;
+  max-width:none;
+  height:auto;
+  aspect-ratio:1/1;
+  object-fit:contain;
+  object-position:center;
+  margin:0;
+  border-radius:0;
+  image-rendering:auto;
+  filter:none;
+  transform:none;
+}
+.brand-lockup-panel>span{position:relative;z-index:1}
+@media(max-width:540px){
+ .brand-lockup-image-frame{width:100%;aspect-ratio:4/3}
+ .brand-lockup-image-frame img{width:138%;max-width:none}
+}
