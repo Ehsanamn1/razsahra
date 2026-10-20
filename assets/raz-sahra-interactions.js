@@ -121,10 +121,14 @@
     readerBackdrop=document.createElement('div');
     readerBackdrop.className='article-reader-backdrop';
     readerBackdrop.setAttribute('role','presentation');
-    readerBackdrop.innerHTML='<section class="article-reader-dialog" role="dialog" aria-modal="true" aria-labelledby="article-reader-title"><div class="article-reader-topbar"><span class="article-reader-brand">RAZ SAHRA · SPECIALIST MAGAZINE</span><div class="article-reader-actions"><button type="button" data-reader-save aria-pressed="false" aria-label="ذخیره مقاله">♡</button></div><button class="article-reader-close" type="button" aria-label="بستن مقاله" data-reader-close>×</button></div><div class="article-reader-scroll"><img class="article-reader-cover" alt="" hidden><header class="article-reader-head"><div class="article-reader-meta"></div><h1 class="article-reader-title" id="article-reader-title"></h1><p class="article-reader-deck"></p></header><article class="article-reader-content"></article></div></section>';
+    readerBackdrop.innerHTML='<section class="article-reader-dialog" role="dialog" aria-modal="true" aria-labelledby="article-reader-title"><div class="article-reader-topbar"><span class="article-reader-brand">RAZ SAHRA · SPECIALIST MAGAZINE</span><div class="article-reader-actions"><button type="button" data-reader-save aria-pressed="false" aria-label="ذخیره مقاله">♡</button></div><button class="article-reader-close" type="button" aria-label="بستن مقاله" data-reader-close>×</button><div class="article-reader-progress" aria-hidden="true"><span></span></div></div><div class="article-reader-scroll"><img class="article-reader-cover" alt="" hidden><header class="article-reader-head"><div class="article-reader-meta"></div><h1 class="article-reader-title" id="article-reader-title"></h1><p class="article-reader-deck"></p></header><article class="article-reader-content"></article></div></section>';
     document.body.appendChild(readerBackdrop);
     readerBackdrop.addEventListener('click',function(event){if(event.target===readerBackdrop)closeReader();});
     readerBackdrop.querySelector('[data-reader-close]').addEventListener('click',closeReader);
+    readerBackdrop.querySelector('.article-reader-scroll').addEventListener('scroll',function(){
+      var pane=this,maxScroll=pane.scrollHeight-pane.clientHeight,percent=maxScroll>0?(pane.scrollTop/maxScroll)*100:0;
+      var bar=readerBackdrop.querySelector('.article-reader-progress span');if(bar)bar.style.width=Math.max(0,Math.min(100,percent))+'%';
+    },{passive:true});
     readerBackdrop.querySelector('[data-reader-save]').addEventListener('click',function(){
       if(!readerCurrentId)return;setArticleSaved(readerCurrentId,!articleSaved(readerCurrentId));
     });
