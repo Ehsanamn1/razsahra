@@ -14,9 +14,9 @@
   window.addEventListener('scroll',function(){if(!ticking){window.requestAnimationFrame(updateScroll);ticking=true;}},{passive:true});
   window.addEventListener('resize',updateScroll,{passive:true});updateScroll();
 
-  var revealSelectors='.section-heading,.business-card,.principle,.flow-item,.roadmap-item,.content-panel,.insight-main,.editorial-empty,.partnership-band,.intro-quote,.intro-copy,.final-cta-inner';
+  var revealSelectors='.section-heading,.business-card,.principle,.flow-item,.roadmap-item,.content-panel,.insight-main,.editorial-empty,.partnership-band,.intro-quote,.intro-copy,.final-cta-inner,.chain-flow,.chain-copy,.roadmap,.business-grid,.brand-story-grid,.collaboration-carousel,.magazine-heading';
   var items=Array.prototype.slice.call(document.querySelectorAll(revealSelectors));
-  items.forEach(function(el,i){el.classList.add('rs-reveal');if(el.matches('.business-card,.principle,.flow-item,.roadmap-item'))el.classList.add('rs-reveal-delay-'+((i%3)+1));});
+  items.forEach(function(el,i){el.classList.add('rs-reveal');if(el.matches('.business-card,.principle,.flow-item,.roadmap-item')){el.classList.add('rs-reveal-delay-'+((i%3)+1));el.style.setProperty('--rs-motion-delay',((i%5)*55)+'ms');}});
   if(!reduce&&'IntersectionObserver' in window){
     var observer=new IntersectionObserver(function(entries){entries.forEach(function(entry){if(entry.isIntersecting){entry.target.classList.add('rs-visible');observer.unobserve(entry.target);}});},{threshold:.12,rootMargin:'0px 0px -30px 0px'});
     items.forEach(function(el){observer.observe(el);});
@@ -71,14 +71,14 @@
       link.addEventListener('click',function(){
         mobileMenu.classList.remove('open');
         mobileToggle.setAttribute('aria-expanded','false');
-        mobileToggle.setAttribute('aria-label','باز کردن منو');
+        mobileToggle.setAttribute('aria-label',window.RSCurrentLanguage==='en'?'Open menu':'باز کردن منو');
       });
     });
     document.addEventListener('keydown',function(event){
       if(event.key==='Escape'&&mobileMenu.classList.contains('open')){
         mobileMenu.classList.remove('open');
         mobileToggle.setAttribute('aria-expanded','false');
-        mobileToggle.setAttribute('aria-label','باز کردن منو');
+        mobileToggle.setAttribute('aria-label',window.RSCurrentLanguage==='en'?'Open menu':'باز کردن منو');
         mobileToggle.focus();
       }
     });
@@ -93,6 +93,7 @@
     dock.innerHTML='<a class="rs-cta-primary" href="?page=partnerships" data-route="partnerships"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.5-7 10-7 10Z"/><path d="M8 12h8M12 8v8"/></svg>پیشنهاد همکاری</a><a class="rs-cta-secondary" href="?page=contact" data-route="contact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 5h16v14H4z"/><path d="m4 7 8 6 8-6"/></svg>ارتباط با ما</a>';
     document.body.appendChild(dock);
   }
+  updateMobileDockText();
   document.querySelectorAll('form input,form select,form textarea').forEach(function(field){
     field.addEventListener('focus',function(){document.body.classList.add('rs-form-focused');});
     field.addEventListener('blur',function(){window.setTimeout(function(){if(!document.activeElement||!document.activeElement.matches('input,select,textarea'))document.body.classList.remove('rs-form-focused');},80);});
@@ -178,7 +179,15 @@
   }
   window.RazSahraOpenArticle=function(id){openArticleById(id,null);};
   window.RazSahraCloseArticle=closeReader;
-  window.addEventListener('rs:languagechange',function(){closeReader();updateEmbers();});
+  function updateMobileDockText(){
+    var dock=document.querySelector('.rs-mobile-cta');if(!dock)return;
+    var en=window.RSCurrentLanguage==='en';
+    dock.setAttribute('aria-label',en?'Quick access':'دسترسی سریع');
+    dock.innerHTML=en
+      ?'<a class="rs-cta-primary" href="?page=partnerships" data-route="partnerships"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.5-7 10-7 10Z"/><path d="M8 12h8M12 8v8"/></svg>Partnerships</a><a class="rs-cta-secondary" href="?page=contact" data-route="contact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 5h16v14H4z"/><path d="m4 7 8 6 8-6"/></svg>Contact us</a>'
+      :'<a class="rs-cta-primary" href="?page=partnerships" data-route="partnerships"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.5-7 10-7 10Z"/><path d="M8 12h8M12 8v8"/></svg>پیشنهاد همکاری</a><a class="rs-cta-secondary" href="?page=contact" data-route="contact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 5h16v14H4z"/><path d="m4 7 8 6 8-6"/></svg>ارتباط با ما</a>';
+  }
+  window.addEventListener('rs:languagechange',function(){closeReader();updateEmbers();updateMobileDockText();});
 
   function updateSavedLabels(){
     document.querySelectorAll('[data-save-article]').forEach(function(button){
@@ -197,13 +206,13 @@
     if(draftButton){
       var form=draftButton.closest('form'),formType=form&&form.getAttribute('data-local-form'),draft={};
       if(form){Array.prototype.forEach.call(form.elements,function(field){if(field.name)draft[field.name]=field.type==='checkbox'?field.checked:field.value;});
-        try{localStorage.setItem('rs-draft-'+formType,JSON.stringify(draft));var status=form.querySelector('.form-status');if(status){status.className='form-status success';status.textContent='پیش‌نویس روی همین مرورگر ذخیره شد؛ هنوز برای شرکت ارسال نشده است.';}draftButton.textContent='ذخیره شد ✓';window.setTimeout(function(){draftButton.textContent='ذخیره پیش‌نویس';},1800);}
-        catch(e){var statusError=form.querySelector('.form-status');if(statusError){statusError.className='form-status error';statusError.textContent='ذخیره محلی در این مرورگر در دسترس نیست؛ می‌توانید فایل درخواست را آماده کنید.';}}
+        try{localStorage.setItem('rs-draft-'+formType,JSON.stringify(draft));var status=form.querySelector('.form-status');if(status){status.className='form-status success';status.textContent=window.RSCurrentLanguage==='en'?'Draft saved in this browser only; it has not been sent to the company.':'پیش‌نویس روی همین مرورگر ذخیره شد؛ هنوز برای شرکت ارسال نشده است.';}draftButton.textContent=window.RSCurrentLanguage==='en'?'Saved ✓':'ذخیره شد ✓';window.setTimeout(function(){draftButton.textContent=window.RSCurrentLanguage==='en'?'Save draft':'ذخیره پیش‌نویس';},1800);}
+        catch(e){var statusError=form.querySelector('.form-status');if(statusError){statusError.className='form-status error';statusError.textContent=window.RSCurrentLanguage==='en'?'Local saving is unavailable in this browser. You can still prepare the request file.':'ذخیره محلی در این مرورگر در دسترس نیست؛ می‌توانید فایل درخواست را آماده کنید.';}}
       }return;
     }
     if(!event.target.closest('.site-header')){
       var menu=document.getElementById('mobile-menu'),toggle=document.querySelector('.mobile-toggle');
-      if(menu&&menu.classList.contains('open')){menu.classList.remove('open');if(toggle){toggle.setAttribute('aria-expanded','false');toggle.setAttribute('aria-label','باز کردن منو');}}
+      if(menu&&menu.classList.contains('open')){menu.classList.remove('open');if(toggle){toggle.setAttribute('aria-expanded','false');toggle.setAttribute('aria-label',window.RSCurrentLanguage==='en'?'Open menu':'باز کردن منو');}}
     }
   });
   document.addEventListener('input',function(event){
@@ -218,7 +227,7 @@
     if(event.key==='Escape'){
       if(readerBackdrop&&readerBackdrop.classList.contains('is-open')){closeReader();return;}
       var menu=document.getElementById('mobile-menu'),toggle=document.querySelector('.mobile-toggle');
-      if(menu&&menu.classList.contains('open')){menu.classList.remove('open');if(toggle){toggle.setAttribute('aria-expanded','false');toggle.setAttribute('aria-label','باز کردن منو');toggle.focus();}}
+      if(menu&&menu.classList.contains('open')){menu.classList.remove('open');if(toggle){toggle.setAttribute('aria-expanded','false');toggle.setAttribute('aria-label',window.RSCurrentLanguage==='en'?'Open menu':'باز کردن منو');toggle.focus();}}
     }
   });
   window.addEventListener('popstate',function(){
@@ -261,8 +270,8 @@
     show(0);start();
     return {next:function(){show(current+1);start();},previous:function(){show(current-1);start();},show:show};
   }
-  setupCarousel({root:'[data-hero-slider]',slide:'[data-hero-slide]',dot:'[data-hero-dot]',prev:'[data-hero-prev]',next:'[data-hero-next]',interval:6900});
-  setupCarousel({root:'[data-cta-slider]',slide:'[data-cta-slide]',dot:'[data-cta-dot]',prev:'[data-cta-prev]',next:'[data-cta-next]',count:'[data-cta-count]',progress:'[data-cta-progress]',interval:7800});
+  setupCarousel({root:'[data-hero-slider]',slide:'[data-hero-slide]',dot:'[data-hero-dot]',prev:'[data-hero-prev]',next:'[data-hero-next]',interval:5400});
+  setupCarousel({root:'[data-cta-slider]',slide:'[data-cta-slide]',dot:'[data-cta-dot]',prev:'[data-cta-prev]',next:'[data-cta-next]',count:'[data-cta-count]',progress:'[data-cta-progress]',interval:6100});
 
   var magazine=document.querySelector('[data-magazine-carousel]'),magTrack=document.querySelector('[data-magazine-track]'),magTimer=null,magPaused=false;
   if(magazine&&magTrack){
@@ -273,7 +282,7 @@
     var magPrev=document.querySelector('[data-mag-prev]'),magNext=document.querySelector('[data-mag-next]');
     if(magPrev)magPrev.addEventListener('click',function(){scrollMagazine('prev');restartMag();});
     if(magNext)magNext.addEventListener('click',function(){scrollMagazine('next');restartMag();});
-    function restartMag(){if(magTimer)window.clearInterval(magTimer);magTimer=null;if(!reduce&&!magPaused&&!document.hidden)magTimer=window.setInterval(function(){var max=magazine.scrollWidth-magazine.clientWidth;if(magazine.scrollLeft>=max-10)magazine.scrollTo({left:0,behavior:'smooth'});else scrollMagazine('next');},8500);}
+    function restartMag(){if(magTimer)window.clearInterval(magTimer);magTimer=null;if(!reduce&&!magPaused&&!document.hidden)magTimer=window.setInterval(function(){var max=magazine.scrollWidth-magazine.clientWidth;if(magazine.scrollLeft>=max-10)magazine.scrollTo({left:0,behavior:'smooth'});else scrollMagazine('next');},6800);}
     magazine.addEventListener('mouseenter',function(){magPaused=true;if(magTimer)window.clearInterval(magTimer);magTimer=null;});
     magazine.addEventListener('mouseleave',function(){magPaused=false;restartMag();});
     magazine.addEventListener('focusin',function(){magPaused=true;if(magTimer)window.clearInterval(magTimer);magTimer=null;});
@@ -295,12 +304,12 @@
       ember.style.setProperty('--ember-drift',(-25+Math.random()*50)+'px');
       field.appendChild(ember);
     }
-    host.appendChild(field);
+    host.insertBefore(field,host.firstChild);
   }
   function updateEmbers(){
     if(reduce)return;
-    document.querySelectorAll('[data-hero-slider],.cta-motion-section,.magazine-home-section,.site-footer').forEach(function(host){
-      var count=host.matches('.site-footer,.magazine-home-section')?12:host.matches('.cta-motion-section')?15:16;
+    document.querySelectorAll('.page-view section,.site-footer,[data-hero-slider],.collaboration-carousel,.business-grid,.principles-grid,.roadmap,.chain-section').forEach(function(host){
+      var count=host.matches('.site-footer')?15:host.matches('[data-hero-slider],.collaboration-carousel')?8:host.matches('.magazine-home-section,.cta-motion-section')?10:host.matches('.business-grid,.principles-grid,.roadmap,.chain-section')?7:5;
       addEmberField(host,count);
     });
   }
