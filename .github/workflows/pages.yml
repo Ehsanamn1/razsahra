@@ -49,6 +49,24 @@ jobs:
           print("Static checks passed: all 8 page views, Persian RTL, and sitemap XML.")
           PY
           node --check /tmp/raz-sahra-app.js
+          node --check assets/raz-sahra-interactions.js
+          test -f assets/raz-sahra-premium.css
+          test -f assets/raz-sahra-icon.svg
+          test -f manifest.webmanifest
+          grep -q 'assets/raz-sahra-premium.css' index.html
+          grep -q 'assets/raz-sahra-interactions.js' index.html
+          grep -q '"lang": "fa"' manifest.webmanifest
+          if grep -qi 'unsplash.com' index.html; then echo "Unexpected stock-photo URL found"; exit 1; fi
+          python - <<'PY'
+          from pathlib import Path
+          import json
+          manifest = json.loads(Path("manifest.webmanifest").read_text(encoding="utf-8"))
+          if manifest.get("dir") != "rtl" or manifest.get("lang") != "fa":
+              raise SystemExit("Manifest must be Persian and RTL")
+          if not Path("assets/raz-sahra-icon.svg").is_file():
+              raise SystemExit("Missing branded SVG icon")
+          print("Asset, PWA manifest, script syntax, and source checks passed.")
+          PY
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
         with:
