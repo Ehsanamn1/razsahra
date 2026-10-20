@@ -84,4 +84,19 @@
     });
   }
 
+
+  // Mobile conversion dock: clear next steps without inventing a phone number or email.
+  if(!document.querySelector('.rs-mobile-cta')){
+    var dock=document.createElement('nav');
+    dock.className='rs-mobile-cta';
+    dock.setAttribute('aria-label','دسترسی سریع');
+    dock.innerHTML='<a class="rs-cta-primary" href="?page=partnerships" data-route="partnerships"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.5-7 10-7 10Z"/><path d="M8 12h8M12 8v8"/></svg>پیشنهاد همکاری</a><a class="rs-cta-secondary" href="?page=contact" data-route="contact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 5h16v14H4z"/><path d="m4 7 8 6 8-6"/></svg>ارتباط با ما</a>';
+    document.body.appendChild(dock);
+  }
+  document.querySelectorAll('form input,form select,form textarea').forEach(function(field){
+    field.addEventListener('focus',function(){document.body.classList.add('rs-form-focused');});
+    field.addEventListener('blur',function(){window.setTimeout(function(){if(!document.activeElement||!document.activeElement.matches('input,select,textarea'))document.body.classList.remove('rs-form-focused');},80);});
+  });
+  window.addEventListener('pageshow',function(){document.body.classList.remove('rs-form-focused');});
+
 })();
