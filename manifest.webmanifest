@@ -2,7 +2,7 @@
   "id": "/razsahra/",
   "name": "راز صحرا | RAZ SAHRA",
   "short_name": "راز صحرا",
-  "description": "تأمین، تجارت و توسعه زنجیره ارزش با نگاهی منسجم و مشارکت‌محور.",
+  "description": "راهبران زنجیره ارزش صحرا؛ تأمین، تجارت و توزیع در صنعت طیور.",
   "lang": "fa",
   "dir": "rtl",
   "start_url": "/razsahra/?source=pwa",
@@ -12,9 +12,9 @@
   "theme_color": "#24364a",
   "icons": [
     {
-      "src": "/razsahra/assets/raz-sahra-icon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
+      "src": "/razsahra/assets/raz-sahra-symbol.webp",
+      "sizes": "512x512",
+      "type": "image/webp",
       "purpose": "any"
     }
   ]
