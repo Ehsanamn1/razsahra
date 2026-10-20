@@ -156,7 +156,7 @@
     save.textContent=articleSaved(id)?'♥ '+(window.RSCurrentLanguage==='en'?'Saved':'ذخیره‌شده'):'♡ '+(window.RSCurrentLanguage==='en'?'Save':'ذخیره');
     readerBackdrop.classList.add('is-open');
     document.body.classList.add('rs-reader-open');
-    readerBackdrop.querySelector('.article-reader-scroll').scrollTop=0;
+    readerBackdrop.querySelector('.article-reader-scroll').scrollTop=0;var readingBar=readerBackdrop.querySelector('.article-reader-progress span');if(readingBar)readingBar.style.width='0%';
     window.setTimeout(function(){readerBackdrop.querySelector('[data-reader-close]').focus();},60);
     if(window.RSApplyLanguage)window.RSApplyLanguage();
     var url=new URL(window.location.href);
@@ -264,12 +264,12 @@
   if(magazine&&magTrack){
     function scrollMagazine(direction){
       var card=magTrack.querySelector('.magazine-card'),distance=card?card.getBoundingClientRect().width+18:320;
-      magTrack.scrollBy({left:(direction==='next'?1:-1)*distance,behavior:reduce?'auto':'smooth'});
+      magazine.scrollBy({left:(direction==='next'?1:-1)*distance,behavior:reduce?'auto':'smooth'});
     }
     var magPrev=document.querySelector('[data-mag-prev]'),magNext=document.querySelector('[data-mag-next]');
     if(magPrev)magPrev.addEventListener('click',function(){scrollMagazine('prev');restartMag();});
     if(magNext)magNext.addEventListener('click',function(){scrollMagazine('next');restartMag();});
-    function restartMag(){if(magTimer)window.clearInterval(magTimer);magTimer=null;if(!reduce&&!magPaused&&!document.hidden)magTimer=window.setInterval(function(){var max=magTrack.scrollWidth-magTrack.clientWidth;if(magTrack.scrollLeft>=max-10)magTrack.scrollTo({left:0,behavior:'smooth'});else scrollMagazine('next');},8500);}
+    function restartMag(){if(magTimer)window.clearInterval(magTimer);magTimer=null;if(!reduce&&!magPaused&&!document.hidden)magTimer=window.setInterval(function(){var max=magazine.scrollWidth-magazine.clientWidth;if(magazine.scrollLeft>=max-10)magazine.scrollTo({left:0,behavior:'smooth'});else scrollMagazine('next');},8500);}
     magazine.addEventListener('mouseenter',function(){magPaused=true;if(magTimer)window.clearInterval(magTimer);magTimer=null;});
     magazine.addEventListener('mouseleave',function(){magPaused=false;restartMag();});
     magazine.addEventListener('focusin',function(){magPaused=true;if(magTimer)window.clearInterval(magTimer);magTimer=null;});
