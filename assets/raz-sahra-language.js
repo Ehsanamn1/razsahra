@@ -3,7 +3,7 @@
   'use strict';
   var dictionary={
     "صفحه اصلی":"Home","درباره ما":"About","حوزه‌های فعالیت":"Our fields","زنجیره تأمین":"Supply chain","همکاری با ما":"Partnerships","مجله تخصصی":"Magazine","ارتباط با ما":"Contact","حریم خصوصی":"Privacy",
-    "شروع همکاری":"Start a partnership","پیشنهاد همکاری":"Partnership request","پیشنهاد همکاری تولیدکننده":"Producer partnership","ارتباط با راز صحرا":"Contact Raz Sahra",
+    "شروع همکاری":"Start a partnership","پیشنهاد همکاری":"Partnership request","معرفی ظرفیت تولید":"Share production capacity","ارتباط با راز صحرا":"Contact Raz Sahra",
     "راهبران زنجیره ارزش صحرا":"Sahra Value Chain Leaders","راز صحرا":"Raz Sahra","از تأمین تا ارزش‌آفرینی":"From supply to value creation","از تأمین":"From supply","ارزش‌آفرینی":"value creation",
     "شناخت حوزه‌های فعالیت":"Explore our fields","آغاز گفت‌وگوی همکاری":"Start a conversation","آشنایی با حوزه‌های فعالیت":"Explore our fields","درخواست همکاری":"Partnership inquiry",
     "نگاه جامع به صنعت طیور":"A connected poultry industry","مدل پیشنهادی همکاری":"Proposed collaboration model","ارتباط روشن":"Clear communication","ظرفیت قابل بررسی":"Verifiable capacity","پیگیری مسئولانه":"Accountable follow-up",
@@ -232,7 +232,7 @@
     "محصولات جانبی":"Related products","مرغداری‌ها":"Poultry farms","توزیع‌کننده":"Distributor","تأمین و توزیع":"Sourcing & distribution",
     "بررسی ظرفیت و نیاز بازار":"Assess capacity and market need","چارچوب همکاری":"Partnership framework","مسئولیت‌پذیری":"Accountability","ارزش‌آفرینی":"Value creation","شفافیت":"Transparency",
     "ظرفیت واقعی،":"Real capacity,","توافق روشن":"clear terms","رشد پایدار،":"Sustainable growth,","با همکاری حرفه‌ای":"through professional collaboration",
-    "ارتباطی حرفه‌ای، پیش از هر تعهد.":"Professional dialogue before commitment.","تجارت قابل اتکا از اطلاعات دقیق شروع می‌شود.":"Dependable trade starts with accurate information.","یک مسیر مشترک برای زنجیره‌ای منسجم‌تر.":"A shared path to a more connected chain.",
+    "ظرفیت تولید شما، نقطه شروع همکاری است.":"Your production capacity is the starting point for cooperation.","تأمین مطمئن با مشخصات روشن آغاز می‌شود.":"Reliable sourcing starts with clear specifications.","حمل‌ونقل و توزیع؛ هماهنگ با برنامه واقعی.":"Transport and distribution, aligned with realistic plans.",
     "برای ایجاد همکاری‌های پایدار آماده‌ایم.":"We are ready to explore sustainable collaboration.","پیشنهاد همکاری خود را مطرح کنید":"Tell us about your proposal","حوزه همکاری خود را مطرح کنید.":"Tell us about your area of collaboration.",
     "از تأمین تا ارزش‌آفرینی":"From supply to value creation",
     "برخی زمینه‌های فعالیت معرفی‌شده در این وب‌سایت، برنامه‌های توسعه یا حوزه‌های در دست بررسی هستند؛ نمایش آن‌ها به معنی عملیاتی‌بودن، مالکیت زیرساخت یا اخذ مجوز مربوطه نیست.":"Some fields described here are plans or areas under assessment. Their inclusion does not imply that they are operational, that the company owns the associated infrastructure or that relevant permits have been obtained.",
@@ -245,13 +245,13 @@
     "دامنه فعالیت، صنعت طیور را به‌صورت یک زنجیره کامل می‌بیند: تأمین و بازرگانی، ارتباط با تولیدکنندگان، هماهنگی توزیع و بررسی فرصت‌های توسعه‌ای. وضعیت هر حوزه شفاف و متناسب با مرحله واقعی آن بیان شده است.":"Our scope treats poultry as an interconnected value chain: sourcing and trade, producer relationships, distribution coordination and carefully assessed opportunities. Each field is described according to its actual stage.",
     "راز صحرا با تمرکز بر پیوند میان ظرفیت تولید، نیاز بازار و شبکه توزیع شکل گرفته است؛ رویکردی که به‌جای نگاه تک‌محصولی، صنعت طیور را به‌عنوان مجموعه‌ای از حلقه‌های به‌هم‌پیوسته می‌بیند.":"Raz Sahra is built around connecting production capacity, market demand and distribution. Rather than focusing on one product, it views poultry as a network of connected activities.",
     "تولیدکنندگان، تأمین‌کنندگان، فعالان فرآوری و بسته‌بندی، حمل‌ونقل و خریداران عمده هرکدام بخشی از تصویرند. گفت‌وگوی دقیق کمک می‌کند تناسب و امکان همکاری را بهتر بسنجیم.":"Producers, suppliers, processors, packers, logistics partners and wholesale buyers each play a part. Clear dialogue helps assess the fit and feasibility before commitments are made.",
-    "اگر در تولید یا پرورش طیور فعالیت دارید، می‌توانیم درباره نوع محصول، ظرفیت قابل ارائه، زمان‌بندی و محدوده همکاری گفت‌وگو کنیم؛ روشن و بدون وعده‌های زودهنگام.":"If you work in poultry production or husbandry, we can discuss product type, deliverable capacity, timing and potential scope—clearly and without premature promises.",
+    "اگر تولیدکننده یا پرورش‌دهنده طیور هستید، نوع محصول، ظرفیت ماهانه و محدوده ارسال را معرفی کنید. امکان همکاری بر اساس ظرفیت واقعی و شرایط روشن بررسی می‌شود.":"If you produce or raise poultry, share your product, monthly capacity and delivery area. Potential cooperation is assessed against real capacity and clear terms.",
     "مشخصات محصول، حجم قابل تحویل، زمان‌بندی، شرایط پرداخت و مسئولیت‌ها باید پیش از تعهد روشن باشند. شفافیت، هزینه سوءتفاهم را کمتر و پیگیری را دقیق‌تر می‌کند.":"Product specifications, deliverable volume, timing, payment terms and responsibilities should be clear before commitment. Transparency reduces avoidable misunderstanding and improves follow-up.",
     "راز صحرا با تمرکز بر ارتباط مؤثر میان حلقه‌های صنعت طیور، به دنبال شکل‌دادن به همکاری‌های روشن‌تر، تأمین قابل اتکاتر و تصمیم‌های تجاری سنجیده‌تر است.":"Raz Sahra aims to foster clearer cooperation, more dependable sourcing and better-informed commercial decisions by strengthening links across the poultry industry.",
     "از تولید و تأمین تا فرآوری، نگهداری، حمل و بازار؛ هر مرحله بر کیفیت، هزینه و تجربه حلقه بعدی اثر می‌گذارد. دیدن ارتباط‌ها، نقطه شروع تصمیم بهتر است.":"From production and sourcing to processing, storage, transport and markets, each stage influences the next. Understanding those connections is a starting point for better decisions.",
-    "برای تأمین‌کنندگان، فرآوری‌کنندگان و خریداران عمده؛ تعریف مشخصات محصول، شرایط پرداخت و معیار تحویل، پایه یک توافق قابل پیگیری است.":"For suppliers, processors and wholesale buyers, clear specifications, payment terms and delivery criteria form the basis of a traceable agreement.",
+    "برای خریداران عمده، فرآوری‌کنندگان و مراکز بسته‌بندی؛ نوع و درجه محصول، حجم، مقصد، بازه تحویل و شرایط تسویه را مشخص کنید تا امکان تأمین واقع‌بینانه بررسی شود.":"For wholesalers, processors and packers, specify product type and grade, volume, destination, delivery window and settlement terms so sourcing feasibility can be assessed realistically.",
     "نشان‌های وضعیت، جهت‌گیری فعلی و مسیرهای بررسی را توضیح می‌دهند و به‌معنی تأیید مستقل فعالیت جاری، ظرفیت اجرایی یا مجوز نیستند.":"Status labels describe current focus and areas under review. They do not independently verify current operations, capacity or permits.",
-    "فعالان حمل‌ونقل، بسته‌بندی و توزیع می‌توانند زمینه فعالیت و دامنه خدمات خود را معرفی کنند تا تناسب احتمالی همکاری بررسی شود.":"Transport, packaging and distribution providers can introduce their services so a potential fit can be assessed.",
+    "اگر در حمل‌ونقل، سردخانه، بسته‌بندی یا توزیع فعال هستید، محدوده خدمات و مسیرهای تحت پوشش خود را معرفی کنید تا تناسب همکاری بر پایه امکانات واقعی سنجیده شود.":"If you work in transport, cold storage, packaging or distribution, share your service scope and routes so a potential fit can be assessed against actual capabilities.",
     "ارزیابی امکان توسعه تولید و بسته‌بندی، الزامات کیفیت، زیرساخت، سرمایه و مجوزهای لازم پیش از هرگونه اجرا.":"Evaluate production and packaging opportunities, including quality, infrastructure, capital and permit requirements before implementation.",
     "تعریف فرایندهای هماهنگی تأمین، تحویل، انتقال کالا و ارتباط میان طرف‌ها، متناسب با دامنه واقعی عملیات.":"Define sourcing, delivery, transfer and communication processes that fit the actual scope of operations.",
     "بررسی فرصت‌های توسعه زیرساخت و خدمات تخصصی با توجه به نیاز بازار، سرمایه‌گذاری و ملاحظات اجرایی.":"Assess infrastructure and specialist service opportunities against market needs, investment and practical constraints.",
@@ -316,7 +316,7 @@
     "دامنه فعالیت و مسیر توسعه":"Activity scope and development paths",
     "طرح پیشنهاد همکاری":"Submit a partnership proposal",
     "مشاهده مسیر توسعه":"Explore development paths",
-    "طرح یک نیاز تجاری":"Describe a commercial need",
+    "ثبت نیاز تأمین":"Submit sourcing request",
     "ابزارهای دیجیتال":"Digital tools","مجوز Unsplash":"Unsplash licence","مجوز Pexels":"Pexels licence",
     "آشنایی بیشتر":"Learn more","تأمین و خرید":"Sourcing and purchasing","و":"and"
   });
@@ -335,10 +335,10 @@
   });
   Object.assign(dictionary,{
     "دعوت به همکاری · ۰۴":"Partnership · 04",
-    "نیاز بازار را به یک همکاری روشن تبدیل کنیم.":"Turn market needs into a clear partnership.",
-    "برای خریداران عمده و فعالان توزیع، مشخص‌کردن نوع محصول، حجم موردنیاز، معیار پذیرش، مقصد و بازه تحویل کمک می‌کند امکان تأمین و شرایط همکاری واقع‌بینانه بررسی شود.":"For wholesale buyers and distributors, defining product type, required volume, acceptance criteria, destination and delivery window helps assess supply feasibility and realistic terms.",
-    "شرح نیاز تأمین":"Describe sourcing needs",
-    "نیاز دقیق · هماهنگی تحویل":"Clear demand · coordinated delivery",
+    "نیاز بازار را دقیق بگویید؛ امکان تأمین را می‌سنجیم.":"Describe market demand; we’ll assess sourcing feasibility.",
+    "نوع محصول، درجه‌بندی، حجم، مقصد، معیار پذیرش و بازه تحویل را مشخص کنید. امکان تأمین و شرایط معامله پیش از هر تعهد بررسی می‌شود.":"Specify product, grade, volume, destination, acceptance criteria and delivery window. Sourcing feasibility and terms are reviewed before any commitment.",
+    "ثبت درخواست خرید":"Submit purchase request",
+    "نیاز دقیق · هماهنگی تحویل":"Clear demand · coordinated delivery", "معرفی خدمات":"Introduce your services",
     "English / فارسی":"English / Persian",
     "بستن مقاله":"Close article",
     "ذخیره مقاله":"Save article",
