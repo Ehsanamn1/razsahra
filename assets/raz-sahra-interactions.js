@@ -50,4 +50,38 @@
   // Make outbound source-credit links safe and give image-bearing sections meaningful fallbacks.
   document.querySelectorAll('a[target="_blank"]').forEach(function(a){a.setAttribute('rel','noopener noreferrer');});
   document.querySelectorAll('.hero-panel,.partnership-art,.insight-main').forEach(function(el){el.classList.add('rs-image-enhanced');});
+
+  // Desktop pointer tilt: restrained 3D depth; disabled on touch and reduced-motion devices.
+  if(!reduce&&window.matchMedia('(hover:hover) and (pointer:fine)').matches){
+    document.querySelectorAll('.business-card,.principle,.route-card,.partnership-art,.insight-main').forEach(function(card){
+      card.addEventListener('pointermove',function(event){
+        var rect=card.getBoundingClientRect(),x=(event.clientX-rect.left)/rect.width,y=(event.clientY-rect.top)/rect.height;
+        card.style.transform='perspective(1000px) rotateX('+((.5-y)*3.5)+'deg) rotateY('+((x-.5)*4)+'deg) translateY(-3px)';
+        card.style.setProperty('--rs-glint-x',(x*100)+'%');card.style.setProperty('--rs-glint-y',(y*100)+'%');
+      });
+      card.addEventListener('pointerleave',function(){card.style.removeProperty('transform');});
+    });
+  }
+
+  // Give the mobile menu a polished open/close rhythm and close it after route selection.
+  var mobileMenu=document.getElementById('mobile-menu');
+  var mobileToggle=document.querySelector('.mobile-toggle');
+  if(mobileMenu&&mobileToggle){
+    mobileMenu.querySelectorAll('a').forEach(function(link){
+      link.addEventListener('click',function(){
+        mobileMenu.classList.remove('open');
+        mobileToggle.setAttribute('aria-expanded','false');
+        mobileToggle.setAttribute('aria-label','باز کردن منو');
+      });
+    });
+    document.addEventListener('keydown',function(event){
+      if(event.key==='Escape'&&mobileMenu.classList.contains('open')){
+        mobileMenu.classList.remove('open');
+        mobileToggle.setAttribute('aria-expanded','false');
+        mobileToggle.setAttribute('aria-label','باز کردن منو');
+        mobileToggle.focus();
+      }
+    });
+  }
+
 })();
