@@ -670,3 +670,41 @@ html.lang-en .route-card,html.lang-en .status-chip,html.lang-en .slide-vertical-
 @keyframes rs-chain-breathe{0%,100%{transform:scale(.96);opacity:.55}50%{transform:scale(1.04);opacity:1}}
 .rs-particle-field{mix-blend-mode:screen;opacity:.86}.rs-particle{filter:drop-shadow(0 0 2px rgba(220,144,79,.26))}
 @media(prefers-reduced-motion:reduce){.hero-slide,.hero-slide-copy,.hero-slide-bg,.collaboration-slide,.magazine-track,.magazine-card,.magazine-cover img,.language-toggle,.rs-particle,.collaboration-orbit,.collab-monogram,.collaboration-visual:before,.chain-section:after,.business-card.rs-visible,.principle.rs-visible,.flow-item.rs-visible,.roadmap-item.rs-visible,.chain-flow.rs-visible,.chain-copy.rs-visible{animation:none!important;transition:none!important}.business-card:hover,.principle:hover,.flow-item:hover,.roadmap-item:hover,.chain-flow:hover{transform:none}.rs-particle-field{display:none}}
+
+/* Final logo treatment: crop the excess quiet margin from the supplied lockup at render time.
+   Source artwork is unchanged; native pixels are enlarged only enough to use the footer's real space. */
+.footer-lockup-link{
+  width:min(100%,276px);
+  max-width:276px;
+  aspect-ratio:4/3;
+  overflow:hidden;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:0;
+  margin:0 0 16px;
+  border:1px solid rgba(215,162,123,.24);
+  border-radius:13px;
+  background:linear-gradient(145deg,#faf6ed,#eee6d8);
+  box-shadow:0 10px 22px rgba(0,0,0,.13),inset 0 1px rgba(255,255,255,.88);
+}
+.footer-lockup-image{
+  width:147%;
+  max-width:none;
+  height:auto;
+  aspect-ratio:1/1;
+  flex:0 0 auto;
+  object-fit:contain;
+  object-position:center;
+  margin:0;
+  border:0;
+  border-radius:0;
+  box-shadow:none;
+  filter:none;
+  image-rendering:auto;
+  transform:none;
+}
+.footer-lockup-link:hover{transform:translateY(-2px);box-shadow:0 13px 25px rgba(0,0,0,.16),inset 0 1px rgba(255,255,255,.88)}
+.footer-lockup-link:hover .footer-lockup-image{transform:none;filter:none}
+@media(max-width:850px){.footer-lockup-link{width:min(100%,250px);max-width:250px}}
+@media(max-width:540px){.footer-lockup-link{width:min(100%,224px);max-width:224px;aspect-ratio:4/3;padding:0}.footer-lockup-image{width:147%;max-width:none}}
