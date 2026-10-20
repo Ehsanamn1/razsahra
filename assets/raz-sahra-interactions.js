@@ -118,7 +118,7 @@
       saveButton.setAttribute('aria-pressed',index<0?'true':'false');saveButton.textContent=index<0?'♥ ذخیره‌شده':'♡ ذخیره';return;
     }
     if(event.target.closest('[data-retry-articles]')){
-      var host=document.getElementById('article-library');if(host){host.innerHTML='<div class="article-loading"><span></span><p>در حال تلاش دوباره...</p></div>';window.setTimeout(function(){var retry=host.querySelector('[data-retry-articles]');if(retry)retry.click();else window.location.reload();},250);}return;
+      var host=document.getElementById('article-library');if(host){window.location.reload();}return;
     }
     var draftButton=event.target.closest('[data-save-draft]');
     if(draftButton){
