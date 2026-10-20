@@ -96,8 +96,8 @@ jobs:
                   raise SystemExit(f"Homepage feature missing: {required}")
           if len(re.findall(r'<article class="hero-slide', html)) != 4:
               raise SystemExit("Homepage must contain exactly 4 hero slides")
-          if len(re.findall(r'<article class="collaboration-slide', html)) != 3:
-              raise SystemExit("Collaboration carousel must contain exactly 3 slides")
+          if len(re.findall(r'<article class="collaboration-slide', html)) != 4:
+              raise SystemExit("Collaboration carousel must contain exactly 4 slides")
           if len(re.findall(r'class="magazine-card"', html)) < 4:
               raise SystemExit("Homepage magazine must contain at least 4 featured cards")
           if "rs-image-credit" in html:
