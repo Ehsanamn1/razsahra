@@ -57,6 +57,9 @@ jobs:
           grep -q 'assets/raz-sahra-interactions.js' index.html
           grep -q '"lang": "fa"' manifest.webmanifest
           test -f assets/raz-sahra-articles.html
+          test -f assets/raz-sahra-symbol.svg
+          test -f assets/raz-sahra-logo-lockup.svg
+          grep -q 'assets/raz-sahra-symbol.svg' index.html
           grep -q 'data-articles-src="assets/raz-sahra-articles.html"' index.html
           if grep -qi 'Coturnix' index.html; then echo "Quail-specific image reference remains in main page"; exit 1; fi
           python - <<'PY'
@@ -64,14 +67,14 @@ jobs:
           import re
           articles = Path("assets/raz-sahra-articles.html").read_text(encoding="utf-8")
           count = len(re.findall(r'data-article-card', articles))
-          if count != 5:
-              raise SystemExit(f"Expected 5 editorial guides, found {count}")
+          if count != 8:
+              raise SystemExit(f"Expected 8 editorial guides, found {count}")
           for required in ["data-article-open", "data-save-article", "article-takeaway"]:
               if required not in articles:
                   raise SystemExit(f"Editorial feature missing: {required}")
           if "rs-image-credit" in Path("index.html").read_text(encoding="utf-8"):
               raise SystemExit("Image-credit block should not appear in the footer")
-          print("Editorial content checks passed: five guides, reading controls, and clean footer.")
+          print("Editorial content checks passed: eight guides, reading controls, and clean footer.")
           PY
           if grep -qi 'unsplash.com' index.html; then echo "Unexpected stock-photo URL found"; exit 1; fi
           python - <<'PY'
