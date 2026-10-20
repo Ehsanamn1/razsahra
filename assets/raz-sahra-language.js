@@ -333,6 +333,17 @@
     "ناوبری موبایل":"Mobile navigation",
     "ناوبری اصلی":"Main navigation"
   });
+  Object.assign(dictionary,{
+    "دعوت به همکاری · ۰۴":"Partnership · 04",
+    "نیاز بازار را به یک همکاری روشن تبدیل کنیم.":"Turn market needs into a clear partnership.",
+    "برای خریداران عمده و فعالان توزیع، مشخص‌کردن نوع محصول، حجم موردنیاز، معیار پذیرش، مقصد و بازه تحویل کمک می‌کند امکان تأمین و شرایط همکاری واقع‌بینانه بررسی شود.":"For wholesale buyers and distributors, defining product type, required volume, acceptance criteria, destination and delivery window helps assess supply feasibility and realistic terms.",
+    "شرح نیاز تأمین":"Describe sourcing needs",
+    "نیاز دقیق · هماهنگی تحویل":"Clear demand · coordinated delivery",
+    "English / فارسی":"English / Persian",
+    "بستن مقاله":"Close article",
+    "ذخیره مقاله":"Save article",
+    "Quick access":"Quick access"
+  });
   var attributeDictionary={
     "باز کردن منو":"Open menu","بستن منو":"Close menu","اسلاید قبلی":"Previous slide","اسلاید بعدی":"Next slide",
     "اسلاید ۱":"Slide 1","اسلاید ۲":"Slide 2","اسلاید ۳":"Slide 3","اسلاید ۴":"Slide 4",
@@ -380,7 +391,7 @@
       });
     });
     document.querySelectorAll('[data-language-label]').forEach(function(el){el.textContent=language==='fa'?'EN':'FA';});
-    document.querySelectorAll('[data-language-toggle]').forEach(function(el){el.setAttribute('aria-label',language==='fa'?'Switch to English':'تغییر زبان به فارسی');el.setAttribute('title',language==='fa'?'English':'فارسی');});
+    document.querySelectorAll('[data-language-toggle]').forEach(function(el){el.setAttribute('aria-label',language==='fa'?'Switch to English':'Switch to Persian');el.setAttribute('title',language==='fa'?'English':'Persian');});
     document.documentElement.lang=language;
     document.documentElement.dir=language==='fa'?'rtl':'ltr';
     document.documentElement.classList.toggle('lang-en',language==='en');
@@ -388,6 +399,7 @@
     var page=new URLSearchParams(window.location.search).get('page')||'home';
     var titles={home:{fa:'راز صحرا | از تأمین تا ارزش‌آفرینی',en:'Raz Sahra | From Supply to Value Creation'},about:{fa:'درباره ما | راز صحرا',en:'About | Raz Sahra'},business:{fa:'حوزه‌های فعالیت | راز صحرا',en:'Our Fields | Raz Sahra'},supply:{fa:'زنجیره تأمین | راز صحرا',en:'Supply Chain | Raz Sahra'},partnerships:{fa:'همکاری با ما | راز صحرا',en:'Partnerships | Raz Sahra'},contact:{fa:'ارتباط با ما | راز صحرا',en:'Contact | Raz Sahra'},insights:{fa:'مجله تخصصی | راز صحرا',en:'Specialist Magazine | Raz Sahra'},privacy:{fa:'حریم خصوصی | راز صحرا',en:'Privacy | Raz Sahra'}};
     if(titles[page])document.title=titles[page][language];
+    var yearNode=document.getElementById('year');if(yearNode)yearNode.textContent=new Date().getFullYear().toLocaleString(language==='fa'?'fa-IR':'en-US');
     var metaDescription=document.querySelector('meta[name="description"]');
     if(metaDescription)metaDescription.content=language==='en'?'Sahra Value Chain Leaders connects poultry production, sourcing, trade and distribution through clear commercial coordination.':'راهبران زنجیره ارزش صحرا؛ نگاه یکپارچه به تأمین، تجارت و توزیع در صنعت طیور، از تولید تا بازار.';
     var ogTitle=document.querySelector('meta[property="og:title"]');if(ogTitle)ogTitle.content=document.title;
