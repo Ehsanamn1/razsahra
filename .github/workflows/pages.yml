@@ -65,9 +65,15 @@ jobs:
           grep -q 'assets/raz-sahra-symbol.webp' index.html
           grep -q 'assets/raz-sahra-logo-lockup.webp' index.html
           grep -q 'data-language-toggle' index.html
+          grep -q 'data-hero-slider' index.html
+          grep -q 'data-cta-slider' index.html
+          grep -q 'data-magazine-carousel' index.html
+          grep -q 'article-reader-dialog' assets/raz-sahra-premium.css
           grep -q 'data-articles-src="assets/raz-sahra-articles.html"' index.html
-          if grep -qi 'Coturnix' index.html; then echo "Quail-specific image reference remains in main page"; exit 1; fi
-          if grep -qi 'Iran_1395_Coturnix' assets/raz-sahra-premium.css; then echo "Quail-specific background image remains"; exit 1; fi
+          if grep -Eqi 'Coturnix|Iran_1395_Coturnix|Arian_chicken|pussalla\.lk|globalagmedia\.com|wixstatic\.com|wattagnet\.com' index.html assets/raz-sahra-premium.css assets/raz-sahra-articles.html assets/raz-sahra-articles-en.html; then echo "Legacy/unverified image reference remains"; exit 1; fi
+          grep -q 'assets/raz-sahra-hero-banner.webp' index.html
+          grep -q 'assets/raz-sahra-logo-lockup.webp' index.html
+          grep -q 'assets/raz-sahra-symbol.webp' manifest.webmanifest
           if grep -q 'assets/raz-sahra-symbol.svg' index.html; then echo "Hand-drawn SVG mark still referenced by main page"; exit 1; fi
           python - <<'PY'
           from pathlib import Path
