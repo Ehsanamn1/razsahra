@@ -1,0 +1,497 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#24364a">
+  <meta name="description" content="راز صحرا؛ رویکردی منسجم به تأمین، تجارت و توسعه زنجیره ارزش. آشنایی با حوزه‌های فعالیت و مسیرهای همکاری با راهبران زنجیره ارزش صحرا.">
+  <meta name="robots" content="index,follow">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="fa_IR">
+  <meta property="og:site_name" content="RAZ SAHRA | راز صحرا">
+  <meta property="og:title" content="راز صحرا | از تأمین تا ارزش‌آفرینی">
+  <meta property="og:description" content="تأمین، تجارت و توسعه زنجیره ارزش با نگاهی منسجم و مشارکت‌محور.">
+  <meta property="og:image" content="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1200&q=85">
+  <title>راز صحرا | از تأمین تا ارزش‌آفرینی</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://images.unsplash.com">
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%2324364a'/%3E%3Cpath d='M32 8 51 27 32 46 13 27Z' fill='none' stroke='%23c28a61' stroke-width='4'/%3E%3Cpath d='M32 18 41 27 32 36 23 27Z' fill='none' stroke='%23f4f0e8' stroke-width='3'/%3E%3C/svg%3E">
+  <style>
+    :root{--navy:#24364a;--navy-deep:#172838;--copper:#b7744b;--copper-light:#d7a27b;--slate:#68717a;--ivory:#f4f0e8;--paper:#fffdf8;--sand:#e8dfd2;--ink:#202b35;--muted:#66717b;--line:rgba(36,54,74,.14);--radius:22px;--radius-sm:13px;--shadow:0 18px 48px rgba(25,38,51,.09);--max:1200px;--ease:220ms cubic-bezier(.2,.7,.2,1)}
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth;scroll-padding-top:104px}
+    body{margin:0;background:var(--ivory);color:var(--ink);font-family:"Vazirmatn",Tahoma,Arial,sans-serif;line-height:1.8;font-weight:400}
+    body,button,input,select,textarea{font-family:"Vazirmatn",Tahoma,Arial,sans-serif}
+    img{display:block;max-width:100%}
+    a{color:inherit;text-decoration:none}
+    button{font:inherit}
+    :focus-visible{outline:3px solid var(--copper);outline-offset:4px}
+    .skip-link{position:fixed;top:8px;right:8px;z-index:1000;transform:translateY(-150%);background:var(--paper);color:var(--navy);padding:8px 16px;border-radius:8px}
+    .skip-link:focus{transform:translateY(0)}
+    .container{width:min(var(--max),calc(100% - 48px));margin-inline:auto}
+    .announcement{background:var(--navy-deep);color:#e9e2d7;font-size:11px;letter-spacing:.01em}
+    .announcement-inner{min-height:34px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+    .announce-side{display:flex;align-items:center;gap:9px}
+    .announce-dot{width:6px;height:6px;display:inline-block;border-radius:50%;background:var(--copper-light)}
+    .site-header{position:sticky;top:0;z-index:50;background:rgba(244,240,232,.94);backdrop-filter:blur(18px);border-bottom:1px solid rgba(36,54,74,.09)}
+    .header-inner{min-height:88px;display:flex;align-items:center;justify-content:space-between;gap:22px}
+    .brand{display:inline-flex;align-items:center;gap:12px;min-width:205px}
+    .brand-mark{width:46px;height:46px;flex:0 0 46px;color:var(--navy)}
+    .brand-copy{display:flex;flex-direction:column;line-height:1.2}
+    .brand-persian{font-size:18px;font-weight:800;color:var(--navy);letter-spacing:-.04em}
+    .brand-english{font-family:Arial,sans-serif;font-size:10px;letter-spacing:.2em;font-weight:700;color:var(--copper);margin-top:5px;direction:ltr;text-align:right}
+    .brand-legal{font-size:9px;color:var(--muted);margin-top:6px}
+    .main-nav{display:flex;align-items:center;gap:clamp(13px,2vw,27px)}
+    .nav-link{position:relative;padding:9px 0;color:#4f5a64;font-size:12px;font-weight:600;white-space:nowrap;transition:color var(--ease)}
+    .nav-link:after{content:"";position:absolute;bottom:2px;right:0;width:0;height:2px;background:var(--copper);transition:width var(--ease)}
+    .nav-link:hover,.nav-link[aria-current="page"]{color:var(--navy)}
+    .nav-link:hover:after,.nav-link[aria-current="page"]:after{width:100%}
+    .header-actions{display:flex;align-items:center;gap:10px}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;border:1px solid transparent;border-radius:10px;padding:12px 18px;min-height:46px;font-size:12px;font-weight:700;cursor:pointer;transition:transform var(--ease),background var(--ease),border-color var(--ease),color var(--ease);text-align:center}
+    .btn:hover{transform:translateY(-2px)}
+    .btn-primary{background:var(--copper);color:white}
+    .btn-primary:hover{background:#a6633f}
+    .btn-outline{border-color:rgba(36,54,74,.22);color:var(--navy);background:transparent}
+    .btn-outline:hover{background:rgba(36,54,74,.05);border-color:var(--navy)}
+    .btn-light{background:var(--ivory);color:var(--navy)}
+    .btn-light:hover{background:white}
+    .btn-dark-outline{border-color:rgba(255,255,255,.42);color:white;background:transparent}
+    .btn-dark-outline:hover{background:rgba(255,255,255,.08)}
+    .btn svg{width:17px;height:17px}
+    .mobile-toggle{display:none;width:44px;height:44px;border:1px solid var(--line);border-radius:10px;background:transparent;color:var(--navy);align-items:center;justify-content:center;cursor:pointer}
+    .mobile-toggle svg{width:23px;height:23px}
+    .mobile-menu{display:none;padding:0 24px 20px;border-top:1px solid var(--line)}
+    .mobile-menu.open{display:grid;gap:4px}
+    .mobile-menu a{padding:10px 4px;font-size:13px;color:var(--navy);border-bottom:1px solid rgba(36,54,74,.07)}
+    main{min-height:55vh}
+    .page-view{display:none;animation:fade-up .35s ease both}
+    .page-view.active{display:block}
+    @keyframes fade-up{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
+    .eyebrow{display:inline-flex;align-items:center;gap:10px;color:var(--copper);font-size:11px;font-weight:800;letter-spacing:.08em}
+    .eyebrow:before{content:"";width:26px;height:1px;background:currentColor;display:inline-block}
+    h1,h2,h3,p{margin-top:0}
+    .display{font-weight:800;letter-spacing:-.045em;line-height:1.35;color:var(--navy)}
+    .display-xl{font-size:clamp(32px,4.3vw,57px)}
+    .section-title{font-size:clamp(25px,3vw,38px);margin:12px 0 16px}
+    .lead{font-size:clamp(14px,1.4vw,17px);line-height:2.1;color:#5c6670;max-width:670px}
+    .section{padding:86px 0}
+    .section.compact{padding:62px 0}
+    .section-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:28px;margin-bottom:32px}
+    .section-heading>div{max-width:720px}
+    .section-heading .lead{font-size:13px;margin-bottom:0}
+    .text-link{display:inline-flex;align-items:center;gap:9px;color:var(--copper);font-size:12px;font-weight:800;white-space:nowrap}
+    .text-link svg{width:17px;height:17px;transition:transform var(--ease)}
+    .text-link:hover svg{transform:translateX(-4px)}
+    .hero{padding:28px 0 48px}
+    .hero-panel{min-height:520px;background:var(--navy);color:white;border-radius:27px;overflow:hidden;display:grid;grid-template-columns:1fr 1fr;position:relative;isolation:isolate;box-shadow:0 28px 65px rgba(26,41,56,.17)}
+    .hero-panel:before{content:"";position:absolute;inset:0;z-index:-1;background-image:linear-gradient(90deg,rgba(23,40,56,.06),rgba(23,40,56,.74)),url("https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1800&q=88");background-size:cover;background-position:center}
+    .hero-copy{padding:clamp(32px,5.5vw,72px);display:flex;flex-direction:column;justify-content:center;position:relative;z-index:2}
+    .hero .eyebrow{color:var(--copper-light)}
+    .hero h1{font-size:clamp(36px,4.7vw,62px);font-weight:800;line-height:1.34;letter-spacing:-.055em;margin:17px 0 17px;max-width:610px;color:white}
+    .hero h1 em{font-style:normal;color:var(--copper-light);white-space:nowrap}
+    .hero-description{font-size:14px;color:#d7dfe5;line-height:2.15;max-width:550px;margin-bottom:28px}
+    .hero-actions{display:flex;gap:11px;flex-wrap:wrap}
+    .hero-notes{display:flex;gap:19px;flex-wrap:wrap;margin-top:33px;color:#e0e5e9;font-size:11px}
+    .hero-notes span{display:flex;align-items:center;gap:7px}
+    .hero-notes i{width:6px;height:6px;border-radius:50%;background:var(--copper-light)}
+    .hero-visual{position:relative;min-height:400px;display:flex;align-items:flex-end;padding:32px;overflow:hidden}
+    .hero-visual:before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(19,36,52,.04),rgba(19,36,52,.67))}
+    .hero-network{position:absolute;inset:14% 7% 22%;opacity:.8}
+    .hero-network svg{width:100%;height:100%}
+    .route-card{position:relative;z-index:2;margin-top:auto;width:min(100%,365px);padding:19px;border:1px solid rgba(255,255,255,.23);border-radius:16px;background:rgba(244,240,232,.94);color:var(--navy);box-shadow:0 16px 40px rgba(0,0,0,.16);backdrop-filter:blur(10px)}
+    .route-card-top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:15px}
+    .route-card-title{font-size:12px;font-weight:800}
+    .status-chip{display:inline-flex;align-items:center;gap:6px;padding:4px 8px;border-radius:99px;background:#e9dfd2;color:#6f4d38;font-size:9px;font-weight:700;white-space:nowrap}
+    .route-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;position:relative}
+    .route-steps:before{content:"";height:1px;position:absolute;top:13px;right:13%;left:13%;background:#c7b6a4}
+    .route-step{font-size:9px;text-align:center;position:relative;display:flex;flex-direction:column;align-items:center;gap:7px;color:#596470}
+    .route-step b{width:27px;height:27px;border-radius:9px;display:grid;place-items:center;background:var(--navy);color:white;font-size:10px;border:3px solid var(--ivory);box-shadow:0 0 0 1px rgba(36,54,74,.18)}
+    .route-step:last-child b{background:var(--copper)}
+    .intro-grid{display:grid;grid-template-columns:.85fr 1.15fr;gap:clamp(30px,7vw,100px);align-items:start}
+    .intro-quote{border-right:2px solid var(--copper);padding:3px 22px 4px 0;font-size:16px;font-weight:600;line-height:2.1;color:var(--navy)}
+    .intro-copy p{color:var(--muted);font-size:13px;line-height:2.15}
+    .small-label{display:inline-block;font-size:10px;font-weight:800;letter-spacing:.06em;color:var(--copper);margin-bottom:7px}
+    .business-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+    .business-card{min-height:255px;padding:25px 24px;background:var(--paper);border:1px solid rgba(36,54,74,.09);border-radius:17px;display:flex;flex-direction:column;align-items:flex-start;transition:transform var(--ease),box-shadow var(--ease),border-color var(--ease);position:relative;overflow:hidden}
+    .business-card:after{content:"";position:absolute;width:130px;height:130px;left:-50px;bottom:-69px;border:1px solid rgba(183,116,75,.17);transform:rotate(45deg);pointer-events:none}
+    .business-card:hover{transform:translateY(-4px);box-shadow:var(--shadow);border-color:rgba(183,116,75,.32)}
+    .card-icon{width:46px;height:46px;border-radius:13px;background:#e9e2d6;color:var(--navy);display:grid;place-items:center;margin-bottom:23px}
+    .card-icon svg{width:22px;height:22px}
+    .business-card h3{font-size:16px;font-weight:800;line-height:1.7;margin-bottom:10px;color:var(--navy)}
+    .business-card p{font-size:12px;color:var(--muted);line-height:2;margin-bottom:19px}
+    .business-card .text-link{margin-top:auto;font-size:11px}
+    .card-status{display:inline-flex;border-radius:6px;padding:3px 7px;font-size:9px;font-weight:700;background:#eee9df;color:#665b4d;margin-bottom:13px}
+    .card-status.current{background:#e2e9e9;color:#32505c}
+    .chain-section{background:#eae3d8;position:relative;overflow:hidden}
+    .chain-section:before{content:"";position:absolute;width:420px;height:420px;border:1px solid rgba(36,54,74,.08);border-radius:50%;left:-190px;top:-180px}
+    .chain-layout{display:grid;grid-template-columns:.8fr 1.2fr;gap:65px;align-items:center;position:relative}
+    .chain-copy .lead{font-size:13px}
+    .chain-flow{background:var(--paper);padding:28px;border-radius:20px;border:1px solid rgba(36,54,74,.08);box-shadow:0 10px 28px rgba(36,54,74,.04)}
+    .chain-flow-head{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-bottom:18px;border-bottom:1px solid var(--line);margin-bottom:22px}
+    .chain-flow-head strong{font-size:13px;color:var(--navy)}
+    .chain-flow-head span{font-size:10px;color:var(--muted)}
+    .flow-items{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;position:relative}
+    .flow-item{position:relative;text-align:center;padding:15px 7px 13px;border:1px solid var(--line);border-radius:12px;background:white;z-index:1}
+    .flow-item:not(:last-child):after{content:"←";position:absolute;left:-12px;top:29px;color:var(--copper);font-size:17px;font-weight:800;z-index:2}
+    .flow-symbol{display:grid;place-items:center;width:39px;height:39px;margin:0 auto 11px;background:var(--navy);color:white;border-radius:12px}
+    .flow-symbol svg{width:20px;height:20px}
+    .flow-item:last-child .flow-symbol{background:var(--copper)}
+    .flow-item b{display:block;font-size:10px;line-height:1.7;color:var(--navy)}
+    .flow-item small{font-size:9px;color:var(--muted)}
+    .principles-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+    .principle{padding-top:16px;border-top:1px solid rgba(36,54,74,.22)}
+    .principle-num{font-family:Arial,sans-serif;direction:ltr;text-align:right;color:var(--copper);font-size:12px;letter-spacing:.08em;font-weight:700}
+    .principle h3{font-size:14px;color:var(--navy);margin:14px 0 8px}
+    .principle p{font-size:11px;line-height:2;color:var(--muted);margin:0}
+    .partnership-band{background:var(--navy);color:white;border-radius:24px;overflow:hidden;display:grid;grid-template-columns:1.15fr .85fr;position:relative}
+    .partnership-copy{padding:clamp(30px,5vw,62px);position:relative;z-index:2}
+    .partnership-copy .eyebrow{color:var(--copper-light)}
+    .partnership-copy h2{font-size:clamp(26px,3.2vw,42px);line-height:1.5;color:white;margin:15px 0}
+    .partnership-copy p{font-size:13px;color:#d0d8de;line-height:2.2;max-width:610px}
+    .partnership-copy .hero-actions{margin-top:23px}
+    .partnership-art{min-height:310px;position:relative;overflow:hidden;background:linear-gradient(135deg,rgba(36,54,74,.05),rgba(183,116,75,.2)),url("https://images.unsplash.com/photo-1516937941344-00b4e0337589?auto=format&fit=crop&w=1000&q=85") center/cover}
+    .partnership-art:after{content:"";position:absolute;inset:0;background:linear-gradient(270deg,rgba(36,54,74,.05),var(--navy) 100%)}
+    .partnership-art svg{position:absolute;width:100%;height:100%;inset:0;z-index:1;opacity:.65}
+    .roadmap{display:grid;grid-template-columns:repeat(5,1fr);gap:0;position:relative;margin-top:34px}
+    .roadmap:before{content:"";position:absolute;top:17px;right:10%;left:10%;height:1px;background:#c8b6a5}
+    .roadmap-item{padding:0 14px;position:relative}
+    .roadmap-dot{width:35px;height:35px;border-radius:50%;background:var(--ivory);border:1px solid #c8b6a5;display:grid;place-items:center;color:var(--copper);position:relative;z-index:1;font-family:Arial,sans-serif;font-size:10px;font-weight:700}
+    .roadmap-item h3{font-size:12px;color:var(--navy);margin:15px 0 8px;line-height:1.8}
+    .roadmap-item p{font-size:10px;color:var(--muted);line-height:2;margin:0}
+    .insights-preview{display:grid;grid-template-columns:1.2fr .8fr;gap:22px}
+    .insight-main{min-height:255px;border-radius:18px;overflow:hidden;position:relative;background:var(--navy);color:white;padding:30px;display:flex;align-items:flex-end}
+    .insight-main:before{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(20,34,48,.95),rgba(20,34,48,.05)),url("https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1100&q=85") center/cover}
+    .insight-main>*{position:relative;z-index:1}
+    .insight-main h3{font-size:20px;color:white;line-height:1.6;margin:10px 0}
+    .insight-main p{font-size:12px;color:#d8dfe4;line-height:2;margin-bottom:0}
+    .editorial-empty{padding:28px;background:var(--paper);border:1px dashed rgba(36,54,74,.25);border-radius:18px;display:flex;flex-direction:column;justify-content:center}
+    .editorial-empty .empty-mark{width:42px;height:42px;display:grid;place-items:center;border-radius:12px;background:#eae2d7;color:var(--navy);margin-bottom:20px}
+    .editorial-empty h3{font-size:15px;color:var(--navy);margin-bottom:9px}
+    .editorial-empty p{font-size:12px;color:var(--muted);line-height:2;margin-bottom:17px}
+    .final-cta{padding:65px 0;background:#ded4c6}
+    .final-cta-inner{display:flex;align-items:center;justify-content:space-between;gap:30px}
+    .final-cta h2{font-size:clamp(24px,3vw,37px);color:var(--navy);line-height:1.5;margin:0 0 8px}
+    .final-cta p{font-size:13px;color:#5e666d;margin:0;max-width:650px}
+    .site-footer{background:var(--navy-deep);color:#dbe0e4;padding:56px 0 20px}
+    .footer-grid{display:grid;grid-template-columns:1.35fr .8fr .9fr 1fr;gap:34px;padding-bottom:36px}
+    .footer-brand .brand-persian{color:white}
+    .footer-brand .brand-legal{color:#aebac4}
+    .footer-brand .brand-mark{color:#f4f0e8}
+    .footer-brand .brand{margin-bottom:18px}
+    .footer-brand p{font-size:11px;color:#aebac4;line-height:2.15;max-width:320px;margin:0}
+    .footer-column h3{font-size:12px;color:#fff;margin:3px 0 16px}
+    .footer-links{display:grid;gap:9px}
+    .footer-links a{font-size:11px;color:#aebac4;transition:color var(--ease)}
+    .footer-links a:hover{color:var(--copper-light)}
+    .contact-placeholder{font-size:11px;color:#aebac4;line-height:2.2}
+    .footer-bottom{border-top:1px solid rgba(255,255,255,.12);padding-top:17px;display:flex;align-items:center;justify-content:space-between;gap:15px;font-size:10px;color:#99a8b4}
+    .footer-bottom a:hover{color:white}
+    .page-hero{padding:58px 0 48px;background:linear-gradient(110deg,#e8dfd2 0%,#f4f0e8 62%);border-bottom:1px solid rgba(36,54,74,.08);position:relative;overflow:hidden}
+    .page-hero:after{content:"";position:absolute;width:270px;height:270px;border:1px solid rgba(183,116,75,.2);border-radius:50%;left:-95px;top:-140px;box-shadow:0 0 0 26px rgba(183,116,75,.035),0 0 0 54px rgba(183,116,75,.025)}
+    .page-hero-inner{position:relative;z-index:1;max-width:860px}
+    .breadcrumbs{font-size:10px;color:var(--muted);display:flex;gap:8px;align-items:center;margin-bottom:18px}
+    .breadcrumbs span{color:var(--copper)}
+    .page-hero h1{font-size:clamp(31px,4vw,48px);line-height:1.4;margin:13px 0 12px}
+    .page-hero p{font-size:14px;color:#5d6670;max-width:700px;line-height:2.1;margin:0}
+    .content-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start}
+    .content-panel{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:clamp(22px,3vw,34px)}
+    .content-panel h2,.content-panel h3{color:var(--navy)}
+    .content-panel h2{font-size:21px;margin-bottom:13px}
+    .content-panel h3{font-size:15px;margin-bottom:7px}
+    .content-panel p,.content-panel li{font-size:12px;line-height:2.15;color:var(--muted)}
+    .content-panel ul{padding-right:18px;margin-bottom:0}
+    .value-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+    .value-card{background:var(--paper);border-radius:16px;border:1px solid var(--line);padding:23px}
+    .value-card b{display:block;color:var(--navy);font-size:14px;margin:12px 0 7px}
+    .value-card p{font-size:11px;color:var(--muted);line-height:2;margin:0}
+    .large-photo{min-height:350px;border-radius:18px;overflow:hidden;background:linear-gradient(0deg,rgba(23,40,56,.4),rgba(23,40,56,.04)),url("https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=1200&q=85") center/cover}
+    .status-note{border-right:3px solid var(--copper);background:#ebe3d7;padding:15px 18px;font-size:11px;color:#5e5e58;line-height:2.1;border-radius:0 10px 10px 0}
+    .activity-list{display:grid;gap:14px}
+    .activity-item{display:grid;grid-template-columns:54px 1fr;gap:16px;padding:20px;border:1px solid var(--line);border-radius:15px;background:var(--paper)}
+    .activity-no{height:50px;width:50px;display:grid;place-items:center;background:var(--navy);color:#fff;border-radius:13px;font-size:11px;font-weight:700}
+    .activity-item h3{margin:0 0 5px;font-size:14px;color:var(--navy)}
+    .activity-item p{margin:0;font-size:11px;color:var(--muted);line-height:2}
+    .process-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:13px}
+    .process-card{padding:23px 19px;border-radius:15px;background:var(--paper);border:1px solid var(--line)}
+    .process-card .number{display:block;font-family:Arial,sans-serif;color:var(--copper);font-size:13px;font-weight:700;letter-spacing:.1em;margin-bottom:17px}
+    .process-card h3{font-size:13px;color:var(--navy);margin:0 0 8px}
+    .process-card p{font-size:11px;line-height:2;color:var(--muted);margin:0}
+    .form-layout{display:grid;grid-template-columns:.72fr 1.28fr;gap:25px;align-items:start}
+    .form-aside{background:var(--navy);border-radius:18px;color:white;padding:28px;position:sticky;top:120px}
+    .form-aside .eyebrow{color:var(--copper-light)}
+    .form-aside h2{font-size:23px;color:white;line-height:1.6;margin:13px 0}
+    .form-aside p{font-size:12px;color:#c8d1d9;line-height:2.2}
+    .form-aside .aside-rule{height:1px;background:rgba(255,255,255,.14);margin:22px 0}
+    .form-aside small{display:block;font-size:10px;color:#c8d1d9;line-height:2.1}
+    .inquiry-form{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:clamp(22px,3.5vw,38px)}
+    .inquiry-form h2{color:var(--navy);font-size:21px;margin-bottom:5px}
+    .form-intro{font-size:11px;color:var(--muted);margin-bottom:25px}
+    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:17px}
+    .field{display:flex;flex-direction:column;gap:7px}
+    .field.full{grid-column:1/-1}
+    .field label{font-size:11px;color:#3f4b56;font-weight:700}
+    .field input,.field select,.field textarea{width:100%;border:1px solid #d8d8d2;border-radius:10px;background:#fffefa;padding:12px 13px;color:var(--ink);font-size:12px;min-height:47px;outline:none;transition:border-color var(--ease),box-shadow var(--ease)}
+    .field textarea{resize:vertical;min-height:125px}
+    .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--copper);box-shadow:0 0 0 3px rgba(183,116,75,.12)}
+    .field input::placeholder,.field textarea::placeholder{color:#9aa0a4}
+    .form-help{font-size:10px;color:var(--muted);line-height:1.9}
+    .form-actions{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:22px}
+    .form-status{font-size:11px;line-height:1.9;color:var(--muted);min-height:22px}
+    .form-status.error{color:#9c3d31}
+    .form-status.success{color:#345c4b}
+    .contact-methods{display:grid;gap:13px;margin-top:20px}
+    .contact-method{display:flex;align-items:flex-start;gap:12px}
+    .contact-method .card-icon{width:36px;height:36px;flex:0 0 36px;margin:0;background:rgba(255,255,255,.1);color:var(--copper-light)}
+    .contact-method strong{display:block;font-size:11px;color:white;margin:1px 0 3px}
+    .contact-method span{display:block;font-size:10px;color:#c8d1d9;line-height:1.9}
+    .empty-editorial{max-width:720px;margin:0 auto;padding:48px 30px;text-align:center;border:1px dashed rgba(36,54,74,.22);border-radius:20px;background:rgba(255,253,248,.65)}
+    .empty-editorial .empty-mark{width:58px;height:58px;display:grid;place-items:center;background:#e9e1d5;color:var(--navy);border-radius:17px;margin:0 auto 19px}
+    .empty-editorial h2{font-size:21px;color:var(--navy);margin-bottom:9px}
+    .empty-editorial p{font-size:12px;line-height:2.1;color:var(--muted);margin:0 auto 20px;max-width:550px}
+    .privacy-content{max-width:850px}
+    .privacy-content h2{margin-top:34px;font-size:19px;color:var(--navy)}
+    .privacy-content p,.privacy-content li{font-size:12px;line-height:2.2;color:var(--muted)}
+    .privacy-content ul{padding-right:20px}
+    .privacy-updated{font-size:10px!important;color:#897d6e!important}
+    .back-top{position:fixed;left:20px;bottom:20px;width:44px;height:44px;display:grid;place-items:center;border-radius:12px;background:var(--navy);color:white;border:1px solid rgba(255,255,255,.2);box-shadow:0 10px 28px rgba(23,40,56,.2);z-index:30;opacity:0;pointer-events:none;transform:translateY(8px);transition:opacity var(--ease),transform var(--ease);cursor:pointer}
+    .back-top.visible{opacity:1;pointer-events:auto;transform:translateY(0)}
+    .back-top svg{width:19px;height:19px}
+    @media(max-width:1060px){.main-nav{gap:12px}.nav-link{font-size:11px}.brand{min-width:180px}.brand-legal{display:none}.header-inner{gap:14px}.hero-panel{min-height:490px}.hero-visual{padding:24px}.footer-grid{grid-template-columns:1.2fr .8fr .8fr}.footer-column:last-child{grid-column:2/4}.principles-grid{grid-template-columns:repeat(2,1fr);row-gap:28px}}
+    @media(max-width:850px){.container{width:min(var(--max),calc(100% - 34px))}.announcement-inner{font-size:10px}.header-inner{min-height:76px}.main-nav,.header-actions .btn{display:none}.mobile-toggle{display:flex}.brand{min-width:0}.brand-mark{width:42px;height:42px;flex-basis:42px}.brand-persian{font-size:17px}.hero-panel{grid-template-columns:1fr}.hero-panel:before{background-image:linear-gradient(90deg,rgba(23,40,56,.68),rgba(23,40,56,.87)),url("https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1400&q=85")}.hero-copy{padding:36px 30px 20px}.hero h1{font-size:clamp(34px,7.5vw,52px)}.hero-visual{min-height:265px;padding:14px 30px 28px}.hero-network{inset:3% 20% 14% 10%}.route-card{width:min(100%,420px)}.section{padding:65px 0}.intro-grid,.chain-layout{grid-template-columns:1fr;gap:22px}.intro-grid{gap:18px}.business-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.chain-layout{gap:28px}.chain-copy{max-width:650px}.partnership-band{grid-template-columns:1fr}.partnership-art{min-height:200px;order:-1}.partnership-art:after{background:linear-gradient(180deg,rgba(36,54,74,.12),var(--navy))}.partnership-copy{padding:30px}.roadmap{grid-template-columns:1fr;gap:13px;margin-top:24px}.roadmap:before{top:17px;bottom:20px;right:17px;left:auto;width:1px;height:auto}.roadmap-item{display:grid;grid-template-columns:35px 1fr;column-gap:16px;padding:0;align-items:start}.roadmap-dot{grid-row:span 2}.roadmap-item h3{margin:0 0 4px}.roadmap-item p{margin-bottom:5px}.insights-preview{grid-template-columns:1fr}.insight-main{min-height:230px}.final-cta-inner{align-items:flex-start;flex-direction:column}.footer-grid{grid-template-columns:1fr 1fr}.footer-brand{grid-column:1/-1}.footer-column:last-child{grid-column:auto}.page-hero{padding:45px 0 38px}.content-grid,.form-layout{grid-template-columns:1fr}.form-aside{position:static}.value-cards{grid-template-columns:1fr 1fr}.process-grid{grid-template-columns:1fr 1fr}}
+    @media(max-width:540px){.container{width:calc(100% - 28px)}.announcement-inner{justify-content:center}.announce-side:last-child{display:none}.header-inner{min-height:70px}.brand-mark{width:37px;height:37px;flex-basis:37px}.brand{gap:8px}.brand-persian{font-size:15px}.brand-english{font-size:8px;letter-spacing:.16em}.mobile-menu{padding-inline:14px}.hero{padding:15px 0 32px}.hero-panel{border-radius:18px}.hero-copy{padding:31px 22px 13px}.hero h1{font-size:35px}.hero-description{font-size:12px}.hero-actions .btn{width:100%}.hero-notes{gap:10px 15px;font-size:10px;margin-top:23px}.hero-visual{padding:12px 19px 22px;min-height:255px}.route-card{padding:14px}.route-step{font-size:8px}.route-step b{width:24px;height:24px}.section{padding:52px 0}.section.compact{padding:44px 0}.section-heading{align-items:flex-start;flex-direction:column;gap:10px;margin-bottom:22px}.section-title{font-size:26px}.lead{font-size:12px}.business-grid{grid-template-columns:1fr;gap:12px}.business-card{min-height:0;padding:21px}.card-icon{margin-bottom:15px}.chain-flow{padding:17px 12px}.chain-flow-head{align-items:flex-start;flex-direction:column;gap:4px}.flow-items{grid-template-columns:1fr 1fr;gap:9px}.flow-item:not(:last-child):after{display:none}.flow-item{padding:13px 7px}.flow-item b{font-size:10px}.principles-grid{grid-template-columns:1fr;gap:19px}.principle{padding-top:12px}.partnership-copy{padding:25px 21px}.partnership-copy h2{font-size:27px}.roadmap-item h3{font-size:12px}.insights-preview{gap:12px}.insight-main{padding:22px;min-height:245px}.final-cta{padding:44px 0}.final-cta .btn{width:100%}.footer-grid{grid-template-columns:1fr 1fr;gap:27px 20px}.footer-brand{grid-column:1/-1}.footer-column h3{font-size:11px}.footer-bottom{flex-direction:column;align-items:flex-start;gap:4px}.page-hero{padding:35px 0 30px}.page-hero h1{font-size:31px}.page-hero p{font-size:12px}.content-panel{padding:21px}.value-cards{grid-template-columns:1fr}.process-grid{grid-template-columns:1fr}.form-grid{grid-template-columns:1fr}.field.full{grid-column:auto}.form-actions .btn{width:100%}.activity-item{grid-template-columns:43px 1fr;gap:12px;padding:15px}.activity-no{height:42px;width:42px}.empty-editorial{padding:35px 20px}.back-top{left:12px;bottom:12px}}
+    @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+  </style>
+</head>
+<body>
+<a class="skip-link" href="#main-content">رفتن به محتوای اصلی</a>
+<div class="announcement">
+  <div class="container announcement-inner">
+    <div class="announce-side"><span class="announce-dot"></span><span>راهبران زنجیره ارزش صحرا</span></div>
+    <div class="announce-side"><span>نگاهی منسجم به تأمین، تجارت و همکاری پایدار</span></div>
+  </div>
+</div>
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href="?page=home" data-route="home" aria-label="راز صحرا، صفحه اصلی">
+      <svg class="brand-mark" viewBox="0 0 56 56" aria-hidden="true"><path d="M28 3 49 24 28 45 7 24Z" fill="none" stroke="#24364a" stroke-width="3.4"/><path d="M28 12 40 24 28 36 16 24Z" fill="none" stroke="#b7744b" stroke-width="3.4"/><path d="M28 20 32 24 28 28 24 24Z" fill="#24364a"/><path d="M40 24h10M7 24h9" stroke="#24364a" stroke-width="2"/><path d="M28 45v7" stroke="#b7744b" stroke-width="2.5"/></svg>
+      <span class="brand-copy"><span class="brand-persian">راز صحرا</span><span class="brand-english">RAZ SAHRA</span><span class="brand-legal">راهبران زنجیره ارزش صحرا</span></span>
+    </a>
+    <nav class="main-nav" aria-label="ناوبری اصلی">
+      <a class="nav-link" href="?page=home" data-route="home">صفحه اصلی</a>
+      <a class="nav-link" href="?page=about" data-route="about">درباره ما</a>
+      <a class="nav-link" href="?page=business" data-route="business">حوزه‌های فعالیت</a>
+      <a class="nav-link" href="?page=supply" data-route="supply">زنجیره تأمین</a>
+      <a class="nav-link" href="?page=partnerships" data-route="partnerships">همکاری با ما</a>
+      <a class="nav-link" href="?page=insights" data-route="insights">دانستنی‌ها</a>
+      <a class="nav-link" href="?page=contact" data-route="contact">ارتباط با ما</a>
+    </nav>
+    <div class="header-actions"><a class="btn btn-primary" href="?page=partnerships" data-route="partnerships">شروع همکاری <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></a><button class="mobile-toggle" type="button" aria-label="باز کردن منو" aria-expanded="false" aria-controls="mobile-menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button></div>
+  </div>
+  <nav class="mobile-menu" id="mobile-menu" aria-label="ناوبری موبایل">
+    <a href="?page=home" data-route="home">صفحه اصلی</a><a href="?page=about" data-route="about">درباره ما</a><a href="?page=business" data-route="business">حوزه‌های فعالیت</a><a href="?page=supply" data-route="supply">زنجیره تأمین</a><a href="?page=partnerships" data-route="partnerships">همکاری با ما</a><a href="?page=insights" data-route="insights">دانستنی‌ها و اخبار</a><a href="?page=contact" data-route="contact">ارتباط با ما</a><a href="?page=privacy" data-route="privacy">حریم خصوصی</a>
+  </nav>
+</header>
+
+<main id="main-content">
+  <div class="page-view active" data-page="home">
+    <section class="hero">
+      <div class="container">
+        <div class="hero-panel">
+          <div class="hero-copy">
+            <span class="eyebrow">تجارت منسجم · همکاری پایدار</span>
+            <h1 class="display">از تأمین<br>تا <em>ارزش‌آفرینی</em></h1>
+            <p class="hero-description">راز صحرا با رویکردی منسجم به تأمین، تجارت و توسعه زنجیره ارزش، در مسیر ایجاد همکاری‌های پایدار و فرصت‌های رشد مشترک حرکت می‌کند.</p>
+            <div class="hero-actions"><a class="btn btn-primary" href="?page=business" data-route="business">آشنایی با حوزه‌های فعالیت <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></a><a class="btn btn-dark-outline" href="?page=partnerships" data-route="partnerships">درخواست همکاری</a></div>
+            <div class="hero-notes"><span><i></i> نگاه زنجیره‌ای</span><span><i></i> روابط تجاری مسئولانه</span><span><i></i> توسعه مرحله‌ای</span></div>
+          </div>
+          <div class="hero-visual" aria-label="تصویر نماینده‌ای از زیرساخت‌های انبارداری و زنجیره تأمین">
+            <div class="hero-network" aria-hidden="true"><svg viewBox="0 0 470 330" fill="none"><g stroke="#d7a27b" stroke-width="1.2" opacity=".8"><path d="M35 235 120 150 213 196 310 91 425 135"/><path d="M120 150 133 52 310 91 366 233 213 196 133 52"/><path d="M35 235 170 285 366 233 425 135"/><path d="M213 196 246 306"/></g><g fill="#e8c09d" stroke="#f4f0e8" stroke-width="2"><circle cx="35" cy="235" r="6"/><circle cx="120" cy="150" r="7"/><circle cx="213" cy="196" r="6"/><circle cx="310" cy="91" r="8"/><circle cx="425" cy="135" r="6"/><circle cx="133" cy="52" r="5"/><circle cx="366" cy="233" r="7"/><circle cx="170" cy="285" r="4"/><circle cx="246" cy="306" r="4"/></g></svg></div>
+            <div class="route-card"><div class="route-card-top"><span class="route-card-title">نگاه یکپارچه به زنجیره ارزش</span><span class="status-chip"><i class="announce-dot"></i> مدل پیشنهادی همکاری</span></div><div class="route-steps"><div class="route-step"><b>۰۱</b><span>تأمین</span></div><div class="route-step"><b>۰۲</b><span>هماهنگی</span></div><div class="route-step"><b>۰۳</b><span>توزیع</span></div><div class="route-step"><b>۰۴</b><span>بازار</span></div></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section compact">
+      <div class="container intro-grid">
+        <div><span class="eyebrow">درباره راز صحرا</span><h2 class="display section-title">تجارت، وقتی منسجم‌تر پیش می‌رود که زنجیره دیده شود.</h2><div class="intro-quote">«از یک معامله تا یک رابطه تجاری پایدار؛ ارزش در هماهنگی و اعتماد ساخته می‌شود.»</div></div>
+        <div class="intro-copy"><span class="small-label">رویکرد ما</span><p>راهبران زنجیره ارزش صحرا با برند تجاری «راز صحرا» در حال توسعه رویکردی سازمان‌یافته برای تأمین، هماهنگی تجاری و توزیع است. نقطه شروع، شناخت درست نیاز بازار، ایجاد ارتباط شفاف با تأمین‌کنندگان و طراحی همکاری‌هایی است که برای طرفین معنا و ارزش داشته باشد.</p><p>برخی حوزه‌ها در مرحله بررسی و توسعه قرار دارند. این وب‌سایت مسیر و اصول موردنظر شرکت را معرفی می‌کند و به‌جای ادعای امکانات یا فعالیت‌های تأییدنشده، وضعیت هر حوزه را شفاف نشان می‌دهد.</p><a class="text-link" href="?page=about" data-route="about">بیشتر درباره ما <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></a></div>
+      </div>
+    </section>
+
+    <section class="section" id="business-areas" style="background:var(--paper)">
+      <div class="container">
+        <div class="section-heading"><div><span class="eyebrow">حوزه‌های فعالیت</span><h2 class="display section-title">از نقطه شروع تجاری تا فرصت‌های توسعه</h2><p class="lead">تمرکز اولیه بر تأمین و هماهنگی تجاری است؛ حوزه‌های تولیدی و زیرساختی به‌عنوان مسیرهای توسعه بررسی می‌شوند.</p></div><a class="text-link" href="?page=business" data-route="business">مشاهده همه حوزه‌ها <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></a></div>
+        <div class="business-grid">
+          <article class="business-card"><div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 7.5 12 3l9 4.5-9 4.5-9-4.5Z"/><path d="M3 12l9 4.5 9-4.5M3 16.5l9 4.5 9-4.5"/></svg></div><span class="card-status current">تمرکز اولیه</span><h3>تأمین و بازرگانی</h3><p>شناخت نیاز، بررسی منابع تأمین و شکل‌دهی روابط تجاری بر پایه کیفیت، شفافیت و توافق روشن.</p><a class="text-link" href="?page=business" data-route="business">جزئیات حوزه <span>←</span></a></article>
+          <article class="business-card"><div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="5" cy="6" r="2"/><circle cx="19" cy="7" r="2"/><circle cx="12" cy="18" r="2"/><path d="m7 7 4 9M17 8l-4 8M7 6h10"/></svg></div><span class="card-status current">در مسیر طراحی</span><h3>شبکه توزیع و زنجیره تأمین</h3><p>ایجاد هماهنگی بهتر میان تأمین، تحویل و طرف‌های تجاری در چارچوب توافق‌های مشخص.</p><a class="text-link" href="?page=supply" data-route="supply">مشاهده رویکرد <span>←</span></a></article>
+          <article class="business-card"><div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 20V8l8-4 8 4v12"/><path d="M2 20h20M8 11h2m4 0h2M8 15h2m4 0h2"/></svg></div><span class="card-status current">حوزه همکاری</span><h3>همکاری با فعالان صنعت طیور</h3><p>بررسی ظرفیت‌ها و نیازهای مرغداری‌ها، تولیدکنندگان و تأمین‌کنندگان مرتبط با صنعت طیور.</p><a class="text-link" href="?page=partnerships" data-route="partnerships">طرح پیشنهاد همکاری <span>←</span></a></article>
+          <article class="business-card"><div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 21h18M5 21V8l7-5 7 5v13M9 21v-7h6v7"/><path d="M8 9h.01M12 9h.01M16 9h.01"/></svg></div><span class="card-status">مسیر توسعه</span><h3>زیرساخت‌های کشاورزی و دامپروری</h3><p>بررسی فرصت‌های زیرساختی و همکاری‌های تخصصی متناسب با نیاز واقعی زنجیره ارزش.</p><a class="text-link" href="?page=business" data-route="business">آشنایی بیشتر <span>←</span></a></article>
+          <article class="business-card"><div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 7h16v13H4zM8 7V4h8v3M4 12h16M9 12v3h6v-3"/></svg></div><span class="card-status">نیازمند ارزیابی</span><h3>توسعه تولید و بسته‌بندی</h3><p>بررسی مرحله‌ای امکان توسعه فعالیت‌های تولیدی و بسته‌بندی با توجه به الزامات فنی و قانونی.</p><a class="text-link" href="?page=business" data-route="business">مشاهده مسیر توسعه <span>←</span></a></article>
+          <article class="business-card"><div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 8h10M7 12h4M7 16h7M16 12l1.5 1.5L20 11"/></svg></div><span class="card-status">چشم‌انداز آینده</span><h3>سامانه‌های دیجیتال مدیریت عملیات</h3><p>بررسی ابزارهای دیجیتال برای سازمان‌دهی اطلاعات، گردش کار و تصمیم‌گیری بهتر در آینده.</p><a class="text-link" href="?page=business" data-route="business">درباره چشم‌انداز <span>←</span></a></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section chain-section">
+      <div class="container chain-layout">
+        <div class="chain-copy"><span class="eyebrow">زنجیره تأمین</span><h2 class="display section-title">هر حلقه، بخشی از یک مسیر روشن‌تر است.</h2><p class="lead">مدل موردنظر راز صحرا بر هماهنگی میان تأمین‌کننده، فرایندهای تجاری، توزیع و بازار تأکید دارد. ارتباط هر حلقه باید با مسئولیت، زمان‌بندی و توافق مشخص تعریف شود.</p><a class="btn btn-outline" href="?page=supply" data-route="supply">آشنایی با مدل زنجیره تأمین <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></a></div>
+        <div class="chain-flow"><div class="chain-flow-head"><strong>نمای کلی مدل همکاری</strong><span>چارچوب پیشنهادی · نه سامانه عملیاتی زنده</span></div><div class="flow-items">
+          <div class="flow-item"><div class="flow-symbol"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="m12 3 9 4.5-9 4.5-9-4.5L12 3Z"/><path d="m3 12 9 4.5 9-4.5M3 16.5 12 21l9-4.5"/></svg></div><b>تأمین‌کننده</b><small>منبع و ظرفیت</small></div>
+          <div class="flow-item"><div class="flow-symbol"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 5h16v14H4z"/><path d="M8 9h8M8 13h5M8 16h3"/></svg></div><b>تأمین و هماهنگی</b><small>توافق و پیگیری</small></div>
+          <div class="flow-item"><div class="flow-symbol"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 6h11v12H3zM14 10h4l3 3v5h-7"/><circle cx="7" cy="19" r="2"/><circle cx="18" cy="19" r="2"/></svg></div><b>توزیع و تجارت</b><small>تحویل هماهنگ</small></div>
+          <div class="flow-item"><div class="flow-symbol"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 20V8l8-4 8 4v12M2 20h20"/><path d="M9 12h6M12 9v6"/></svg></div><b>مشتری و بازار</b><small>نیاز و بازخورد</small></div>
+        </div></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container"><div class="section-heading"><div><span class="eyebrow">اصول همکاری</span><h2 class="display section-title">استانداردهایی برای تصمیم‌های بهتر</h2><p class="lead">این اصول، چارچوبی برای توسعه روابط تجاری و طراحی فرایندهای آینده‌اند.</p></div></div>
+        <div class="principles-grid">
+          <article class="principle"><span class="principle-num">01 / PERSPECTIVE</span><h3>نگاه زنجیره‌ای به کسب‌وکار</h3><p>دیدن ارتباط میان تأمین، عملیات، توزیع و نیاز مشتری به‌جای تصمیم‌گیری جداگانه درباره هر بخش.</p></article>
+          <article class="principle"><span class="principle-num">02 / RELATIONSHIP</span><h3>روابط تجاری پایدار</h3><p>تکیه بر گفت‌وگوی شفاف، انتظارات روشن و همکاری‌ای که منافع و مسئولیت‌های دو طرف را ببیند.</p></article>
+          <article class="principle"><span class="principle-num">03 / DISCIPLINE</span><h3>نظم در تأمین و توزیع</h3><p>توجه به کیفیت اطلاعات، زمان‌بندی، مستندسازی و پیگیری مسئولانه تعهدات تجاری.</p></article>
+          <article class="principle"><span class="principle-num">04 / DEVELOPMENT</span><h3>توسعه مرحله‌ای</h3><p>حرکت بر پایه ارزیابی امکان‌پذیری و ظرفیت واقعی، بدون جلوتر رفتن از شواهد و آمادگی اجرایی.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section compact" style="background:var(--paper)">
+      <div class="container"><div class="partnership-band"><div class="partnership-copy"><span class="eyebrow">دعوت به همکاری</span><h2>زنجیره‌های قوی با گفت‌وگوهای جدی آغاز می‌شوند.</h2><p>اگر تأمین‌کننده، فعال صنعت طیور، توزیع‌کننده یا شریک تجاری بالقوه هستید، پیشنهاد خود را ثبت کنید تا نوع همکاری و شرایط اولیه آن قابل بررسی باشد.</p><div class="hero-actions"><a class="btn btn-primary" href="?page=partnerships" data-route="partnerships">پیشنهاد همکاری خود را ثبت کنید <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></a><a class="btn btn-dark-outline" href="?page=contact" data-route="contact">ارتباط با راز صحرا</a></div></div><div class="partnership-art" aria-hidden="true"><svg viewBox="0 0 480 310" fill="none"><g stroke="#d7a27b" stroke-width="1.2"><path d="M20 246 116 150 215 204 320 75 450 145"/><path d="M116 150 145 30 320 75 357 252 215 204"/><path d="M20 246 176 285 357 252 450 145"/></g><g fill="#d7a27b"><circle cx="20" cy="246" r="5"/><circle cx="116" cy="150" r="6"/><circle cx="215" cy="204" r="5"/><circle cx="320" cy="75" r="7"/><circle cx="450" cy="145" r="5"/><circle cx="145" cy="30" r="4"/><circle cx="357" cy="252" r="6"/></g></svg></div></div></div>
+    </section>
+
+    <section class="section">
+      <div class="container"><div class="section-heading"><div><span class="eyebrow">نقشه راه توسعه</span><h2 class="display section-title">قدم‌های سنجیده، نه وعده‌های شتاب‌زده</h2><p class="lead">این نقشه راه، مسیرهای پیشنهادی توسعه را نمایش می‌دهد؛ نه فهرست دستاوردهای تکمیل‌شده.</p></div><a class="text-link" href="?page=about" data-route="about">فلسفه توسعه <span>←</span></a></div>
+        <div class="roadmap"><article class="roadmap-item"><span class="roadmap-dot">01</span><h3>زیرساخت تجاری</h3><p>تعریف نیازها، فرایندها و چارچوب‌های همکاری</p></article><article class="roadmap-item"><span class="roadmap-dot">02</span><h3>شبکه تأمین و توزیع</h3><p>شناخت شرکا و طراحی هماهنگی عملیاتی</p></article><article class="roadmap-item"><span class="roadmap-dot">03</span><h3>همکاری‌های تخصصی</h3><p>توسعه روابط بر پایه ظرفیت و تناسب واقعی</p></article><article class="roadmap-item"><span class="roadmap-dot">04</span><h3>بررسی فعالیت تولیدی</h3><p>ارزیابی فنی، اقتصادی و مجوزهای موردنیاز</p></article><article class="roadmap-item"><span class="roadmap-dot">05</span><h3>ابزارهای دیجیتال</h3><p>بررسی نیاز به سامانه مدیریت زنجیره ارزش</p></article></div>
+      </div>
+    </section>
+
+    <section class="section compact" style="background:var(--paper)">
+      <div class="container"><div class="section-heading"><div><span class="eyebrow">دانستنی‌ها و دیدگاه‌ها</span><h2 class="display section-title">محتوا، زمانی ارزش دارد که واقعی و کاربردی باشد.</h2><p class="lead">بخش تحریریه برای انتشار دیدگاه‌ها و محتوای آموزشی آینده آماده شده است.</p></div><a class="text-link" href="?page=insights" data-route="insights">رفتن به دانستنی‌ها <span>←</span></a></div>
+        <div class="insights-preview"><article class="insight-main"><div><span class="eyebrow">موضوعات آینده</span><h3>شناخت زنجیره تأمین، کیفیت همکاری را تغییر می‌دهد.</h3><p>پس از آماده‌شدن محتوای تأییدشده، مقاله‌ها و به‌روزرسانی‌های واقعی در این بخش منتشر خواهند شد.</p></div></article><div class="editorial-empty"><div class="empty-mark"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M5 4h14v16H5zM8 8h8M8 12h8M8 16h5"/></svg></div><h3>در انتظار انتشار محتوای تأییدشده</h3><p>برای جلوگیری از نمایش خبر یا تاریخ ساختگی، فعلاً مقاله منتشرشده‌ای نمایش داده نمی‌شود.</p><a class="text-link" href="?page=insights" data-route="insights">جزئیات بخش دانستنی‌ها <span>←</span></a></div></div>
+      </div>
+    </section>
+
+    <section class="final-cta"><div class="container final-cta-inner"><div><h2 class="display">برای ایجاد همکاری‌های پایدار آماده‌ایم.</h2><p>برای بررسی فرصت‌های همکاری تجاری و آشنایی با مسیرهای مشترک، با ما در ارتباط باشید.</p></div><a class="btn btn-primary" href="?page=contact" data-route="contact">ارتباط با راز صحرا <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></a></div></section>
+  </div>
+
+  <div class="page-view" data-page="about">
+    <section class="page-hero"><div class="container page-hero-inner"><div class="breadcrumbs"><a href="?page=home" data-route="home">صفحه اصلی</a><span>←</span><span>درباره ما</span></div><span class="eyebrow">هویت و رویکرد</span><h1 class="display">درباره راهبران زنجیره ارزش صحرا</h1><p>راز صحرا، برند تجاری شرکتی است که با تمرکز بر تأمین، تجارت و توسعه زنجیره ارزش، به‌دنبال ساختن روابط منظم‌تر و فرصت‌های همکاری پایدار است.</p></div></section>
+    <section class="section"><div class="container content-grid"><div><span class="eyebrow">معرفی شرکت</span><h2 class="display section-title">یک هویت شرکتی، یک برند تجاری روشن</h2><p class="lead">«راهبران زنجیره ارزش صحرا» نام رسمی شرکت و «راز صحرا | RAZ SAHRA» هویت تجاری و ارتباطی آن است. این دو نام در وب‌سایت، هر یک با کاربرد مشخص خود استفاده می‌شوند.</p><p class="lead">رویکرد شرکت از نیازهای واقعی تجارت و تأمین آغاز می‌شود و مسیرهای توسعه آتی را به‌صورت مرحله‌ای و با توجه به امکان‌پذیری دنبال می‌کند.</p><div class="status-note">برخی زمینه‌های فعالیت معرفی‌شده در این وب‌سایت، برنامه‌های توسعه یا حوزه‌های در دست بررسی هستند؛ نمایش آن‌ها به معنی عملیاتی‌بودن، مالکیت زیرساخت یا اخذ مجوز مربوطه نیست.</div></div><div class="large-photo" role="img" aria-label="تصویر نماینده از فضای صنعتی و کنترل فرایندها"></div></div></section>
+    <section class="section compact" style="background:var(--paper)"><div class="container"><div class="section-heading"><div><span class="eyebrow">فلسفه کسب‌وکار</span><h2 class="display section-title">آنچه می‌خواهیم در شیوه کارمان منعکس شود</h2></div></div><div class="value-cards"><article class="value-card"><div class="card-icon"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><path d="m8 12 2.5 2.5L16 9"/></svg></div><b>ماموریت</b><p>توسعه رویکردی منظم برای تأمین، هماهنگی تجاری و همکاری میان حلقه‌های مرتبط زنجیره ارزش.</p></article><article class="value-card"><div class="card-icon"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6-10-6-10-6Z"/><circle cx="12" cy="12" r="3"/></svg></div><b>چشم‌انداز</b><p>بررسی مسیر تبدیل‌شدن به مجموعه‌ای هماهنگ‌تر در تجارت و زنجیره تأمین، با توسعه متناسب با ظرفیت واقعی.</p></article><article class="value-card"><div class="card-icon"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 3 20 7v5c0 5-3.5 7.5-8 9-4.5-1.5-8-4-8-9V7l8-4Z"/><path d="m8 12 2.5 2.5L16 9"/></svg></div><b>اصول عملیاتی</b><p>شفافیت در توافق‌ها، مسئولیت‌پذیری در پیگیری، نظم اطلاعاتی و توسعه مرحله‌به‌مرحله.</p></article></div></div></section>
+    <section class="section"><div class="container content-grid"><div class="content-panel"><h2>رویکرد زنجیره‌ای</h2><p>در بسیاری از فعالیت‌های تجاری، کیفیت تصمیم به ارتباط میان حلقه‌ها وابسته است. شناخت منبع تأمین، روشن‌بودن شرایط معامله، هماهنگی تحویل و توجه به بازخورد مشتری می‌تواند به فرایند قابل‌پیگیری‌تری کمک کند.</p><p>این چارچوب، جهت‌گیری طراحی‌شده برای توسعه کسب‌وکار است و نباید با وجود یک شبکه عملیاتی کامل یا فناوری اختصاصی فعال اشتباه گرفته شود.</p></div><div class="content-panel"><h2>استراتژی توسعه</h2><ul><li>شروع از نیازهای مشخص و قابل ارزیابی تجاری</li><li>بررسی تناسب شرکا و تعریف مسئولیت‌های روشن</li><li>توسعه شبکه با توجه به ظرفیت و پایداری همکاری</li><li>ارزیابی مستقل فرصت‌های تولیدی، زیرساختی و دیجیتال</li><li>پرهیز از ادعاهای فراتر از امکانات تأییدشده</li></ul></div></div></section>
+    <section class="final-cta"><div class="container final-cta-inner"><div><h2 class="display">با رویکردی روشن وارد گفت‌وگو شویم.</h2><p>برای بررسی امکان همکاری، حوزه فعالیت و پیشنهاد خود را با ما در میان بگذارید.</p></div><a class="btn btn-primary" href="?page=partnerships" data-route="partnerships">شروع گفت‌وگو</a></div></section>
+  </div>
+
+  <div class="page-view" data-page="business">
+    <section class="page-hero"><div class="container page-hero-inner"><div class="breadcrumbs"><a href="?page=home" data-route="home">صفحه اصلی</a><span>←</span><span>حوزه‌های فعالیت</span></div><span class="eyebrow">دامنه فعالیت و مسیر توسعه</span><h1 class="display">حوزه‌های فعالیت راز صحرا</h1><p>از تمرکز اولیه بر تأمین و بازرگانی تا فرصت‌های آتی در تولید، زیرساخت و ابزارهای دیجیتال؛ وضعیت هر حوزه با توجه به مرحله توسعه آن مشخص شده است.</p></div></section>
+    <section class="section"><div class="container"><div class="status-note" style="margin-bottom:28px">نشان‌های وضعیت، جهت‌گیری فعلی و مسیرهای بررسی را توضیح می‌دهند و به‌معنی تأیید مستقل فعالیت جاری، ظرفیت اجرایی یا مجوز نیستند.</div><div class="business-grid">
+      <article class="business-card"><div class="card-icon"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 7.5 12 3l9 4.5-9 4.5-9-4.5Z"/><path d="M3 12l9 4.5 9-4.5M3 16.5l9 4.5 9-4.5"/></svg></div><span class="card-status current">تمرکز اولیه</span><h3>تأمین و بازرگانی</h3><p>شناخت نیازهای خریداران و تأمین‌کنندگان، بررسی گزینه‌های تأمین، مذاکره درباره شرایط و طراحی چارچوب روشن معاملات.</p><a class="text-link" href="?page=partnerships" data-route="partnerships">گفت‌وگو درباره همکاری <span>←</span></a></article>
+      <article class="business-card"><div class="card-icon"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="5" cy="6" r="2"/><circle cx="19" cy="7" r="2"/><circle cx="12" cy="18" r="2"/><path d="m7 7 4 9M17 8l-4 8M7 6h10"/></svg></div><span class="card-status current">در مسیر طراحی</span><h3>شبکه توزیع و زنجیره تأمین</h3><p>تعریف فرایندهای هماهنگی تأمین، تحویل، انتقال کالا و ارتباط میان طرف‌ها، متناسب با دامنه واقعی عملیات.</p><a class="text-link" href="?page=supply" data-route="supply">مدل زنجیره تأمین <span>←</span></a></article>
+      <article class="business-card"><div class="card-icon"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 20V8l8-4 8 4v12"/><path d="M2 20h20M8 11h2m4 0h2M8 15h2m4 0h2"/></svg></div><span class="card-status current">حوزه همکاری</span><h3>همکاری با فعالان صنعت طیور</h3><p>بررسی نیازها و توانمندی‌های تأمین‌کنندگان، مرغداری‌ها و کسب‌وکارهای مرتبط با صنعت طیور و محصولات جانبی.</p><a class="text-link" href="?page=partnerships" data-route="partnerships">ثبت پیشنهاد <span>←</span></a></article>
+      <article class="business-card"><div class="card-icon"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 21h18M5 21V8l7-5 7 5v13M9 21v-7h6v7"/><path d="M8 9h.01M12 9h.01M16 9h.01"/></svg></div><span class="card-status">مسیر توسعه</span><h3>زیرساخت‌های کشاورزی و دامپروری</h3><p>بررسی فرصت‌های توسعه زیرساخت و خدمات تخصصی با توجه به نیاز بازار، سرمایه‌گذاری و ملاحظات اجرایی.</p><a class="text-link" href="?page=contact" data-route="contact">طرح موضوع <span>←</span></a></article>
+      <article class="business-card"><div class="card-icon"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 7h16v13H4zM8 7V4h8v3M4 12h16M9 12v3h6v-3"/></svg></div><span class="card-status">نیازمند ارزیابی</span><h3>توسعه تولید و بسته‌بندی</h3><p>ارزیابی امکان توسعه تولید و بسته‌بندی، الزامات کیفیت، زیرساخت، سرمایه و مجوزهای لازم پیش از هرگونه اجرا.</p><a class="text-link" href="?page=contact" data-route="contact">گفت‌وگو درباره فرصت <span>←</span></a></article>
+      <article class="business-card"><div class="card-icon"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 8h10M7 12h4M7 16h7"/></svg></div><span class="card-status">چشم‌انداز آینده</span><h3>سامانه‌های دیجیتال مدیریت عملیات</h3><p>بررسی نیاز به ابزارهای یکپارچه برای مستندسازی، مدیریت گردش کار و پشتیبانی از تصمیم‌های تجاری در مراحل بعدی.</p><a class="text-link" href="?page=about" data-route="about">فلسفه توسعه <span>←</span></a></article>
+    </div></div></section>
+    <section class="section compact" style="background:var(--paper)"><div class="container"><div class="section-heading"><div><span class="eyebrow">چارچوب ارزیابی</span><h2 class="display section-title">چه چیزی پیش از توسعه بررسی می‌شود؟</h2></div></div><div class="process-grid"><article class="process-card"><span class="number">01 / NEED</span><h3>نیاز واقعی</h3><p>تعریف مسئله، مشتری و ارزش مورد انتظار از فعالیت.</p></article><article class="process-card"><span class="number">02 / FIT</span><h3>تناسب تجاری</h3><p>بررسی تناسب شرکا، ظرفیت و مسیر تأمین یا توزیع.</p></article><article class="process-card"><span class="number">03 / FEASIBILITY</span><h3>امکان‌پذیری</h3><p>ارزیابی مالی، فنی، عملیاتی و الزامات قانونی.</p></article><article class="process-card"><span class="number">04 / EXECUTION</span><h3>اجرای مرحله‌ای</h3><p>شروع تنها پس از روشن‌شدن مسئولیت‌ها و پیش‌نیازها.</p></article></div></div></section>
+    <section class="final-cta"><div class="container final-cta-inner"><div><h2 class="display">حوزه همکاری خود را مطرح کنید.</h2><p>پیشنهادهای مرتبط با تأمین، صنعت طیور و زنجیره توزیع برای بررسی اولیه قابل ثبت هستند.</p></div><a class="btn btn-primary" href="?page=partnerships" data-route="partnerships">ثبت پیشنهاد همکاری</a></div></section>
+  </div>
+
+  <div class="page-view" data-page="supply">
+    <section class="page-hero"><div class="container page-hero-inner"><div class="breadcrumbs"><a href="?page=home" data-route="home">صفحه اصلی</a><span>←</span><span>زنجیره تأمین</span></div><span class="eyebrow">از منبع تا بازار</span><h1 class="display">زنجیره تأمین؛ با هماهنگی و مسئولیت روشن</h1><p>راز صحرا، چارچوبی برای فکرکردن به ارتباط میان تأمین، توافق تجاری، توزیع و مشتری ارائه می‌کند. این نمایش، مدل مفهومی همکاری است و به‌معنی وجود سامانه ردیابی زنده یا شبکه عملیاتی متصل نیست.</p></div></section>
+    <section class="section"><div class="container"><div class="chain-flow"><div class="chain-flow-head"><strong>نمای مفهومی زنجیره ارزش</strong><span>چارچوب فرایندی پیشنهادی</span></div><div class="flow-items"><div class="flow-item"><div class="flow-symbol"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7"><path d="m12 3 9 4.5-9 4.5-9-4.5L12 3Z"/><path d="m3 12 9 4.5 9-4.5"/></svg></div><b>تأمین‌کننده</b><small>نیاز، ظرفیت و کیفیت</small></div><div class="flow-item"><div class="flow-symbol"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 5h16v14H4z"/><path d="M8 9h8M8 13h5"/></svg></div><b>تأمین و هماهنگی</b><small>استعلام و توافق</small></div><div class="flow-item"><div class="flow-symbol"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 6h11v12H3zM14 10h4l3 3v5h-7"/><circle cx="7" cy="19" r="2"/><circle cx="18" cy="19" r="2"/></svg></div><b>توزیع و تحویل</b><small>زمان و مسئولیت</small></div><div class="flow-item"><div class="flow-symbol"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 20V8l8-4 8 4v12M2 20h20"/></svg></div><b>مشتری و بازار</b><small>بازخورد و نیاز</small></div></div></div></div></section>
+    <section class="section compact" style="background:var(--paper)"><div class="container"><div class="section-heading"><div><span class="eyebrow">مراحل همکاری</span><h2 class="display section-title">فرایند باید قابل فهم و قابل پیگیری باشد.</h2><p class="lead">در هر مرحله لازم است اطلاعات و مسئولیت‌ها روشن باشند؛ جزئیات واقعی بر اساس نوع معامله و توافق طرفین تعیین می‌شود.</p></div></div><div class="activity-list">
+      <article class="activity-item"><div class="activity-no">۰۱</div><div><h3>شناخت نیاز و مشخصات</h3><p>تعریف نوع محصول یا خدمت، مشخصات کیفی، حجم موردنیاز، زمان‌بندی و شرایط اولیه مورد انتظار.</p></div></article>
+      <article class="activity-item"><div class="activity-no">۰۲</div><div><h3>بررسی منبع و شرایط</h3><p>گفت‌وگو با طرف‌های مرتبط، بررسی اطلاعات موجود و روشن‌کردن محدودیت‌ها، ظرفیت و شرایط تجاری.</p></div></article>
+      <article class="activity-item"><div class="activity-no">۰۳</div><div><h3>توافق بر مسئولیت‌ها</h3><p>مشخص‌کردن تعهدات هر طرف، شرایط پرداخت، مسئولیت تحویل، کیفیت مورد توافق و شیوه رسیدگی به اختلاف.</p></div></article>
+      <article class="activity-item"><div class="activity-no">۰۴</div><div><h3>پیگیری و بازخورد</h3><p>ثبت تصمیم‌ها و بازخوردها برای بهبود همکاری‌های بعدی؛ ابزارها و روش پیگیری باید متناسب با عملیات واقعی انتخاب شوند.</p></div></article>
+    </div></div></section>
+    <section class="section"><div class="container content-grid"><div class="content-panel"><h2>اصل شفافیت</h2><p>اطلاعات کلیدی، شرایط معامله و انتظارهای طرفین باید تا حد امکان پیش از شروع همکاری روشن شوند. این شفافیت می‌تواند از سوءتفاهم و تصمیم‌گیری مبتنی بر اطلاعات ناقص جلوگیری کند.</p></div><div class="content-panel"><h2>اصل تناسب</h2><p>فرایند واحدی برای همه معاملات مناسب نیست. نوع محصول، حساسیت کیفی، روش حمل، حجم سفارش و الزامات قانونی باید در طراحی هر همکاری لحاظ شوند.</p></div></div></section>
+    <section class="final-cta"><div class="container final-cta-inner"><div><h2 class="display">برای هماهنگی بهتر، از گفت‌وگو شروع کنیم.</h2><p>پیشنهاد همکاری مرتبط با تأمین یا توزیع خود را مطرح کنید.</p></div><a class="btn btn-primary" href="?page=partnerships" data-route="partnerships">درخواست همکاری</a></div></section>
+  </div>
+
+  <div class="page-view" data-page="partnerships">
+    <section class="page-hero"><div class="container page-hero-inner"><div class="breadcrumbs"><a href="?page=home" data-route="home">صفحه اصلی</a><span>←</span><span>همکاری با ما</span></div><span class="eyebrow">شبکه روابط تجاری</span><h1 class="display">پیشنهاد همکاری خود را مطرح کنید</h1><p>برای تأمین‌کنندگان، مرغداری‌ها، توزیع‌کنندگان و فعالان تجاری مرتبط، این فرم برای آماده‌سازی یک درخواست اولیه طراحی شده است.</p></div></section>
+    <section class="section"><div class="container form-layout">
+      <aside class="form-aside"><span class="eyebrow">گفت‌وگوی حرفه‌ای</span><h2>برای شروع، کافی است زمینه همکاری را روشن کنیم.</h2><p>اطلاعات اولیه کمک می‌کند موضوع، نوع همکاری و شرایط مورد انتظار مشخص‌تر شوند. ثبت درخواست به‌معنی پذیرش پیشنهاد یا انعقاد قرارداد نیست.</p><div class="aside-rule"></div><small>مراحل مورد انتظار: ثبت اطلاعات اولیه، بررسی نوع همکاری، گفت‌وگو درباره شرایط و تعیین چارچوب احتمالی همکاری.</small><div class="aside-rule"></div><small>نکته فنی: در حال حاضر سرور یا مقصد رسمی برای دریافت فرم پیکربندی نشده است. پس از تکمیل فرم، می‌توانید یک فایل درخواست روی دستگاه خود ذخیره کنید؛ این فرم به شرکت ارسال نمی‌شود.</small></aside>
+      <form class="inquiry-form" data-local-form="partnership" novalidate><h2>فرم پیشنهاد همکاری</h2><p class="form-intro">فیلدهای ستاره‌دار ضروری هستند. لطفاً اطلاعات واقعی و قابل پیگیری وارد کنید.</p>
+        <div class="form-grid">
+          <div class="field"><label for="partner-name">نام و نام خانوادگی / نام مجموعه *</label><input id="partner-name" name="نام شخص یا مجموعه" required autocomplete="organization" placeholder="نام شما یا کسب‌وکار"></div>
+          <div class="field"><label for="partner-role">نوع همکاری *</label><select id="partner-role" name="نوع همکاری" required><option value="">انتخاب کنید</option><option>تأمین‌کننده</option><option>مرغداری یا فعال صنعت طیور</option><option>توزیع‌کننده یا پخش</option><option>مشتری تجاری</option><option>شریک کشاورزی یا بازرگانی</option><option>سایر پیشنهادها</option></select></div>
+          <div class="field"><label for="partner-phone">شماره تماس *</label><input id="partner-phone" name="شماره تماس" required autocomplete="tel" inputmode="tel" placeholder="شماره تماس در دسترس"></div>
+          <div class="field"><label for="partner-email">ایمیل (اختیاری)</label><input id="partner-email" name="ایمیل" type="email" autocomplete="email" placeholder="name@example.com"></div>
+          <div class="field"><label for="partner-city">شهر / محدوده فعالیت</label><input id="partner-city" name="شهر یا محدوده فعالیت" placeholder="برای مثال: استان یا شهر"></div>
+          <div class="field"><label for="partner-capacity">ظرفیت یا موضوع اصلی</label><input id="partner-capacity" name="ظرفیت یا موضوع همکاری" placeholder="نوع محصول، ظرفیت یا خدمت"></div>
+          <div class="field full"><label for="partner-details">شرح پیشنهاد و شرایط مورد انتظار *</label><textarea id="partner-details" name="شرح پیشنهاد" required placeholder="نوع همکاری، محصول یا خدمت، شرایط و زمان‌بندی را توضیح دهید."></textarea></div>
+          <div class="field full"><label><input type="checkbox" required name="آگاهی از وضعیت ارسال" style="width:16px;min-height:16px;vertical-align:middle;margin-left:8px"> متوجه هستم که این فرم فعلاً درخواست را به شرکت ارسال نمی‌کند و فقط فایل اطلاعات را برای من آماده می‌کند. *</label></div>
+        </div>
+        <div class="form-actions"><button class="btn btn-primary" type="submit">آماده‌سازی فایل درخواست <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3v12m-5-5 5 5 5-5M4 19h16"/></svg></button><span class="form-help">پس از اعتبارسنجی، یک فایل متنی برای ذخیره یا ارسال دستی ساخته می‌شود.</span></div><div class="form-status" role="status" aria-live="polite"></div>
+      </form>
+    </div></section>
+  </div>
+
+  <div class="page-view" data-page="contact">
+    <section class="page-hero"><div class="container page-hero-inner"><div class="breadcrumbs"><a href="?page=home" data-route="home">صفحه اصلی</a><span>←</span><span>ارتباط با ما</span></div><span class="eyebrow">ارتباط تجاری</span><h1 class="display">ارتباط با راز صحرا</h1><p>برای مطرح‌کردن پرسش، فرصت همکاری یا موضوع تجاری مرتبط با زنجیره تأمین، اطلاعات اولیه خود را آماده کنید.</p></div></section>
+    <section class="section"><div class="container form-layout">
+      <aside class="form-aside"><span class="eyebrow">راه ارتباطی</span><h2>برای گفت‌وگویی روشن و هدفمند</h2><p>اطلاعات رسمی تماس پس از تأیید از سوی شرکت در این بخش قرار می‌گیرد. برای جلوگیری از انتشار اطلاعات نادرست، شماره تلفن، نشانی و حساب شبکه اجتماعی فرضی نمایش داده نشده است.</p><div class="contact-methods"><div class="contact-method"><div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 5h16v14H4z"/><path d="m4 7 8 6 8-6"/></svg></div><div><strong>ایمیل رسمی</strong><span>پس از تأیید، در این بخش درج می‌شود.</span></div></div><div class="contact-method"><div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M7 3h10v18H7z"/><path d="M10 6h4M11 18h2"/></svg></div><div><strong>تلفن و دفتر</strong><span>اطلاعات هنوز برای انتشار ارائه نشده است.</span></div></div></div><div class="aside-rule"></div><small>در حال حاضر ارسال مستقیم فرم به شرکت فعال نیست. می‌توانید اطلاعات را به‌صورت فایل محلی آماده کنید؛ فایل ساخته‌شده روی دستگاه شما باقی می‌ماند تا خودتان برای مقصد مورداعتماد ارسال کنید.</small></aside>
+      <form class="inquiry-form" data-local-form="contact" novalidate><h2>فرم پیام</h2><p class="form-intro">موضوع پیام را مشخص کنید و راه تماس قابل پیگیری ارائه دهید.</p>
+        <div class="form-grid">
+          <div class="field"><label for="contact-name">نام و نام خانوادگی *</label><input id="contact-name" name="نام" required autocomplete="name" placeholder="نام شما"></div>
+          <div class="field"><label for="contact-topic">موضوع پیام *</label><select id="contact-topic" name="موضوع پیام" required><option value="">انتخاب کنید</option><option>درخواست همکاری تجاری</option><option>تأمین یا خرید</option><option>توزیع و حمل‌ونقل</option><option>پرسش عمومی</option><option>سایر موارد</option></select></div>
+          <div class="field"><label for="contact-phone">شماره تماس *</label><input id="contact-phone" name="شماره تماس" required autocomplete="tel" inputmode="tel" placeholder="شماره قابل تماس"></div>
+          <div class="field"><label for="contact-email">ایمیل (اختیاری)</label><input id="contact-email" name="ایمیل" type="email" autocomplete="email" placeholder="name@example.com"></div>
+          <div class="field full"><label for="contact-message">متن پیام *</label><textarea id="contact-message" name="متن پیام" required placeholder="موضوع و درخواست خود را شرح دهید."></textarea></div>
+          <div class="field full"><label><input type="checkbox" required name="آگاهی از وضعیت ارسال" style="width:16px;min-height:16px;vertical-align:middle;margin-left:8px"> متوجه هستم که پیام از طریق وب‌سایت ارسال نمی‌شود و فقط فایل آن ساخته خواهد شد. *</label></div>
+        </div>
+        <div class="form-actions"><button class="btn btn-primary" type="submit">ساخت فایل پیام <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3v12m-5-5 5 5 5-5M4 19h16"/></svg></button><span class="form-help">ارسال آنلاین تا زمان معرفی ایمیل یا سرویس رسمی فعال نمی‌شود.</span></div><div class="form-status" role="status" aria-live="polite"></div>
+      </form>
+    </div></section>
+  </div>
+
+  <div class="page-view" data-page="insights">
+    <section class="page-hero"><div class="container page-hero-inner"><div class="breadcrumbs"><a href="?page=home" data-route="home">صفحه اصلی</a><span>←</span><span>دانستنی‌ها و اخبار</span></div><span class="eyebrow">دیدگاه و یادگیری</span><h1 class="display">دانستنی‌ها و اخبار راز صحرا</h1><p>این بخش برای انتشار محتوای آموزشی مرتبط با تجارت، تأمین، زنجیره توزیع و به‌روزرسانی‌های رسمی شرکت در نظر گرفته شده است.</p></div></section>
+    <section class="section"><div class="container"><div class="empty-editorial"><div class="empty-mark"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M5 4h14v16H5zM8 8h8M8 12h8M8 16h5"/></svg></div><h2>محتوای تأییدشده‌ای برای انتشار آماده نشده است.</h2><p>به‌جای نمایش خبر، تاریخ، نویسنده یا مقاله ساختگی، این بخش تا زمان آماده‌شدن محتوای واقعی در وضعیت آماده‌سازی قرار دارد. در نسخه فعلی، سامانه مدیریت محتوا یا پنل انتشار مقاله پیاده‌سازی نشده است.</p><a class="btn btn-outline" href="?page=contact" data-route="contact">پرسش درباره شرکت</a></div></div></section>
+    <section class="section compact" style="background:var(--paper)"><div class="container"><div class="section-heading"><div><span class="eyebrow">محورهای محتوایی پیشنهادی</span><h2 class="display section-title">موضوعاتی که در آینده می‌توانند مفید باشند</h2><p class="lead">این موارد صرفاً دسته‌بندی‌های پیشنهادی‌اند و مقاله منتشرشده محسوب نمی‌شوند.</p></div></div><div class="value-cards"><article class="value-card"><span class="small-label">موضوع ۰۱</span><b>اصول انتخاب تأمین‌کننده</b><p>معیارهای بررسی کیفیت، ظرفیت، ثبات تحویل و شفافیت شرایط تجاری.</p></article><article class="value-card"><span class="small-label">موضوع ۰۲</span><b>هماهنگی در زنجیره توزیع</b><p>نقش تعریف مسئولیت‌ها، زمان‌بندی و تبادل اطلاعات در تحویل کالا.</p></article><article class="value-card"><span class="small-label">موضوع ۰۳</span><b>همکاری پایدار در تجارت</b><p>چگونگی شکل‌دادن توافق روشن، مدیریت انتظارها و ثبت تصمیم‌ها.</p></article></div></div></section>
+  </div>
+
+  <div class="page-view" data-page="privacy">
+    <section class="page-hero"><div class="container page-hero-inner"><div class="breadcrumbs"><a href="?page=home" data-route="home">صفحه اصلی</a><span>←</span><span>حریم خصوصی</span></div><span class="eyebrow">شفافیت اطلاعات</span><h1 class="display">سیاست حریم خصوصی</h1><p>این متن با توجه به امکانات فعلی وب‌سایت ایستا و فرم‌هایی که فقط فایل محلی ایجاد می‌کنند تهیه شده است. با تغییر نحوه جمع‌آوری یا پردازش اطلاعات، این سیاست باید بازبینی شود.</p></div></section>
+    <section class="section"><div class="container"><article class="privacy-content content-panel"><p class="privacy-updated">نسخه اولیه سیاست حریم خصوصی · متناسب با پیاده‌سازی فعلی</p><h2>۱. وضعیت فعلی وب‌سایت</h2><p>وب‌سایت فعلی یک وب‌سایت ایستا است و در نسخه حاضر پایگاه‌داده، پنل کاربری یا سرویس سمت سرور برای دریافت فرم‌ها پیاده‌سازی نشده است. فرم‌های تماس و همکاری، پس از اعتبارسنجی در مرورگر، امکان ساخت فایل متنی روی دستگاه کاربر را فراهم می‌کنند. اطلاعات از طریق این فرم‌ها به شرکت ارسال نمی‌شود.</p><h2>۲. اطلاعاتی که وارد می‌کنید</h2><p>ممکن است در فرم‌ها نام، نام مجموعه، شماره تماس، ایمیل، محدوده فعالیت، موضوع و متن پیام را وارد کنید. این اطلاعات در مرورگر برای آماده‌سازی فایل به کار می‌روند. مسئولیت نگهداری فایل دانلودشده بر عهده کاربر است و کاربر باید پیش از ارسال آن، مقصد و محتوای فایل را بررسی کند.</p><h2>۳. ارتباطات شخص ثالث</h2><p>برای نمایش تایپ‌فیس و تصاویر نماینده، نسخه فعلی می‌تواند منابعی را از ارائه‌دهندگان بیرونی مانند Google Fonts و Unsplash بارگذاری کند. این درخواست‌ها مستقیماً از مرورگر انجام می‌شوند و تابع سیاست‌ها و شرایط سرویس‌های مربوطه هستند. در صورت استقرار نسخه نهایی، می‌توان این منابع را بازبینی و در صورت نیاز به‌صورت محلی میزبانی کرد.</p><h2>۴. کوکی‌ها و رهگیری</h2><p>در کد فعلی، ابزار اختصاصی تحلیل رفتار، تبلیغات یا رهگیری کاربر تعبیه نشده است. زیرساخت میزبان وب‌سایت ممکن است طبق سازوکار و سیاست خودش اطلاعات فنی مربوط به درخواست‌ها را پردازش کند؛ برای جزئیات باید به سیاست میزبان مراجعه شود.</p><h2>۵. امنیت و مسئولیت کاربر</h2><p>از ثبت اطلاعات حساس یا غیرضروری در فرم خودداری کنید. این وب‌سایت برای انتقال امن اطلاعات خصوصی یا اسناد محرمانه طراحی نشده است. فایل درخواست را فقط از مسیر مورداعتماد و به مخاطب موردنظر ارسال کنید.</p><h2>۶. تغییرات این سیاست</h2><p>اگر در آینده مقصد رسمی فرم، سامانه مدیریت محتوا، تحلیل‌گر یا سرویس دیگری افزوده شود، سیاست حریم خصوصی باید متناسب با اطلاعات واقعی جمع‌آوری‌شده، هدف پردازش، مدت نگهداری و راه‌های تماس بازنویسی شود.</p><h2>۷. اطلاعات تماس</h2><p>اطلاعات تماس رسمی شرکت هنوز برای انتشار در این وب‌سایت ارائه نشده است؛ از درج نشانی یا شماره فرضی خودداری شده است. پس از تأیید اطلاعات رسمی، این بخش به‌روزرسانی خواهد شد.</p></article></div></section>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand"><a class="brand" href="?page=home" data-route="home"><svg class="brand-mark" viewBox="0 0 56 56" aria-hidden="true"><path d="M28 3 49 24 28 45 7 24Z" fill="none" stroke="#f4f0e8" stroke-width="3.4"/><path d="M28 12 40 24 28 36 16 24Z" fill="none" stroke="#d7a27b" stroke-width="3.4"/><path d="M28 20 32 24 28 28 24 24Z" fill="#f4f0e8"/><path d="M40 24h10M7 24h9" stroke="#f4f0e8" stroke-width="2"/></svg><span class="brand-copy"><span class="brand-persian">راز صحرا</span><span class="brand-english">RAZ SAHRA</span><span class="brand-legal">راهبران زنجیره ارزش صحرا</span></span></a><p>برندی در مسیر توسعه رویکردی منسجم به تأمین، تجارت و زنجیره ارزش؛ با تأکید بر همکاری پایدار، مسئولیت‌پذیری و رشد مرحله‌ای.</p></div>
+      <div class="footer-column"><h3>دسترسی سریع</h3><div class="footer-links"><a href="?page=about" data-route="about">درباره ما</a><a href="?page=business" data-route="business">حوزه‌های فعالیت</a><a href="?page=supply" data-route="supply">زنجیره تأمین</a><a href="?page=insights" data-route="insights">دانستنی‌ها و اخبار</a></div></div>
+      <div class="footer-column"><h3>همکاری</h3><div class="footer-links"><a href="?page=partnerships" data-route="partnerships">پیشنهاد همکاری</a><a href="?page=contact" data-route="contact">ارتباط با ما</a><a href="?page=privacy" data-route="privacy">سیاست حریم خصوصی</a></div></div>
+      <div class="footer-column"><h3>اطلاعات شرکت</h3><div class="contact-placeholder">نام رسمی: راهبران زنجیره ارزش صحرا<br>برند تجاری: راز صحرا | RAZ SAHRA<br>شعار: از تأمین تا ارزش‌آفرینی<br><br>شماره تماس و نشانی رسمی پس از تأیید درج خواهد شد.</div></div>
+    </div>
+    <div class="footer-bottom"><span>© <span id="year">۲۰۲۶</span> راز صحرا. حقوق محتوای این وب‌سایت محفوظ است.</span><a href="?page=privacy" data-route="privacy">حریم خصوصی</a><span>از تأمین تا ارزش‌آفرینی</span></div>
+  </div>
+</footer>
+<button class="back-top" type="button" aria-label="بازگشت به بالای صفحه"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 19V5m-7 7 7-7 7 7"/></svg></button>
+<script>
+(function(){
+  "use strict";
+  var pageNames={home:"راز صحرا | از تأمین تا ارزش‌آفرینی",about:"درباره ما | راز صحرا",business:"حوزه‌های فعالیت | راز صحرا",supply:"زنجیره تأمین | راز صحرا",partnerships:"همکاری با ما | راز صحرا",contact:"ارتباط با ما | راز صحرا",insights:"دانستنی‌ها و اخبار | راز صحرا",privacy:"سیاست حریم خصوصی | راز صحرا"};
+  var descriptions={home:"راز صحرا؛ رویکردی منسجم به تأمین، تجارت و توسعه زنجیره ارزش.",about:"معرفی راهبران زنجیره ارزش صحرا، برند راز صحرا، مأموریت، چشم‌انداز و اصول توسعه.",business:"حوزه‌های فعالیت راز صحرا، با تفکیک تمرکز اولیه از مسیرهای توسعه و فرصت‌های آینده.",supply:"مدل مفهومی زنجیره تأمین راز صحرا و اصول هماهنگی، توافق و مسئولیت‌پذیری.",partnerships:"ثبت پیشنهاد اولیه همکاری با راز صحرا برای تأمین‌کنندگان، فعالان صنعت طیور و شرکای تجاری.",contact:"راه‌های ارتباط با راز صحرا و فرم آماده‌سازی پیام محلی.",insights:"بخش دانستنی‌ها و اخبار راز صحرا؛ در انتظار محتوای واقعی و تأییدشده.",privacy:"سیاست حریم خصوصی وب‌سایت ایستای راز صحرا و وضعیت پردازش فعلی اطلاعات."};
+  var pageAliases={"":"home","index.html":"home","home":"home","about":"about","business":"business","business-areas":"business","supply":"supply","supply-chain":"supply","partnerships":"partnerships","contact":"contact","insights":"insights","news":"insights","privacy":"privacy"};
+  function currentPage(){var fromQuery=new URLSearchParams(window.location.search).get("page");if(fromQuery&&pageNames[fromQuery])return fromQuery;var path=window.location.pathname.split("/").filter(Boolean).pop()||"";path=path.replace(/\.html$/,"");return pageAliases[path]||"home";}
+  function showPage(page,scroll){if(!pageNames[page])page="home";document.querySelectorAll(".page-view").forEach(function(view){var active=view.getAttribute("data-page")===page;view.classList.toggle("active",active);view.setAttribute("aria-hidden",active?"false":"true");});document.title=pageNames[page];var desc=document.querySelector('meta[name="description"]');if(desc)desc.setAttribute("content",descriptions[page]);var ogTitle=document.querySelector('meta[property="og:title"]');if(ogTitle)ogTitle.setAttribute("content",pageNames[page]);var ogDesc=document.querySelector('meta[property="og:description"]');if(ogDesc)ogDesc.setAttribute("content",descriptions[page]);document.querySelectorAll("[data-route]").forEach(function(link){var active=link.getAttribute("data-route")===page; if(link.classList.contains("nav-link")){if(active)link.setAttribute("aria-current","page");else link.removeAttribute("aria-current");}});var menu=document.getElementById("mobile-menu");var toggle=document.querySelector(".mobile-toggle");if(menu)menu.classList.remove("open");if(toggle){toggle.setAttribute("aria-expanded","false");toggle.setAttribute("aria-label","باز کردن منو");toggle.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M4 12h16M4 17h16"/></svg>';}if(scroll){window.scrollTo({top:0,behavior:window.matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"});}}
+  function navigate(page,scroll){var url=new URL(window.location.href);url.search="";url.searchParams.set("page",page);url.hash="";window.history.pushState({page:page},"",url.pathname+url.search);showPage(page,scroll!==false);}
+  document.addEventListener("click",function(event){var route=event.target.closest("[data-route]");if(route){event.preventDefault();var page=route.getAttribute("data-route");if(page===currentPage()){if(route.getAttribute("data-scroll")){var target=document.getElementById(route.getAttribute("data-scroll"));if(target)target.scrollIntoView({behavior:"smooth"});}else window.scrollTo({top:0,behavior:"smooth"});}else navigate(page,true);return;}var jump=event.target.closest("[data-home-anchor]");if(jump){event.preventDefault();if(currentPage()!=="home"){navigate("home",false);setTimeout(function(){var target=document.getElementById(jump.getAttribute("data-home-anchor"));if(target)target.scrollIntoView({behavior:"smooth"});},80);}else{var dest=document.getElementById(jump.getAttribute("data-home-anchor"));if(dest)dest.scrollIntoView({behavior:"smooth"});}}});
+  window.addEventListener("popstate",function(){showPage(currentPage(),true);});
+  var toggle=document.querySelector(".mobile-toggle"),menu=document.getElementById("mobile-menu");if(toggle&&menu){toggle.addEventListener("click",function(){var open=menu.classList.toggle("open");toggle.setAttribute("aria-expanded",open?"true":"false");toggle.setAttribute("aria-label",open?"بستن منو":"باز کردن منو");toggle.innerHTML=open?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m6 6 12 12M18 6 6 18"/></svg>':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M4 12h16M4 17h16"/></svg>';});}
+  document.querySelectorAll("form[data-local-form]").forEach(function(form){form.addEventListener("submit",function(event){event.preventDefault();var status=form.querySelector(".form-status");status.className="form-status";status.textContent="";var fields=Array.from(form.elements).filter(function(el){return el.name;});var firstInvalid=null;fields.forEach(function(field){field.removeAttribute("aria-invalid");if(field.required&&!((field.type==="checkbox"&&field.checked)||(field.type!=="checkbox"&&String(field.value||"").trim()))){field.setAttribute("aria-invalid","true");if(!firstInvalid)firstInvalid=field;}if(field.type==="email"&&field.value.trim()&&!field.checkValidity()){field.setAttribute("aria-invalid","true");if(!firstInvalid)firstInvalid=field;}});if(firstInvalid){status.classList.add("error");status.textContent="لطفاً فیلدهای ضروری را کامل و قالب ایمیل را بررسی کنید.";firstInvalid.focus();return;}var lines=["راز صحرا | "+(form.getAttribute("data-local-form")==="partnership"?"پیشنهاد همکاری":"پیام ارتباطی"),"زمان آماده‌سازی: "+new Date().toLocaleString("fa-IR"),"","توجه: این فایل از طریق وب‌سایت ارسال نشده است؛ برای ارسال باید آن را شخصاً به مقصد رسمی مورداعتماد منتقل کنید.",""];fields.forEach(function(field){if(field.type==="checkbox"){lines.push(field.name+": "+(field.checked?"بله":"خیر"));}else{lines.push(field.name+": "+String(field.value||"").trim());}});var blob=new Blob(["\ufeff"+lines.join("\r\n")],{type:"text/plain;charset=utf-8"});var objectUrl=URL.createObjectURL(blob);var a=document.createElement("a");a.href=objectUrl;a.download=form.getAttribute("data-local-form")==="partnership"?"raz-sahra-partnership-inquiry.txt":"raz-sahra-contact-message.txt";document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(objectUrl);},1000);status.classList.add("success");status.textContent="فایل درخواست برای ذخیره آماده شد. این اطلاعات به شرکت ارسال نشده است؛ پیش از ارسال دستی، محتوا و مقصد را بررسی کنید.";});});
+  document.querySelectorAll("form input,form textarea,form select").forEach(function(field){field.addEventListener("input",function(){field.removeAttribute("aria-invalid");});});
+  var back=document.querySelector(".back-top");if(back){window.addEventListener("scroll",function(){back.classList.toggle("visible",window.scrollY>550);},{passive:true});back.addEventListener("click",function(){window.scrollTo({top:0,behavior:window.matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"});});}
+  var year=document.getElementById("year");if(year)year.textContent=new Date().getFullYear().toLocaleString("fa-IR");
+  showPage(currentPage(),false);
+})();
+</script>
+</body>
+</html>
