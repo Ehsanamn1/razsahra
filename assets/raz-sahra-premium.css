@@ -689,10 +689,10 @@ html.lang-en .route-card,html.lang-en .status-chip,html.lang-en .slide-vertical-
   box-shadow:0 10px 22px rgba(0,0,0,.13),inset 0 1px rgba(255,255,255,.88);
 }
 .footer-lockup-image{
-  width:138%;
-  max-width:none;
+  width:100%;
+  max-width:100%;
   height:auto;
-  aspect-ratio:1/1;
+  aspect-ratio:auto;
   flex:0 0 auto;
   object-fit:contain;
   object-position:center;
@@ -724,10 +724,10 @@ html.lang-en .route-card,html.lang-en .status-chip,html.lang-en .slide-vertical-
 }
 .brand-lockup-image-frame img{
   display:block;
-  width:138%;
-  max-width:none;
+  width:100%;
+  max-width:100%;
   height:auto;
-  aspect-ratio:1/1;
+  aspect-ratio:auto;
   object-fit:contain;
   object-position:center;
   margin:0;

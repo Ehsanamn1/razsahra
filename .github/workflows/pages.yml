@@ -62,6 +62,7 @@ jobs:
           grep -q '"lang": "fa"' manifest.webmanifest
           test -f assets/raz-sahra-articles.html
           test -f assets/raz-sahra-articles-en.html
+          test -f assets/raz-sahra-image-credits.html
           grep -q 'assets/raz-sahra-symbol.webp' index.html
           grep -q 'assets/raz-sahra-logo-lockup.webp' index.html
           grep -q 'data-language-toggle' index.html
@@ -105,18 +106,22 @@ jobs:
               raise SystemExit("Collaboration carousel must have four matching navigation dots")
           css = Path("assets/raz-sahra-premium.css").read_text(encoding="utf-8")
           interactions = Path("assets/raz-sahra-interactions.js").read_text(encoding="utf-8")
-          if "width:138%" not in css or ".footer-lockup-link" not in css:
-              raise SystemExit("Footer logo crop and presentation rules are missing")
+          if ".footer-lockup-link{display:inline-flex;align-items:center;justify-content:center;width:min(100%,220px)" not in css or ".footer-lockup-image{display:block;width:100%;height:auto;max-width:100%;max-height:none;object-fit:contain" not in css:
+              raise SystemExit("Footer logo must preserve its full canvas without cropping")
           if "brand-lockup-image-frame" not in html or "brand-lockup-image-frame" not in css:
               raise SystemExit("About-page supplied logo frame is missing")
           if "raz-sahra-logo-lockup-hq.webp" in html:
               raise SystemExit("Reference to a non-existent high-resolution logo asset remains")
           if ".page-view section,.site-footer" not in interactions:
               raise SystemExit("Section-wide ember particles are missing")
-          if "interval:5400" not in interactions or "interval:6100" not in interactions:
+          if "interval:4800" not in interactions or "interval:5400" not in interactions:
               raise SystemExit("Carousel timings were not updated")
           if len(re.findall(r'class="magazine-card"', html)) < 4:
               raise SystemExit("Homepage magazine must contain at least 4 featured cards")
+          if "photos/3184465" in html or "photos/4480984" in html:
+              raise SystemExit("Generic handshake/meeting photos remain in the homepage carousels")
+          if 'assets/raz-sahra-image-credits.html' not in html or not Path("assets/raz-sahra-image-credits.html").is_file():
+              raise SystemExit("The footer image-credit link or its target page is missing")
           if "rs-image-credit" in html:
               raise SystemExit("Image-credit block should not appear in the footer")
           print("Editorial and interaction checks passed: 8 distinct illustrated articles per language, 4 hero slides, 4 collaboration slides, section ember motion and a magazine carousel.")
