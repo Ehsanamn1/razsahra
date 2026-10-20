@@ -1,0 +1,104 @@
+/* RAZ SAHRA — premium interaction layer */
+:root{
+  --rs-ink:#1d2a36;--rs-navy:#172b3b;--rs-copper:#b77a53;--rs-ivory:#f7f3eb;
+  --rs-ease:cubic-bezier(.22,.72,.18,1);--rs-line:rgba(28,48,64,.13);
+}
+html{scroll-padding-top:120px}
+body{overflow-x:hidden}
+::selection{background:rgba(183,122,83,.24);color:var(--rs-ink)}
+.site-header{transition:box-shadow .35s var(--rs-ease),background .35s var(--rs-ease)}
+.site-header.is-scrolled{box-shadow:0 12px 34px rgba(23,43,59,.09);background:rgba(247,243,235,.96)}
+.header-inner{min-height:82px}
+.brand-mark{transition:transform .55s var(--rs-ease),filter .35s}
+.brand:hover .brand-mark{transform:rotate(-8deg) scale(1.045);filter:drop-shadow(0 5px 8px rgba(183,122,83,.22))}
+.nav-link{font-size:12px}
+.nav-link:after{height:2px;transform-origin:right}
+.btn{position:relative;overflow:hidden;isolation:isolate;box-shadow:0 0 0 rgba(0,0,0,0);transition:transform .28s var(--rs-ease),box-shadow .28s var(--rs-ease),background .28s,color .28s,border-color .28s}
+.btn:before{content:"";position:absolute;z-index:-1;top:-60%;left:-40%;width:32%;height:220%;transform:rotate(22deg) translateX(-180%);background:linear-gradient(90deg,transparent,rgba(255,255,255,.28),transparent);transition:transform .65s var(--rs-ease)}
+.btn:hover:before{transform:rotate(22deg) translateX(620%)}
+.btn-primary{box-shadow:0 8px 20px rgba(183,122,83,.18)}
+.btn-primary:hover{box-shadow:0 12px 27px rgba(183,122,83,.26)}
+.btn-outline:hover,.btn-dark-outline:hover{box-shadow:0 8px 22px rgba(23,43,59,.08)}
+.hero{padding-top:24px}
+.hero-panel{border-radius:30px;box-shadow:0 32px 90px rgba(23,43,59,.19)}
+.hero-panel:before{background-image:linear-gradient(90deg,rgba(23,40,56,.10),rgba(23,40,56,.82)),url("https://commons.wikimedia.org/wiki/Special:FilePath/Iran_1395_Coturnix.jpg?width=1800")}
+.hero-panel:after{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(circle at 18% 15%,rgba(215,162,123,.16),transparent 33%)}
+.hero h1{text-wrap:balance}
+.hero-description{max-width:510px}
+.hero-visual{background:linear-gradient(135deg,rgba(15,33,48,.18),rgba(15,33,48,.45))}
+.route-card{border:1px solid rgba(255,255,255,.6);box-shadow:0 22px 60px rgba(0,0,0,.2)}
+.route-step b{transition:transform .3s var(--rs-ease),box-shadow .3s}
+.route-step:hover b{transform:translateY(-3px);box-shadow:0 0 0 1px rgba(183,122,83,.4),0 7px 16px rgba(23,43,59,.18)}
+.business-card,.content-panel,.chain-flow,.editorial-empty{box-shadow:0 8px 28px rgba(23,43,59,.035);transition:transform .35s var(--rs-ease),box-shadow .35s var(--rs-ease),border-color .35s}
+.business-card:hover,.content-panel:hover{box-shadow:0 22px 55px rgba(23,43,59,.10)}
+.card-icon{transition:transform .35s var(--rs-ease),background .35s,color .35s}
+.business-card:hover .card-icon{transform:translateY(-3px) rotate(-3deg);background:var(--rs-navy);color:#fff}
+.chain-flow{box-shadow:0 18px 48px rgba(23,43,59,.06)}
+.flow-item{transition:transform .28s var(--rs-ease),border-color .28s,box-shadow .28s}
+.flow-item:hover{transform:translateY(-4px);border-color:rgba(183,122,83,.45);box-shadow:0 12px 24px rgba(23,43,59,.08)}
+.flow-symbol{transition:transform .3s var(--rs-ease)}
+.flow-item:hover .flow-symbol{transform:scale(1.06)}
+.partnership-band{box-shadow:0 24px 65px rgba(23,43,59,.13)}
+.partnership-art{background-image:linear-gradient(135deg,rgba(36,54,74,.06),rgba(183,116,75,.23)),url("https://commons.wikimedia.org/wiki/Special:FilePath/Duck_farm_in_Lar_plain,_Dasht-e_Lar,_Lar_river,_Alborz,_Tehran_%D9%BE%D8%B1%D9%88%D8%B1%D8%B4_%D8%A7%D8%B1%D8%AF%DA%A9_%D8%AF%D8%B1_%D8%AF%D8%B4%D8%AA_%D9%84%D8%A7%D8%B1%D8%8C_%D8%A7%D8%B3%D8%AA%D8%B1%DA%A9%D9%8F%D9%84%D9%8E%DA%A9%D8%8C_%D8%A7%D8%B3%D8%A8_%DA%A9%D8%A7%D9%84%D9%8E%DA%A9%D8%8C_%D8%A8%D9%86%D8%AF_%D9%85%D9%84%DA%A9_%DA%86%D8%B4%D9%85%D9%87%D8%8C_%D8%B1%D9%88%D8%AF_%D9%84%D8%A7%D8%B1_-_panoramio.jpg?width=1600")}
+.insight-main:before{background-image:linear-gradient(0deg,rgba(20,34,48,.94),rgba(20,34,48,.06)),url("https://commons.wikimedia.org/wiki/Special:FilePath/Iran_1395_Coturnix_2.jpg?width=1400")}
+.final-cta{position:relative;overflow:hidden}
+.final-cta:before{content:"";position:absolute;width:330px;height:330px;left:-145px;top:-190px;border:1px solid rgba(183,122,83,.23);border-radius:50%;box-shadow:0 0 0 25px rgba(183,122,83,.04),0 0 0 55px rgba(183,122,83,.025);pointer-events:none}
+.final-cta-inner{position:relative;z-index:1}
+.site-footer{position:relative;overflow:hidden}
+.site-footer:before{content:"";position:absolute;width:450px;height:450px;left:-240px;top:-260px;border:1px solid rgba(215,162,123,.12);border-radius:50%;box-shadow:0 0 0 30px rgba(215,162,123,.025),0 0 0 65px rgba(215,162,123,.018);pointer-events:none}
+.footer-grid,.footer-bottom{position:relative;z-index:1}
+.footer-bottom a{transition:color .25s}
+.footer-bottom a:hover{color:#e3b18a}
+.page-hero{background:linear-gradient(118deg,#e8dfd2 0%,#f7f3eb 62%,#eee5d9 100%)}
+.page-hero h1{letter-spacing:-.035em}
+.form-status{border-radius:12px;padding:12px 14px}
+.form-status:empty{display:none}
+input,select,textarea{transition:border-color .25s,box-shadow .25s,background .25s}
+input:focus,select:focus,textarea:focus{border-color:rgba(183,122,83,.7)!important;box-shadow:0 0 0 4px rgba(183,122,83,.10)!important}
+.back-top{box-shadow:0 10px 28px rgba(23,43,59,.18);transition:transform .25s var(--rs-ease),opacity .25s,box-shadow .25s}
+.back-top:hover{transform:translateY(-4px);box-shadow:0 16px 32px rgba(23,43,59,.22)}
+.rs-scroll-progress{position:fixed;top:0;right:0;height:3px;width:0;background:linear-gradient(90deg,#d7a27b,#a96540);z-index:1000;box-shadow:0 0 12px rgba(183,122,83,.28);transform-origin:right}
+.rs-reveal{opacity:0;transform:translateY(22px);transition:opacity .75s var(--rs-ease),transform .75s var(--rs-ease)}
+.rs-reveal.rs-visible{opacity:1;transform:translateY(0)}
+.rs-reveal-delay-1{transition-delay:.08s}.rs-reveal-delay-2{transition-delay:.16s}.rs-reveal-delay-3{transition-delay:.24s}
+.rs-image-credit{font-size:9px;color:#b7c1ca;margin-top:12px;line-height:1.8}
+.footer-bottom a[aria-label="منبع تصویر بلدرچین"]{font-size:10px}
+@media(max-width:900px){
+ .header-inner{min-height:74px}.brand{min-width:0}.main-nav{gap:13px}
+ .hero-panel{min-height:490px}.hero-copy{padding:34px}.hero-visual{padding:22px}
+ .section{padding:68px 0}.chain-layout{gap:30px}
+}
+@media(max-width:720px){
+ .container{width:min(var(--max),calc(100% - 32px))}
+ .header-inner{min-height:72px}.brand-mark{width:40px;height:40px;flex-basis:40px}.brand-persian{font-size:16px}
+ .header-actions .btn{padding:10px 12px;min-height:41px;font-size:11px}
+ .hero{padding-top:15px}.hero-panel{grid-template-columns:1fr;min-height:0;border-radius:22px}
+ .hero-panel:before{background-image:linear-gradient(90deg,rgba(23,40,56,.68),rgba(23,40,56,.86)),url("https://commons.wikimedia.org/wiki/Special:FilePath/Iran_1395_Coturnix.jpg?width=1200")}
+ .hero-copy{padding:34px 25px 22px}.hero h1{font-size:clamp(34px,9vw,48px)}
+ .hero-description{font-size:13px}.hero-visual{min-height:235px;padding:16px 22px 24px}
+ .hero-network{inset:0 8% 14%;opacity:.45}.route-card{width:100%;padding:15px}
+ .hero-notes{gap:10px;margin-top:22px}.hero-notes span{font-size:10px}
+ .section{padding:56px 0}.section.compact{padding:45px 0}
+ .section-heading{align-items:flex-start;flex-direction:column;gap:12px}
+ .business-grid{grid-template-columns:1fr}.business-card{min-height:0;padding:23px}
+ .chain-layout,.intro-grid,.partnership-band,.insights-preview{grid-template-columns:1fr;gap:24px}
+ .chain-flow{padding:18px}.flow-items{grid-template-columns:repeat(2,1fr);gap:10px}
+ .flow-item:not(:last-child):after{display:none}
+ .principles-grid{grid-template-columns:repeat(2,1fr);gap:22px}
+ .roadmap{grid-template-columns:1fr;gap:18px;margin-right:10px}
+ .roadmap:before{top:15px;bottom:15px;right:16px;left:auto;width:1px;height:auto}
+ .roadmap-item{padding:0 48px 0 0}.roadmap-dot{position:absolute;right:0;top:0}
+ .partnership-art{min-height:220px;grid-row:1}
+ .final-cta-inner{align-items:flex-start;flex-direction:column}
+ .footer-grid{grid-template-columns:1fr 1fr;gap:28px 20px}
+ .footer-brand{grid-column:1/-1}.footer-bottom{flex-wrap:wrap;justify-content:flex-start}
+ .page-hero{padding:40px 0 34px}
+}
+@media(max-width:420px){
+ .header-actions .btn{display:none}.footer-grid{grid-template-columns:1fr}.footer-brand{grid-column:auto}
+ .principles-grid{grid-template-columns:1fr}.hero-actions .btn{width:100%}
+}
+@media(prefers-reduced-motion:reduce){
+ *,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+ .rs-reveal{opacity:1;transform:none}
+}
