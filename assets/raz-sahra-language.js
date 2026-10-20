@@ -369,7 +369,7 @@
         if(translated)el.setAttribute(attr,translated);
       });
     });
-    document.querySelectorAll('[data-language-label]').forEach(function(el){el.textContent=language==='fa'?'EN':'فا';});
+    document.querySelectorAll('[data-language-label]').forEach(function(el){el.textContent=language==='fa'?'EN':'FA';});
     document.querySelectorAll('[data-language-toggle]').forEach(function(el){el.setAttribute('aria-label',language==='fa'?'Switch to English':'تغییر زبان به فارسی');el.setAttribute('title',language==='fa'?'English':'فارسی');});
     document.documentElement.lang=language;
     document.documentElement.dir=language==='fa'?'rtl':'ltr';
