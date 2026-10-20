@@ -50,42 +50,68 @@ jobs:
           PY
           node --check /tmp/raz-sahra-app.js
           node --check assets/raz-sahra-interactions.js
+          node --check assets/raz-sahra-language.js
           test -f assets/raz-sahra-premium.css
-          test -f assets/raz-sahra-icon.svg
+          test -f assets/raz-sahra-symbol.webp
+          test -f assets/raz-sahra-logo-lockup.webp
+          test -f assets/raz-sahra-hero-banner.webp
           test -f manifest.webmanifest
           grep -q 'assets/raz-sahra-premium.css' index.html
           grep -q 'assets/raz-sahra-interactions.js' index.html
+          grep -q 'assets/raz-sahra-language.js' index.html
           grep -q '"lang": "fa"' manifest.webmanifest
           test -f assets/raz-sahra-articles.html
-          test -f assets/raz-sahra-symbol.svg
-          test -f assets/raz-sahra-logo-lockup.svg
-          grep -q 'assets/raz-sahra-symbol.svg' index.html
+          test -f assets/raz-sahra-articles-en.html
+          grep -q 'assets/raz-sahra-symbol.webp' index.html
+          grep -q 'assets/raz-sahra-logo-lockup.webp' index.html
+          grep -q 'data-language-toggle' index.html
           grep -q 'data-articles-src="assets/raz-sahra-articles.html"' index.html
           if grep -qi 'Coturnix' index.html; then echo "Quail-specific image reference remains in main page"; exit 1; fi
+          if grep -qi 'Iran_1395_Coturnix' assets/raz-sahra-premium.css; then echo "Quail-specific background image remains"; exit 1; fi
+          if grep -q 'assets/raz-sahra-symbol.svg' index.html; then echo "Hand-drawn SVG mark still referenced by main page"; exit 1; fi
           python - <<'PY'
           from pathlib import Path
           import re
+          html = Path("index.html").read_text(encoding="utf-8")
           articles = Path("assets/raz-sahra-articles.html").read_text(encoding="utf-8")
-          count = len(re.findall(r'data-article-card', articles))
-          if count != 8:
-              raise SystemExit(f"Expected 8 editorial guides, found {count}")
-          for required in ["data-article-open", "data-save-article", "article-takeaway"]:
-              if required not in articles:
-                  raise SystemExit(f"Editorial feature missing: {required}")
-          if "rs-image-credit" in Path("index.html").read_text(encoding="utf-8"):
+          english = Path("assets/raz-sahra-articles-en.html").read_text(encoding="utf-8")
+          for label, source in [("Persian", articles), ("English", english)]:
+              count = len(re.findall(r'data-article-card', source))
+              if count != 8:
+                  raise SystemExit(f"Expected 8 {label} editorial guides, found {count}")
+              cover_count = len(re.findall(r'class="article-cover"', source))
+              if cover_count != 8:
+                  raise SystemExit(f"Each {label} guide needs a cover image; found {cover_count}")
+              for required in ["data-article-open", "data-save-article", "article-takeaway"]:
+                  if required not in source:
+                      raise SystemExit(f"{label} editorial feature missing: {required}")
+          for required in ["data-hero-slide", "data-cta-slide", "data-hero-dot", "data-cta-dot", "data-language-toggle", "assets/raz-sahra-logo-lockup.webp"]:
+              if required not in html:
+                  raise SystemExit(f"Homepage feature missing: {required}")
+          if len(re.findall(r'<article class="hero-slide', html)) != 4:
+              raise SystemExit("Homepage must contain exactly 4 hero slides")
+          if len(re.findall(r'<article class="collaboration-slide', html)) != 3:
+              raise SystemExit("Collaboration carousel must contain exactly 3 slides")
+          if len(re.findall(r'class="magazine-card"', html)) < 4:
+              raise SystemExit("Homepage magazine must contain at least 4 featured cards")
+          if "rs-image-credit" in html:
               raise SystemExit("Image-credit block should not appear in the footer")
-          print("Editorial content checks passed: eight guides, reading controls, and clean footer.")
+          print("Editorial and interaction checks passed: 8 illustrated articles in both languages, 4 hero slides, 3 collaboration slides and a magazine carousel.")
           PY
-          if grep -qi 'unsplash.com' index.html; then echo "Unexpected stock-photo URL found"; exit 1; fi
+          if grep -qi 'unsplash.com' index.html; then echo "Unexpected stock-photo URL found in main page"; exit 1; fi
           python - <<'PY'
           from pathlib import Path
           import json
           manifest = json.loads(Path("manifest.webmanifest").read_text(encoding="utf-8"))
           if manifest.get("dir") != "rtl" or manifest.get("lang") != "fa":
               raise SystemExit("Manifest must be Persian and RTL")
-          if not Path("assets/raz-sahra-icon.svg").is_file():
-              raise SystemExit("Missing branded SVG icon")
-          print("Asset, PWA manifest, script syntax, and source checks passed.")
+          if manifest.get("icons", [{}])[0].get("src") != "/razsahra/assets/raz-sahra-symbol.webp":
+              raise SystemExit("Manifest must use the exact supplied brand symbol")
+          if not Path("assets/raz-sahra-symbol.webp").is_file():
+              raise SystemExit("Missing exact supplied brand symbol")
+          if not Path("assets/raz-sahra-logo-lockup.webp").is_file():
+              raise SystemExit("Missing exact supplied logo lockup")
+          print("Asset, manifest, script syntax, and source checks passed.")
           PY
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
