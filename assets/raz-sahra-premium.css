@@ -866,7 +866,7 @@ html.lang-en .route-card,html.lang-en .status-chip,html.lang-en .slide-vertical-
 @media(max-width:560px){.hero-slider{height:470px;min-height:470px}}
 .hero-slide::before{content:"";position:absolute;z-index:0;pointer-events:none;left:clamp(8%,15vw,215px);top:clamp(7%,10vh,92px);width:clamp(110px,15vw,210px);aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 38% 34%,rgba(255,243,216,.78) 0 4%,rgba(255,187,112,.48) 13%,rgba(233,105,48,.2) 38%,rgba(233,105,48,0) 72%);filter:blur(9px);opacity:.25;mix-blend-mode:screen;box-shadow:0 0 28px rgba(233,126,51,.12);animation:rs-fireball-breathe 7.8s ease-in-out infinite}
 @keyframes rs-fireball-breathe{0%,100%{opacity:.17;transform:scale(.96)}50%{opacity:.31;transform:scale(1.04)}}
-.hero-slide-copy,.hero-slide-aside,.hero-slider-footer{position:relative;z-index:2}
+.hero-slide-copy{position:relative;z-index:2}.hero-slide-aside{z-index:2}.hero-slider-footer{z-index:3}
 @media(max-width:650px){.hero-slide::before{left:6%;top:6%;width:132px;filter:blur(7px);opacity:.2}}
 @media(prefers-reduced-motion:reduce){.hero-slide::before{animation:none!important}}
 /* The supplied company lockup is a raster master; preserve its whole canvas and proportions. */
