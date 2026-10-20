@@ -88,6 +88,9 @@ jobs:
               cover_count = len(re.findall(r'class="article-cover"', source))
               if cover_count != 8:
                   raise SystemExit(f"Each {label} guide needs a cover image; found {cover_count}")
+              image_sources = re.findall(r'class="article-cover" src="([^"]+)"', source)
+              if len(set(image_sources)) != 8:
+                  raise SystemExit(f"Each {label} article must use a distinct cover image")
               for required in ["data-article-open", "data-save-article", "article-takeaway"]:
                   if required not in source:
                       raise SystemExit(f"{label} editorial feature missing: {required}")
@@ -98,11 +101,21 @@ jobs:
               raise SystemExit("Homepage must contain exactly 4 hero slides")
           if len(re.findall(r'<article class="collaboration-slide', html)) != 4:
               raise SystemExit("Collaboration carousel must contain exactly 4 slides")
+          if len(re.findall(r'data-cta-dot="\d+"', html)) != 4:
+              raise SystemExit("Collaboration carousel must have four matching navigation dots")
+          css = Path("assets/raz-sahra-premium.css").read_text(encoding="utf-8")
+          interactions = Path("assets/raz-sahra-interactions.js").read_text(encoding="utf-8")
+          if "width:147%" not in css or ".footer-lockup-link" not in css:
+              raise SystemExit("Footer logo crop and presentation rules are missing")
+          if ".page-view section,.site-footer" not in interactions:
+              raise SystemExit("Section-wide ember particles are missing")
+          if "interval:5400" not in interactions or "interval:6100" not in interactions:
+              raise SystemExit("Carousel timings were not updated")
           if len(re.findall(r'class="magazine-card"', html)) < 4:
               raise SystemExit("Homepage magazine must contain at least 4 featured cards")
           if "rs-image-credit" in html:
               raise SystemExit("Image-credit block should not appear in the footer")
-          print("Editorial and interaction checks passed: 8 illustrated articles in both languages, 4 hero slides, 3 collaboration slides and a magazine carousel.")
+          print("Editorial and interaction checks passed: 8 distinct illustrated articles per language, 4 hero slides, 4 collaboration slides, section ember motion and a magazine carousel.")
           PY
           if grep -qi 'images.unsplash.com' index.html; then echo "Unexpected hotlinked Unsplash image found in main page"; exit 1; fi
           python - <<'PY'
