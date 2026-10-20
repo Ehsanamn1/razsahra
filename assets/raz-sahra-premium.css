@@ -21,7 +21,7 @@ body{overflow-x:hidden}
 .btn-outline:hover,.btn-dark-outline:hover{box-shadow:0 8px 22px rgba(23,43,59,.08)}
 .hero{padding-top:24px}
 .hero-panel{border-radius:30px;box-shadow:0 32px 90px rgba(23,43,59,.19)}
-.hero-panel:before{background-image:linear-gradient(90deg,rgba(23,40,56,.10),rgba(23,40,56,.82)),url("https://commons.wikimedia.org/wiki/Special:FilePath/Iran_1395_Coturnix.jpg?width=1800")}
+.hero-panel:before{background-image:linear-gradient(90deg,rgba(23,40,56,.10),rgba(23,40,56,.82)),url("https://upload.wikimedia.org/wikipedia/commons/f/f0/Iran_1395_Coturnix.jpg")}
 .hero-panel:after{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(circle at 18% 15%,rgba(215,162,123,.16),transparent 33%)}
 .hero h1{text-wrap:balance}
 .hero-description{max-width:510px}
@@ -39,8 +39,8 @@ body{overflow-x:hidden}
 .flow-symbol{transition:transform .3s var(--rs-ease)}
 .flow-item:hover .flow-symbol{transform:scale(1.06)}
 .partnership-band{box-shadow:0 24px 65px rgba(23,43,59,.13)}
-.partnership-art{background-image:linear-gradient(135deg,rgba(36,54,74,.06),rgba(183,116,75,.23)),url("https://commons.wikimedia.org/wiki/Special:FilePath/Duck_farm_in_Lar_plain,_Dasht-e_Lar,_Lar_river,_Alborz,_Tehran_%D9%BE%D8%B1%D9%88%D8%B1%D8%B4_%D8%A7%D8%B1%D8%AF%DA%A9_%D8%AF%D8%B1_%D8%AF%D8%B4%D8%AA_%D9%84%D8%A7%D8%B1%D8%8C_%D8%A7%D8%B3%D8%AA%D8%B1%DA%A9%D9%8F%D9%84%D9%8E%DA%A9%D8%8C_%D8%A7%D8%B3%D8%A8_%DA%A9%D8%A7%D9%84%D9%8E%DA%A9%D8%8C_%D8%A8%D9%86%D8%AF_%D9%85%D9%84%DA%A9_%DA%86%D8%B4%D9%85%D9%87%D8%8C_%D8%B1%D9%88%D8%AF_%D9%84%D8%A7%D8%B1_-_panoramio.jpg?width=1600")}
-.insight-main:before{background-image:linear-gradient(0deg,rgba(20,34,48,.94),rgba(20,34,48,.06)),url("https://commons.wikimedia.org/wiki/Special:FilePath/Iran_1395_Coturnix_2.jpg?width=1400")}
+.partnership-art{background-image:linear-gradient(135deg,rgba(36,54,74,.06),rgba(183,116,75,.23)),url("https://upload.wikimedia.org/wikipedia/commons/b/b1/Duck_farm_in_Lar_plain%2C_Dasht-e_Lar%2C_Lar_river%2C_Alborz%2C_Tehran_%D9%BE%D8%B1%D9%88%D8%B1%D8%B4_%D8%A7%D8%B1%D8%AF%DA%A9_%D8%AF%D8%B1_%D8%AF%D8%B4%D8%AA_%D9%84%D8%A7%D8%B1%D8%8C_%D8%A7%D8%B3%D8%AA%D8%B1%DA%A9%D9%8F%D9%84%D9%8E%DA%A9%D8%8C_%D8%A7%D8%B3%D8%A8_%DA%A9%D8%A7%D9%84%D9%8E%DA%A9%D8%8C_%D8%A8%D9%86%D8%AF_%D9%85%D9%84%DA%A9_%DA%86%D8%B4%D9%85%D9%87%D8%8C_%D8%B1%D9%88%D8%AF_%D9%84%D8%A7%D8%B1_-_panoramio.jpg")}
+.insight-main:before{background-image:linear-gradient(0deg,rgba(20,34,48,.94),rgba(20,34,48,.06)),url("https://upload.wikimedia.org/wikipedia/commons/5/54/Iran_1395_Coturnix_2.jpg")}
 .final-cta{position:relative;overflow:hidden}
 .final-cta:before{content:"";position:absolute;width:330px;height:330px;left:-145px;top:-190px;border:1px solid rgba(183,122,83,.23);border-radius:50%;box-shadow:0 0 0 25px rgba(183,122,83,.04),0 0 0 55px rgba(183,122,83,.025);pointer-events:none}
 .final-cta-inner{position:relative;z-index:1}
@@ -73,7 +73,7 @@ input:focus,select:focus,textarea:focus{border-color:rgba(183,122,83,.7)!importa
  .header-inner{min-height:72px}.brand-mark{width:40px;height:40px;flex-basis:40px}.brand-persian{font-size:16px}
  .header-actions .btn{padding:10px 12px;min-height:41px;font-size:11px}
  .hero{padding-top:15px}.hero-panel{grid-template-columns:1fr;min-height:0;border-radius:22px}
- .hero-panel:before{background-image:linear-gradient(90deg,rgba(23,40,56,.68),rgba(23,40,56,.86)),url("https://commons.wikimedia.org/wiki/Special:FilePath/Iran_1395_Coturnix.jpg?width=1200")}
+ .hero-panel:before{background-image:linear-gradient(90deg,rgba(23,40,56,.68),rgba(23,40,56,.86)),url("https://upload.wikimedia.org/wikipedia/commons/f/f0/Iran_1395_Coturnix.jpg")}
  .hero-copy{padding:34px 25px 22px}.hero h1{font-size:clamp(34px,9vw,48px)}
  .hero-description{font-size:13px}.hero-visual{min-height:235px;padding:16px 22px 24px}
  .hero-network{inset:0 8% 14%;opacity:.45}.route-card{width:100%;padding:15px}
