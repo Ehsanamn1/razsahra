@@ -344,6 +344,14 @@
     "ذخیره مقاله":"Save article",
     "Quick access":"Quick access"
   });
+  Object.assign(dictionary,{
+    "پیش‌نویس روی همین مرورگر ذخیره شد؛ هنوز برای شرکت ارسال نشده است.":"Draft saved in this browser only; it has not been sent to the company.",
+    "ذخیره شد ✓":"Saved ✓",
+    "ذخیره‌شده":"Saved",
+    "ذخیره":"Save",
+    "ذخیره محلی در این مرورگر در دسترس نیست؛ می‌توانید فایل درخواست را آماده کنید.":"Local saving is unavailable in this browser. You can still prepare the request file.",
+    "مقاله‌ای با این عبارت پیدا نشد؛ عبارت کوتاه‌تری امتحان کنید.":"No article matched that search. Try a shorter phrase."
+  });
   var attributeDictionary={
     "باز کردن منو":"Open menu","بستن منو":"Close menu","اسلاید قبلی":"Previous slide","اسلاید بعدی":"Next slide",
     "اسلاید ۱":"Slide 1","اسلاید ۲":"Slide 2","اسلاید ۳":"Slide 3","اسلاید ۴":"Slide 4",
