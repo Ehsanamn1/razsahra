@@ -308,8 +308,8 @@
   }
   function updateEmbers(){
     if(reduce)return;
-    document.querySelectorAll('.page-view section,.site-footer,[data-hero-slider],.collaboration-carousel').forEach(function(host){
-      var count=host.matches('.site-footer')?15:host.matches('[data-hero-slider],.collaboration-carousel')?8:5;
+    document.querySelectorAll('.page-view,.page-view section,.site-footer,[data-hero-slider],.collaboration-carousel').forEach(function(host){
+      var count=host.matches('.site-footer,.page-view')?15:8;
       addEmberField(host,count);
     });
   }

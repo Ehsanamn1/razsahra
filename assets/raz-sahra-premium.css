@@ -741,3 +741,9 @@ html.lang-en .route-card,html.lang-en .status-chip,html.lang-en .slide-vertical-
  .brand-lockup-image-frame{width:100%;aspect-ratio:4/3}
  .brand-lockup-image-frame img{width:138%;max-width:none}
 }
+
+
+/* Page-wide ember atmosphere: keep the same restrained footer motes in the white space of every routed page. */
+.page-view{position:relative;isolation:isolate}
+.page-view>.rs-particle-field{z-index:0}
+.page-view>*:not(.rs-particle-field){position:relative;z-index:1}
