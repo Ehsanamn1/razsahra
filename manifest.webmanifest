@@ -1,0 +1,21 @@
+{
+  "id": "/razsahra/",
+  "name": "راز صحرا | RAZ SAHRA",
+  "short_name": "راز صحرا",
+  "description": "تأمین، تجارت و توسعه زنجیره ارزش با نگاهی منسجم و مشارکت‌محور.",
+  "lang": "fa",
+  "dir": "rtl",
+  "start_url": "/razsahra/?source=pwa",
+  "scope": "/razsahra/",
+  "display": "standalone",
+  "background_color": "#f4f0e8",
+  "theme_color": "#24364a",
+  "icons": [
+    {
+      "src": "/razsahra/assets/raz-sahra-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
