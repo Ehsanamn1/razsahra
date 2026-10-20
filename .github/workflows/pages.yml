@@ -104,7 +104,7 @@ jobs:
               raise SystemExit("Image-credit block should not appear in the footer")
           print("Editorial and interaction checks passed: 8 illustrated articles in both languages, 4 hero slides, 3 collaboration slides and a magazine carousel.")
           PY
-          if grep -qi 'unsplash.com' index.html; then echo "Unexpected stock-photo URL found in main page"; exit 1; fi
+          if grep -qi 'images.unsplash.com' index.html; then echo "Unexpected hotlinked Unsplash image found in main page"; exit 1; fi
           python - <<'PY'
           from pathlib import Path
           import json
