@@ -105,7 +105,7 @@ jobs:
               raise SystemExit("Collaboration carousel must have four matching navigation dots")
           css = Path("assets/raz-sahra-premium.css").read_text(encoding="utf-8")
           interactions = Path("assets/raz-sahra-interactions.js").read_text(encoding="utf-8")
-          if "width:147%" not in css or ".footer-lockup-link" not in css:
+          if "width:138%" not in css or ".footer-lockup-link" not in css:
               raise SystemExit("Footer logo crop and presentation rules are missing")
           if ".page-view section,.site-footer" not in interactions:
               raise SystemExit("Section-wide ember particles are missing")
