@@ -308,8 +308,8 @@
   }
   function updateEmbers(){
     if(reduce)return;
-    document.querySelectorAll('.page-view section,.site-footer,[data-hero-slider],.collaboration-carousel,.business-grid,.principles-grid,.roadmap,.chain-section').forEach(function(host){
-      var count=host.matches('.site-footer')?15:host.matches('[data-hero-slider],.collaboration-carousel')?8:host.matches('.magazine-home-section,.cta-motion-section')?10:host.matches('.business-grid,.principles-grid,.roadmap,.chain-section')?7:5;
+    document.querySelectorAll('.page-view section,.site-footer,[data-hero-slider],.collaboration-carousel').forEach(function(host){
+      var count=host.matches('.site-footer')?15:host.matches('[data-hero-slider],.collaboration-carousel')?8:5;
       addEmberField(host,count);
     });
   }
