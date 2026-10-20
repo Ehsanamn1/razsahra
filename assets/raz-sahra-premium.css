@@ -102,3 +102,9 @@ input:focus,select:focus,textarea:focus{border-color:rgba(183,122,83,.7)!importa
  *,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
  .rs-reveal{opacity:1;transform:none}
 }
+
+/* Interactive chain explorer */
+.flow-item.is-active{transform:translateY(-5px);border-color:rgba(183,122,83,.75);box-shadow:0 15px 30px rgba(23,43,59,.11);background:#fffaf3}
+.flow-item.is-active .flow-symbol{background:var(--rs-copper);transform:scale(1.08);box-shadow:0 0 0 5px rgba(183,122,83,.11)}
+.flow-item:focus-visible{outline:3px solid var(--rs-copper);outline-offset:3px}
+.flow-item[aria-pressed="true"] b{color:var(--rs-copper)}
