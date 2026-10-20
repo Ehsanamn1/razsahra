@@ -747,3 +747,39 @@ html.lang-en .route-card,html.lang-en .status-chip,html.lang-en .slide-vertical-
 .page-view{position:relative;isolation:isolate}
 .page-view>.rs-particle-field{z-index:0}
 .page-view>*:not(.rs-particle-field){position:relative;z-index:1}
+
+
+/* High-visibility ember pass: intentionally visible over the site's ivory/white surfaces. */
+.rs-particle-field{
+  mix-blend-mode:normal!important;
+  opacity:1!important;
+}
+.rs-particle{
+  background:radial-gradient(circle at 38% 34%,
+    #fff8e7 0 6%,
+    #ffe0a0 13%,
+    #ffb052 29%,
+    #f18439 48%,
+    rgba(221,83,35,.92) 62%,
+    rgba(221,83,35,.24) 76%,
+    transparent 86%);
+  box-shadow:
+    0 0 4px 1px rgba(255,176,74,.98),
+    0 0 11px 3px rgba(242,119,43,.82),
+    0 0 23px 5px rgba(220,83,32,.48);
+  filter:drop-shadow(0 0 5px rgba(226,91,37,.75));
+  animation:rs-ember-drift-strong var(--ember-duration) var(--ember-delay) ease-in-out infinite;
+}
+.rs-particle:after{
+  width:1.5px;
+  height:calc(var(--ember-size)*3.6);
+  background:linear-gradient(rgba(249,143,65,.95),rgba(240,114,47,.64),transparent);
+  opacity:.86;
+}
+@keyframes rs-ember-drift-strong{
+  0%{opacity:0;transform:translate3d(0,25px,0) scale(.62)}
+  13%{opacity:.98}
+  48%{opacity:.92}
+  73%{opacity:.78}
+  100%{opacity:0;transform:translate3d(var(--ember-drift),-118px,0) scale(1.38)}
+}
