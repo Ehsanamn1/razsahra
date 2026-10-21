@@ -1306,3 +1306,11 @@ html.lang-en .route-card,html.lang-en .status-chip,html.lang-en .slide-vertical-
  .madar-product-flow span{min-width:0;flex:1;padding:7px 5px;font-size:9px}
  .madar-product-modules span{font-size:9px;padding:9px 7px}
 }
+
+
+/* Promote the Madar product entry in desktop navigation without changing the corporate palette. */
+.nav-link-madar{display:inline-flex;align-items:center;gap:5px;color:var(--copper);font-weight:800}
+.nav-link-madar:after{background:var(--copper)}
+.nav-link-madar>span[aria-hidden="true"]{font-size:12px;line-height:1;transition:transform var(--ease)}
+.nav-link-madar:hover>span[aria-hidden="true"]{transform:translate(2px,-2px)}
+@media(max-width:1060px){.nav-link-madar{gap:3px}}
