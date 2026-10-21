@@ -185,7 +185,7 @@ async function handle(request, env) {
     if (!(await rateOkay(sql, request, "login:" + identifier))) return fail("تعداد تلاش‌های ناموفق زیاد است. ۱۵ دقیقه دیگر دوباره تلاش کنید.", 429, "rate_limited");
     const rows = await q(sql, "SELECT id,username,email,display_name,password_hash,role,status,created_at,last_login_at FROM users WHERE username=$1 OR email=$1 LIMIT 1", [identifier]);
     const user = rows[0];
-    const valid = user ? await verifyPassword(password, user.password_hash) : await verifyPassword(password, "pbkdf2$310000$6PwV9dRi58j7JAYz4QQv2g$InSIbvodVbZTduNAidXXNP0uocaMCfgCO3OonhyMJzo");
+    const valid = user ? await verifyPassword(password, user.password_hash) : await verifyPassword(password, "pbkdf2$310000$Y3lqQV9TdG9yZU5vdEFSZWFsU2FsdA$AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
     if (!user || !valid || user.status !== "active") return fail("نام کاربری یا رمز عبور نادرست است.", 401, "invalid_credentials");
     await q(sql, "UPDATE users SET last_login_at=now(),updated_at=now() WHERE id=$1", [user.id]);
     const token = await newSession(sql, user, request);
