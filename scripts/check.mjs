@@ -32,8 +32,9 @@ assert.ok(build.includes("process.env.SITE_BUILD_VERSION") && build.includes("${
 
 assert.ok(api.includes('path.startsWith("medar/")') && api.includes("proxyMedar(request, path)"), "Same-origin Medar API proxy missing");
 assert.ok(html.includes('href="/madar/"'), "Same-origin Medar entry point missing");
-assert.ok(html.includes('class="madar-product-section"') && html.includes('id="madar-product-title"'), "Homepage must introduce Madar as a Raz Sahra product");
+assert.ok(html.includes("madar-product-section") && html.includes('id="madar-product-title"'), "Homepage must introduce Madar as a Raz Sahra product");
 assert.ok(html.includes('class="mobile-product-link"'), "Mobile navigation must expose the Madar entry point");
+assert.ok(html.includes('class="nav-link nav-link-madar"'), "Desktop navigation must expose the Madar entry point");
 assert.ok(!html.includes("در انتظار فایل PWA") && !html.includes("پس از اتصال بسته وب/PWA نهایی فعال می‌شود"), "Stale Madar pending-bundle copy must not return");
 assert.ok(schema.includes("'/madar/','',true"), "New installs must seed Madar as an active integrated web app");
 assert.ok((await read("_redirects")).includes("/madar /madar/ 301"), "Madar path normalization redirect missing");
