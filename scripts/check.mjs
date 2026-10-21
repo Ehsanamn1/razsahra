@@ -69,9 +69,10 @@ assert.ok(cloudflareWorkflow.includes("ref: ${{ steps.medar-source.outputs.ref }
 assert.ok(cloudflareWorkflow.includes("VITE_APP_VERSION: ${{ github.sha }}-${{ steps.medar-source.outputs.ref }}"), "Integrated asset version must identify both parent and Medar commits");
 
 assert.ok(cloudflareWorkflow.includes("VITE_API_BASE_URL: /api/medar"), "Madar API must use the same-origin proxy");
-const medarSourceRef = cloudflareWorkflow.match(/repository: Ehsanamn1\/simorgh\s+ref: ([0-9a-f]{40})/);
-assert.ok(medarSourceRef, "Integrated Medar source must be pinned to an immutable commit SHA");
-assert.ok(integrationContract.includes(medarSourceRef[1]), "The integration contract must record the exact Medar source revision");
+const medarSourceRef = cloudflareWorkflow.match(/ref:\\s*\\$\\{\\{\\s*steps\\.medar-source\\.outputs\\.ref\\s*\\}\\}/);
+assert.ok(medarSourceRef, "Integrated Medar checkout must use the output resolved from the canonical source pin");
+assert.ok(cloudflareWorkflow.includes("integration/medar-source.json"), "Pages workflow must resolve Medar source from the canonical manifest");
+assert.ok(integrationContract.includes(medarSourcePin.commit), "The integration contract must record the exact pinned Medar source revision");
 assert.ok(cloudflareWorkflow.includes("Public Medar entry point") && cloudflareWorkflow.includes("api/admin/pages") && cloudflareWorkflow.includes("401|403"), "Production smoke tests must check the public Medar entry point and deny unauthenticated CMS admin access");
 assert.ok(integrationContract.includes("/api/medar/api/health") && integrationContract.includes("No shared database or an authenticated session"), "Integration contract must document routes and identity/data isolation");
 for (const fragment of html.split("<script").slice(1)) {
