@@ -42,6 +42,41 @@ jobs:
           test -f dist/_headers
           test -f dist/manifest.webmanifest
 
+      - name: Check out Medar source for same-origin app hosting
+        uses: actions/checkout@v4
+        with:
+          repository: Ehsanamn1/simorgh
+          ref: main
+          path: medar-src
+
+      - name: Install Medar dependencies
+        working-directory: medar-src
+        run: npm install --no-audit --no-fund
+
+      - name: Validate Medar source
+        working-directory: medar-src
+        run: |
+          npm run typecheck
+          npm run lint
+          npm run test
+
+      - name: Build Medar under /madar with the same-origin API route
+        working-directory: medar-src
+        env:
+          VITE_API_BASE_URL: /api/medar
+          VITE_ENABLE_AUTH_UI: "true"
+          VITE_DISABLE_API_UI: "false"
+          VITE_APP_VERSION: ${{ github.sha }}
+        run: npm run build -- --base=/madar/ --outDir ../dist/madar --emptyOutDir
+
+      - name: Verify combined website and Medar artifact
+        run: |
+          test -f dist/madar/index.html
+          test -f dist/madar/manifest.webmanifest
+          test -f dist/madar/sw.js
+          grep -R -q '/api/medar' dist/madar/assets
+          grep -q '/madar/' _redirects
+
       - name: Deploy to Cloudflare Pages
         if: ${{ env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != '' }}
         run: npx wrangler pages deploy dist --project-name=razsahra --branch=main
