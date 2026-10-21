@@ -45,7 +45,9 @@ for (const fragment of html.split("<script").slice(1)) {
 assert.ok(html.includes('data-route="register"'), "Footer registration link missing");
 assert.ok(html.includes('class="brand footer-brand-lockup"'), "Footer must reuse the approved header brand lockup");
 assert.ok(!html.includes('class="footer-lockup-image"'), "Obsolete square footer lockup must not return");
-assert.ok(css.includes("Hero ember sphere: keep the requested fireball"), "Subtle hero fireball treatment missing");
+assert.ok(css.includes("@keyframes rs-fireball-breathe") && css.includes(".hero-slide::before") && css.includes("opacity:.2"), "Subtle responsive hero fireball treatment missing");
+assert.ok(css.includes("height:clamp(430px,39vw,540px)") && css.includes("height:470px;min-height:470px"), "Compact responsive hero carousel sizing missing");
+assert.ok(interactive.includes("interval:4800"), "Hero carousel rotation interval missing");
 assert.ok(css.includes("Mobile performance and editor-reader fix"), "Responsive fix missing");
 assert.ok(interactive.includes("window.matchMedia('(max-width: 850px)').matches"), "Mobile particle budget missing");
 await access("db/schema.sql");
