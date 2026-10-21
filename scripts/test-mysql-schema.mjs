@@ -7,10 +7,10 @@ if (!url) throw new Error('TARGET_MYSQL_URL is required for the disposable MySQL
 
 const schema = await readFile(new URL('../db/schema.mysql.sql', import.meta.url), 'utf8');
 const seed = await readFile(new URL('../db/seed.mysql.sql', import.meta.url), 'utf8');
-const statements = schema
-  .split(';')
-  .map(statement => statement.split('\n').filter(line => !/^\s*--/.test(line)).join('\n').trim())
-  .filter(Boolean);
+const schemaWithoutComments = schema.split(String.fromCharCode(10))
+  .filter(line => !line.trim().startsWith('--'))
+  .join(String.fromCharCode(10));
+const statements = schemaWithoutComments.split(';').map(statement => statement.trim()).filter(Boolean);
 
 const db = await mysql.createConnection(url);
 try {
@@ -37,12 +37,10 @@ try {
   for (const table of requiredTables) assert(names.has(table), 'Missing table after schema apply: ' + table);
   const [[uuid]] = await db.query('SELECT UUID() AS id');
   assert.match(uuid.id, /^[0-9a-f-]{36}$/i);
-  for (const statement of seed.split(';').map(part =>
-    part.split(String.fromCharCode(10))
-      .filter(line => !line.trim().startsWith('--'))
-      .join(String.fromCharCode(10))
-      .trim()
-  ).filter(Boolean)) {
+  const seedWithoutComments = seed.split(String.fromCharCode(10))
+    .filter(line => !line.trim().startsWith('--'))
+    .join(String.fromCharCode(10));
+  for (const statement of seedWithoutComments.split(';').map(part => part.trim()).filter(Boolean)) {
     await db.query(statement);
   }
   const [[seedCounts]] = await db.query(
