@@ -30,8 +30,13 @@ assert.ok(html.includes('href="/madar/"'), "Same-origin Medar entry point missin
 assert.ok((await read("_redirects")).includes("/madar /madar/ 301"), "Madar path normalization redirect missing");
 assert.ok(cloudflareWorkflow.includes("repository: Ehsanamn1/simorgh") && cloudflareWorkflow.includes("dist/madar"), "Madar app bundle build is not part of the deployment");
 assert.ok(cloudflareWorkflow.includes("VITE_API_BASE_URL: /api/medar"), "Madar API must use the same-origin proxy");
-for (const match of html.matchAll(/<script(?:\\s[^>]*)?>([\\s\\S]*?)<\\/script>/g)) {
-  if (match[1].trim()) new Function(match[1]);
+for (const fragment of html.split("<script").slice(1)) {
+  const open = fragment.indexOf(">");
+  const close = fragment.indexOf("</script>");
+  if (open >= 0 && close > open) {
+    const inlineScript = fragment.slice(open + 1, close);
+    if (inlineScript.trim()) new Function(inlineScript);
+  }
 }
 
 assert.ok(html.includes('data-route="register"'), "Footer registration link missing");
