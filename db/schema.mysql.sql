@@ -1,12 +1,12 @@
 -- Raz Sahra MySQL 8.0+ schema for the domestic-hosting migration.
 -- This is a staging schema only. The current Cloudflare Pages Functions still use Neon/PostgreSQL.
 -- Do not run against production until the Node.js/MySQL API adapter is deployed and verified.
--- Application code must generate UUIDs in Node (UUID()) and pass them explicitly.
+-- MySQL 8.0.13+ expression defaults generate UUIDs for new runtime records; imported IDs remain unchanged.
 SET NAMES utf8mb4;
 SET time_zone = '+00:00';
 
 CREATE TABLE IF NOT EXISTS users (
-  id CHAR(36) NOT NULL PRIMARY KEY,
+  id CHAR(36) NOT NULL DEFAULT (UUID()) PRIMARY KEY,
   username VARCHAR(48) NOT NULL UNIQUE,
   email VARCHAR(254) NULL UNIQUE,
   display_name VARCHAR(120) NOT NULL DEFAULT '',
