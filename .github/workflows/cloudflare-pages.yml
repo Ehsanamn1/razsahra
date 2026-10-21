@@ -10,7 +10,6 @@ on:
       - "db/**"
       - "scripts/**"
       - "package.json"
-      - "package-lock.json"
       - "wrangler.toml"
       - "_headers"
       - ".github/workflows/cloudflare-pages.yml"
@@ -38,10 +37,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "22"
-          cache: npm
 
-      - name: Install locked dependencies
-        run: npm ci
+      - name: Install dependencies
+        run: npm install
 
       - name: Validate CMS, API and database schema
         run: npm run check
