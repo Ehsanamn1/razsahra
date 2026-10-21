@@ -37,7 +37,12 @@ try {
   for (const table of requiredTables) assert(names.has(table), 'Missing table after schema apply: ' + table);
   const [[uuid]] = await db.query('SELECT UUID() AS id');
   assert.match(uuid.id, /^[0-9a-f-]{36}$/i);
-  for (const statement of seed.split(';').map(part => part.split('\\n').filter(line => !/^\\s*--/.test(line)).join('\\n').trim()).filter(Boolean)) {
+  for (const statement of seed.split(';').map(part =>
+    part.split(String.fromCharCode(10))
+      .filter(line => !line.trim().startsWith('--'))
+      .join(String.fromCharCode(10))
+      .trim()
+  ).filter(Boolean)) {
     await db.query(statement);
   }
   const [[seedCounts]] = await db.query(
