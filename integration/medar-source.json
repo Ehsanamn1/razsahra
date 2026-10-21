@@ -1,0 +1,9 @@
+{
+  "repository": "Ehsanamn1/simorgh",
+  "commit": "426889daa35c5520b4572531f2866cfd26900931",
+  "mountPath": "/madar/",
+  "apiBasePath": "/api/medar",
+  "authModel": "Medar-owned username/password session; no cross-product SSO",
+  "databaseBoundary": "Raz Sahra CMS and Medar operational data remain isolated",
+  "updatedAt": "2026-10-21"
+}

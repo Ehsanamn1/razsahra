@@ -61,13 +61,15 @@ If unified sign-in is later approved, it requires an explicit identity/session d
 
 ### Current reviewed Medar source
 
-The Raz Sahra Pages workflow pins its integrated Medar checkout to:
+The exact integrated frontend revision is kept in the canonical manifest at `integration/medar-source.json`. Its `repository` must remain `Ehsanamn1/simorgh`, and `commit` must be a full 40-character lowercase Git SHA. The Pages workflow reads and validates the manifest, checks out that immutable commit, runs the Medar typecheck/lint/unit tests, and builds the bundle under `/madar/`.
+
+The current pin is:
 
 426889daa35c5520b4572531f2866cfd26900931
 
-This is the Medar main revision observed in the successful Medar Worker deployment workflow (run [39631181645](https://github.com/Ehsanamn1/simorgh/actions/runs/39631181645)) and in the parent-site build checkout logs for the successful Raz Sahra release (run [39635161486](https://github.com/Ehsanamn1/razsahra/actions/runs/39635161486)).
+This is the Medar main revision verified by the successful Worker deployment workflow (run [39631181645](https://github.com/Ehsanamn1/simorgh/actions/runs/39631181645)) and the successful parent-site release (run [39635161486](https://github.com/Ehsanamn1/razsahra/actions/runs/39635161486)). The standalone Worker release and the embedded `/madar/` bundle are separate artifacts and must be verified separately.
 
-Do not change the pin to main or another moving ref. To upgrade the integrated bundle, first identify a specific Medar commit, verify its CI and Worker deployment result, then update the SHA in the parent workflow and this contract in the same reviewed change. The standalone Worker release and the embedded /madar/ bundle are separate artifacts; each must be verified.
+To upgrade the integrated bundle, first identify a specific Medar commit merged into `main`, verify its required Medar CI and Worker deployment results, then update `integration/medar-source.json` in a reviewed parent-site change. Do not change the source back to a moving branch, and do not duplicate the pin in the workflow. The workflow embeds both the parent-site SHA and Medar SHA in the app version marker so deployed assets can be attributed to the exact pair.
 
 ### Deployment gates
 

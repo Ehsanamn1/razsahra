@@ -9,6 +9,7 @@ const interactive = await read("assets/raz-sahra-interactions.js");
 const cmsRuntime = await read("assets/raz-sahra-cms-runtime.js");
 const headers = await read("_headers");
 const cloudflareWorkflow = await read(".github/workflows/pages.yml");
+const medarSourcePin = JSON.parse(await read("integration/medar-source.json"));
 const madarRouteFallback = await read("functions/madar/[[path]].js");
 const integrationContract = await read("docs/INTEGRATION_CONTRACT.md");
 const build = await read("scripts/build.mjs");
@@ -38,6 +39,7 @@ assert.ok(!api.includes('path === "setup/admin"'), "Legacy insecure admin bootst
 assert.ok(api.includes('rateOkay(sql, request, "inquiry")'), "Public inquiry submissions must be rate limited");
 assert.ok(headers.includes("X-Content-Type-Options: nosniff"), "Baseline security headers missing");
 assert.ok(cloudflareWorkflow.includes("wrangler pages deploy dist"), "Cloudflare Pages deployment step missing");
+assert.ok(cloudflareWorkflow.includes("cloudflare-pages-pr-{0}") && cloudflareWorkflow.includes("github.event_name == 'pull_request'"), "Pull-request validation must not cancel production deployment runs");
 assert.ok(cloudflareWorkflow.includes("Smoke-test deployed site, Madar route and backend"), "Post-deployment live smoke test missing");
 assert.ok(cloudflareWorkflow.includes("/api/health") && cloudflareWorkflow.includes("database!==\"connected\""), "Live health test must verify Neon database connectivity");
 assert.ok(cloudflareWorkflow.includes("/api/medar/api/health") && cloudflareWorkflow.includes("d.database!==true"), "Live smoke test must verify the separate operational Madar API");
@@ -59,10 +61,19 @@ assert.ok(!html.includes("در انتظار فایل PWA") && !html.includes("پ
 assert.ok(schema.includes("'/madar/','',true"), "New installs must seed Madar as an active integrated web app");
 assert.ok((await read("_redirects")).includes("/madar /madar/ 301"), "Madar path normalization redirect missing");
 assert.ok(cloudflareWorkflow.includes("repository: Ehsanamn1/simorgh") && cloudflareWorkflow.includes("dist/madar"), "Madar app bundle build is not part of the deployment");
+assert.equal(medarSourcePin.repository, "Ehsanamn1/simorgh", "Canonical Medar source pin must point to the operational repository");
+assert.match(medarSourcePin.commit, /^[0-9a-f]{40}$/, "Canonical Medar source pin must use an immutable full commit SHA");
+assert.equal(medarSourcePin.mountPath, "/madar/", "Medar integration mount path mismatch");
+assert.equal(medarSourcePin.apiBasePath, "/api/medar", "Medar same-origin API base path mismatch");
+assert.ok(cloudflareWorkflow.includes("integration/medar-source.json"), "Pages workflow must load the canonical Medar source pin");
+assert.ok(cloudflareWorkflow.includes("ref: ${{ steps.medar-source.outputs.ref }}"), "Pages workflow must checkout the pinned Medar commit, not a moving branch");
+assert.ok(cloudflareWorkflow.includes("VITE_APP_VERSION: ${{ github.sha }}-${{ steps.medar-source.outputs.ref }}"), "Integrated asset version must identify both parent and Medar commits");
+
 assert.ok(cloudflareWorkflow.includes("VITE_API_BASE_URL: /api/medar"), "Madar API must use the same-origin proxy");
-const medarSourceRef = cloudflareWorkflow.match(/repository: Ehsanamn1\/simorgh\s+ref: ([0-9a-f]{40})/);
-assert.ok(medarSourceRef, "Integrated Medar source must be pinned to an immutable commit SHA");
-assert.ok(integrationContract.includes(medarSourceRef[1]), "The integration contract must record the exact Medar source revision");
+const medarSourceRef = cloudflareWorkflow.match(/ref:\s*\$\{\{\s*steps\.medar-source\.outputs\.ref\s*\}\}/);
+assert.ok(medarSourceRef, "Integrated Medar checkout must use the output resolved from the canonical source pin");
+assert.ok(cloudflareWorkflow.includes("integration/medar-source.json"), "Pages workflow must resolve Medar source from the canonical manifest");
+assert.ok(integrationContract.includes(medarSourcePin.commit), "The integration contract must record the exact pinned Medar source revision");
 assert.ok(cloudflareWorkflow.includes("Public Medar entry point") && cloudflareWorkflow.includes("api/admin/pages") && cloudflareWorkflow.includes("401|403"), "Production smoke tests must check the public Medar entry point and deny unauthenticated CMS admin access");
 assert.ok(integrationContract.includes("/api/medar/api/health") && integrationContract.includes("No shared database or an authenticated session"), "Integration contract must document routes and identity/data isolation");
 for (const fragment of html.split("<script").slice(1)) {
