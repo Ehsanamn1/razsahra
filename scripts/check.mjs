@@ -36,7 +36,7 @@ for (const fragment of html.split("<script").slice(1)) {
   if (open >= 0 && close > open) {
     const openingTag = fragment.slice(0, open);
     const inlineScript = fragment.slice(open + 1, close).trim();
-    if (!/\\bsrc\\s*=/.test(openingTag) && !/type=["']application\\/(?:ld\\+)?json["']/.test(openingTag) && inlineScript) {
+    if (!/\bsrc\s*=/.test(openingTag) && !/type=["']application\/(?:ld\+)?json["']/.test(openingTag) && inlineScript) {
       new Function(inlineScript);
     }
   }
