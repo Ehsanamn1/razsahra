@@ -121,5 +121,5 @@ INSERT INTO site_settings(key,value_json) VALUES
 ('site.features','{"accounts":true,"editorial_cms":true,"madar_mount_ready":true}'::jsonb)
 ON CONFLICT (key) DO NOTHING;
 INSERT INTO app_catalog(slug,name,description,app_url,download_url,active,sort_order,metadata)
-VALUES ('madar','مدار','سامانه مدیریت عملیات، شبکه تأمین و مزرعه؛ مسیر نصب و نسخه آنلاین پس از اتصال خروجی نهایی اپ تنظیم می‌شود.','','',false,10,'{"integration_status":"pending_bundle","planned_path":"/madar/"}'::jsonb)
+VALUES ('madar','مدار','سامانه مدیریت عملیات، شبکه تأمین و مزرعه؛ نسخه وب یکپارچه با راز صحرا در مسیر اختصاصی همین دامنه ارائه می‌شود.','/madar/','',true,10,'{"integration_status":"same_origin_web_route","path":"/madar/","native_binary":"not_published"}'::jsonb)
 ON CONFLICT (slug) DO NOTHING;
