@@ -3,6 +3,8 @@ name: Build and deploy Raz Sahra to Cloudflare Pages
 on:
   push:
     branches: ["main"]
+  pull_request:
+    branches: ["main"]
   workflow_dispatch:
 
 permissions:
@@ -78,7 +80,7 @@ jobs:
           grep -q '/madar/' _redirects
 
       - name: Ensure the intended Cloudflare Pages project exists
-        if: ${{ env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != '' }}
+        if: ${{ github.ref == 'refs/heads/main' && env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != '' }}
         run: |
           set -euo pipefail
           # Fail closed if account authentication/listing fails; only create when the
@@ -92,7 +94,7 @@ jobs:
           fi
 
       - name: Deploy to Cloudflare Pages
-        if: ${{ env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != '' }}
+        if: ${{ github.ref == 'refs/heads/main' && env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != '' }}
         run: npx wrangler pages deploy dist --project-name=razsahra --branch=main
 
       - name: Explain skipped deployment
