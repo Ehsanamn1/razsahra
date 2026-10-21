@@ -49,8 +49,9 @@ jobs:
       - name: Check out Medar source for same-origin app hosting
         uses: actions/checkout@v4
         with:
+          # Pin the integrated bundle to the reviewed operational Medar release.
           repository: Ehsanamn1/simorgh
-          ref: main
+          ref: 426889daa35c5520b4572531f2866cfd26900931
           path: medar-src
 
       - name: Install Medar dependencies
@@ -143,6 +144,15 @@ jobs:
           for origin in "${SITE_URL%/}" "${DEPLOYMENT_URL%/}"; do
             [[ -n "$origin" ]] || continue
             echo "Checking deployment origin: $origin"
+            public_home_file="$(mktemp)"
+            public_home_status="$(curl --silent --show-error --location --retry 5 --retry-all-errors --retry-delay 2 --max-time 25 --output "$public_home_file" --write-out '%{http_code}' "$origin/")" || public_home_status="curl-error"
+            if [[ "$public_home_status" != "200" ]] || ! grep -Fq 'href="/madar/"' "$public_home_file" || ! grep -q 'id="madar-product-title"' "$public_home_file"; then
+              echo "Public homepage is missing the integrated Medar entry point at $origin (HTTP $public_home_status)."
+              failure=1
+            else
+              echo "Public Medar entry point verified: $origin/"
+            fi
+            rm -f "$public_home_file"
             for route in / /madar/; do
               body_file="$(mktemp)"
               status="$(curl --silent --show-error --location --retry 5 --retry-all-errors --retry-delay 2 --output "$body_file" --write-out '%{http_code}' "$origin$route")" || status="curl-error"
@@ -179,6 +189,13 @@ jobs:
               failure=1
             fi
             rm -f "$medar_health_file"
+            admin_file="$(mktemp)"
+            admin_status="$(curl --silent --show-error --output "$admin_file" --write-out '%{http_code}' --max-time 25 "$origin/api/admin/pages")" || admin_status="curl-error"
+            case "$admin_status" in
+              401|403) echo "Verified unauthenticated CMS admin access is denied (HTTP $admin_status) at $origin." ;;
+              *) echo "CMS admin endpoint must deny unauthenticated access; received HTTP $admin_status at $origin." >&2; head -c 250 "$admin_file" || true; echo; failure=1 ;;
+            esac
+            rm -f "$admin_file"
           done
           exit "$failure"
 
