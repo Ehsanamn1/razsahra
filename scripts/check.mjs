@@ -30,6 +30,14 @@ assert.ok(html.includes('href="/madar/"'), "Same-origin Medar entry point missin
 assert.ok((await read("_redirects")).includes("/madar /madar/ 301"), "Madar path normalization redirect missing");
 assert.ok(cloudflareWorkflow.includes("repository: Ehsanamn1/simorgh") && cloudflareWorkflow.includes("dist/madar"), "Madar app bundle build is not part of the deployment");
 assert.ok(cloudflareWorkflow.includes("VITE_API_BASE_URL: /api/medar"), "Madar API must use the same-origin proxy");
+assert.ok(html.includes('class="section madar-product-section"'), "Public website must present Madar as a flagship product");
+assert.ok(html.includes("مدار، محصول عملیاتی شاخص راز صحراست"), "Madar/parent brand relationship must be clear and accurate");
+assert.ok(html.includes('href="/madar/" aria-label="ورود به سامانه عملیاتی مدار"'), "Flagship CTA must link to the operational app, not an API");
+assert.ok(!html.includes("فایل انتشار نهایی هنوز به سایت افزوده نشده است"), "Stale pre-integration pending copy must not be shown");
+assert.ok(css.includes(".madar-product-card") && css.includes("@media(max-width:780px)"), "Responsive Madar flagship styles missing");
+assert.ok(cloudflareWorkflow.includes("Smoke-test public site, CMS authorization, and Madar API"), "Production smoke tests must run after deployment");
+assert.ok(cloudflareWorkflow.includes('api/medar/api/health') && cloudflareWorkflow.includes('api/admin/pages'), "Smoke tests must check Madar API health and unauthenticated CMS denial");
+
 for (const fragment of html.split("<script").slice(1)) {
   const open = fragment.indexOf(">");
   const close = fragment.indexOf("</script>");
