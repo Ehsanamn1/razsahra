@@ -28,7 +28,7 @@ https://razsahra.pages.dev/ (هدف استقرار؛ دامنه تا تنظیم 
 ## راه‌اندازی Cloudflare Pages
 
 1. در Cloudflare، از بخش **Workers & Pages** یک Pages project با نام دقیق `razsahra` بسازید و شاخه production را `main` قرار دهید.
-2. در تنظیمات مخزن GitHub، یک Repository Variable با نام `CLOUDFLARE_ACCOUNT_ID` بسازید و Account ID خود را در آن قرار دهید.
+2. در تنظیمات مخزن GitHub، یک Repository Variable با نام `CLOUDFLARE_ACCOUNT_ID` بسازید و Account ID حساب مقصد را در آن قرار دهید. گردش‌کار فعال ابتدا فهرست Pages projectهای همین حساب را می‌خواند؛ اگر پروژه `razsahra` وجود نداشته باشد، آن را با شاخهٔ production برابر `main` ایجاد می‌کند و سپس انتشار را ادامه می‌دهد. اگر فهرست‌گیری از حساب شکست بخورد، انتشار متوقف می‌شود و پروژه‌ای در حساب ناشناخته ساخته نمی‌شود.
 3. یک Repository Secret با نام `CLOUDFLARE_API_TOKEN` بسازید. توکن فقط باید دسترسی لازم برای انتشار Cloudflare Pages روی همان حساب را داشته باشد؛ آن را در فایل‌های پروژه یا پیام‌های عمومی قرار ندهید.
 4. در صورت داشتن دامنه اختصاصی، یک Repository Variable با نام `SITE_URL` برابر آدرس نهایی و کامل سایت (HTTPS) بسازید. در غیر این صورت workflow از `https://razsahra.pages.dev` استفاده می‌کند.
 5. workflow با Node.js 22، دستورهای `npm install --no-audit --no-fund`، `npm run check`، `npm run build` و سپس `wrangler pages deploy dist --project-name=razsahra --branch=main` را اجرا می‌کند.
