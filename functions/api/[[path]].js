@@ -277,6 +277,7 @@ async function handle(request, env) {
   }
   if (path === "inquiries" && method === "POST") {
     if (!originOkay(request)) return fail("درخواست از مبدأ نامعتبر رد شد.", 403, "origin_denied");
+    if (!(await rateOkay(sql, request, "inquiry"))) return fail("تعداد درخواست‌ها زیاد است. کمی بعد دوباره تلاش کنید.", 429, "rate_limited");
     let data;
     try { data = await bodyJson(request); } catch { return fail("اطلاعات فرم معتبر نیست.", 400, "invalid_body"); }
     const name=text(data.name,160), email=text(data.email,254), phone=text(data.phone,60), company=text(data.company,180), message=text(data.message,8000);
