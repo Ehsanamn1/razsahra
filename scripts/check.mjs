@@ -9,6 +9,7 @@ const interactive = await read("assets/raz-sahra-interactions.js");
 const cmsRuntime = await read("assets/raz-sahra-cms-runtime.js");
 const headers = await read("_headers");
 const cloudflareWorkflow = await read(".github/workflows/pages.yml");
+const madarRouteFallback = await read("functions/madar/[[path]].js");
 const views = ["home","about","business","supply","partnerships","contact","insights","privacy","login","register","account","admin"];
 for (const view of views) assert.ok(html.includes('data-page="' + view + '"'), "Missing page: " + view);
 for (const route of ["auth/register","auth/login","auth/me","auth/logout","auth/bootstrap-admin","admin/overview","admin/pages","admin/articles","admin/users","admin/inquiries","admin/apps","admin/settings","admin/audit","inquiries"]) assert.ok(api.includes(route), "Missing API route: " + route);
@@ -37,6 +38,8 @@ assert.ok(!html.includes("فایل انتشار نهایی هنوز به سای�
 assert.ok(css.includes(".madar-product-card") && css.includes("@media(max-width:780px)"), "Responsive Madar flagship styles missing");
 assert.ok(cloudflareWorkflow.includes("Smoke-test public site, CMS authorization, and Madar API"), "Production smoke tests must run after deployment");
 assert.ok(cloudflareWorkflow.includes('api/medar/api/health') && cloudflareWorkflow.includes('api/admin/pages'), "Smoke tests must check Madar API health and unauthenticated CMS denial");
+assert.ok(madarRouteFallback.includes('context.env.ASSETS.fetch') && madarRouteFallback.includes('text/html'), "Madar deep-link requests must return the SPA app shell without intercepting static assets");
+assert.ok(cloudflareWorkflow.includes('/madar/app/home'), "Post-deploy checks must verify a nested Madar route refresh");
 
 for (const fragment of html.split("<script").slice(1)) {
   const open = fragment.indexOf(">");
