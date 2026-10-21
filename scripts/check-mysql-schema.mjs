@@ -15,7 +15,7 @@ assert.equal(new Set(foundTables).size, foundTables.length, 'Duplicate CREATE TA
 for (const table of ['users', 'articles', 'inquiries']) {
   const match = schema.match(new RegExp(`CREATE TABLE IF NOT EXISTS\\s+${table}\\s*\\(([\\s\\S]*?)\\) ENGINE=InnoDB`, 'i'));
   assert(match, `Missing table body for ${table}`);
-  assert(/id CHAR\\(36\\) NOT NULL DEFAULT \\(UUID\\(\\)\\) PRIMARY KEY/i.test(match[1]), `${table}.id must generate a UUID for new runtime inserts`);
+  assert(/id CHAR\(36\) NOT NULL DEFAULT \(UUID\(\)\) PRIMARY KEY/i.test(match[1]), `${table}.id must generate a UUID for new runtime inserts`);
 }
 
 const forbidden = [
