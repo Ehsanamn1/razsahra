@@ -10,6 +10,7 @@ const cmsRuntime = await read("assets/raz-sahra-cms-runtime.js");
 const headers = await read("_headers");
 const cloudflareWorkflow = await read(".github/workflows/pages.yml");
 const madarRouteFallback = await read("functions/madar/[[path]].js");
+const integrationContract = await read("docs/INTEGRATION_CONTRACT.md");
 const build = await read("scripts/build.mjs");
 const views = ["home","about","business","supply","partnerships","contact","insights","privacy","login","register","setup-admin","account","admin"];
 for (const view of views) assert.ok(html.includes('data-page="' + view + '"'), "Missing page: " + view);
@@ -59,6 +60,11 @@ assert.ok(schema.includes("'/madar/','',true"), "New installs must seed Madar as
 assert.ok((await read("_redirects")).includes("/madar /madar/ 301"), "Madar path normalization redirect missing");
 assert.ok(cloudflareWorkflow.includes("repository: Ehsanamn1/simorgh") && cloudflareWorkflow.includes("dist/madar"), "Madar app bundle build is not part of the deployment");
 assert.ok(cloudflareWorkflow.includes("VITE_API_BASE_URL: /api/medar"), "Madar API must use the same-origin proxy");
+const medarSourceRef = cloudflareWorkflow.match(/repository: Ehsanamn1\/simorgh\s+ref: ([0-9a-f]{40})/);
+assert.ok(medarSourceRef, "Integrated Medar source must be pinned to an immutable commit SHA");
+assert.ok(integrationContract.includes(medarSourceRef[1]), "The integration contract must record the exact Medar source revision");
+assert.ok(cloudflareWorkflow.includes("Public Medar entry point") && cloudflareWorkflow.includes("api/admin/pages") && cloudflareWorkflow.includes("401|403"), "Production smoke tests must check the public Medar entry point and deny unauthenticated CMS admin access");
+assert.ok(integrationContract.includes("/api/medar/api/health") && integrationContract.includes("No shared database or an authenticated session"), "Integration contract must document routes and identity/data isolation");
 for (const fragment of html.split("<script").slice(1)) {
   const open = fragment.indexOf(">");
   const close = fragment.indexOf("</script>");
@@ -83,4 +89,6 @@ await access("db/schema.sql");
 await access("assets/raz-sahra-cms-runtime.js");
 await access("_headers");
 await access(".github/workflows/pages.yml");
+await access("docs/INTEGRATION_CONTRACT.md");
+await access("docs/CROSS_PROJECT_STATUS.md");
 console.log("Checks passed: public and protected routes, simple role-based login, inquiry persistence/fallback, database schema, security headers and Cloudflare Pages workflow.");
