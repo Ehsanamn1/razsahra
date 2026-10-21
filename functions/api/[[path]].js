@@ -205,11 +205,12 @@ async function handle(request, env) {
     let data;
     try { data = await bodyJson(request); } catch { return fail("اطلاعات راه‌اندازی معتبر نیست.", 400, "invalid_body"); }
     const username = text(data.username, 48).toLowerCase();
-    const email = text(data.email, 254).toLowerCase();
+    const emailValue = text(data.email, 254).toLowerCase();
+    const email = emailValue || null;
     const displayName = text(data.display_name, 120);
     const password = String(data.password || "");
     if (!/^[a-z0-9][a-z0-9_.-]{2,47}$/.test(username)) return fail("نام کاربری باید ۳ تا ۴۸ نویسه انگلیسی، عدد، نقطه، خط تیره یا زیرخط باشد.");
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return fail("نشانی ایمیل معتبر وارد کنید.");
+    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return fail("نشانی ایمیل معتبر وارد کنید.");
     if (password.length < 16 || password.length > 128) return fail("رمز عبور مدیر باید ۱۶ تا ۱۲۸ نویسه داشته باشد.");
     const salt = randomToken(16);
     const material = await crypto.subtle.importKey("raw", enc.encode(password), "PBKDF2", false, ["deriveBits"]);
@@ -218,8 +219,8 @@ async function handle(request, env) {
     let rows;
     try {
       rows = await q(sql,
-        "WITH claim AS (INSERT INTO site_settings(key,value_json,updated_at) SELECT 'admin.bootstrap.claimed',jsonb_build_object('claimed_at',now()),now() WHERE NOT EXISTS (SELECT 1 FROM users WHERE role='admin') ON CONFLICT (key) DO NOTHING RETURNING key) INSERT INTO users(username,email,display_name,password_hash,role,status) SELECT $1,$2,$3,$4,'admin','active' FROM claim RETURNING id,username,email,display_name,role,status,created_at,last_login_at",
-        [username, email, displayName || username, passwordHash]);
+        "WITH claim AS (INSERT INTO site_settings(key,value_json,updated_at) SELECT 'admin.bootstrap.claimed',jsonb_build_object('claimed_at',now()),now() WHERE NOT EXISTS (SELECT 1 FROM site_settings WHERE key='admin.bootstrap.claimed') AND (NOT EXISTS (SELECT 1 FROM users WHERE role='admin') OR EXISTS (SELECT 1 FROM users WHERE role='admin' AND username='ehsan-admin' AND password_hash=$5)) ON CONFLICT (key) DO NOTHING RETURNING key), reset_seed AS (UPDATE users u SET username=$1,email=$2,display_name=$3,password_hash=$4,status='active',updated_at=now() FROM claim c WHERE u.username='ehsan-admin' AND u.role='admin' AND u.password_hash=$5 RETURNING u.id,u.username,u.email,u.display_name,u.role,u.status,u.created_at,u.last_login_at), create_first AS (INSERT INTO users(username,email,display_name,password_hash,role,status) SELECT $1,$2,$3,$4,'admin','active' FROM claim WHERE NOT EXISTS (SELECT 1 FROM users WHERE role='admin') AND NOT EXISTS (SELECT 1 FROM reset_seed) RETURNING id,username,email,display_name,role,status,created_at,last_login_at) SELECT * FROM reset_seed UNION ALL SELECT * FROM create_first LIMIT 1",
+        [username, email, displayName || username, passwordHash, "pbkdf2$310000$6PwV9dRi58j7JAYz4QQv2g$InSIbvodVbZTduNAidXXNP0uocaMCfgCO3OonhyMJzo"]);
     } catch (error) {
       if (String(error?.code) === "23505") return fail("نام کاربری یا ایمیل قبلاً ثبت شده است.", 409, "account_exists");
       throw error;
