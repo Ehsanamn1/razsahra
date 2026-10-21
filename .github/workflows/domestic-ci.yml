@@ -18,6 +18,19 @@ jobs:
   validate:
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    services:
+      mysql:
+        image: mysql:8.4
+        env:
+          MYSQL_ROOT_PASSWORD: ci-root-password
+          MYSQL_DATABASE: razsahra_ci
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -pci-root-password"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=20
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -29,8 +42,14 @@ jobs:
         run: npm install --no-audit --no-fund
       - name: Static checks and repository contract checks
         run: npm run check
+      - name: Validate MySQL integration test syntax
+        run: node --check scripts/test-mysql-schema.mjs
       - name: Validate the guarded CMS data-transfer utility syntax
         run: node --check scripts/migrate-cms-data.mjs
+      - name: Apply and verify schema against disposable MySQL 8.4
+        env:
+          TARGET_MYSQL_URL: mysql://root:ci-root-password@127.0.0.1:3306/razsahra_ci
+        run: node scripts/test-mysql-schema.mjs && node scripts/check-mysql-connection.mjs
       - name: Build static site bundle
         env:
           SITE_URL: https://razsahra.pages.dev
