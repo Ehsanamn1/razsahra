@@ -42,6 +42,27 @@ function encode(value) {
 try {
   await target.query("SET time_zone = '+00:00'");
   for (const table of TABLES) {
+    const sourceColumns = await source.query(
+      'SELECT column_name FROM information_schema.columns WHERE table_schema = $1 AND table_name = $2 ORDER BY ordinal_position',
+      ['public', table],
+    );
+    const [targetColumnRows] = await target.query(
+      'SELECT COLUMN_NAME AS column_name, IS_NULLABLE AS is_nullable, COLUMN_DEFAULT AS column_default, EXTRA AS extra FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ? ORDER BY ORDINAL_POSITION',
+      [table],
+    );
+    const sourceColumnNames = sourceColumns.map(column => String(column.column_name).toLowerCase());
+    const targetColumnNames = targetColumnRows.map(column => String(column.column_name).toLowerCase());
+    const missing = sourceColumnNames.filter(column => !targetColumnNames.includes(column));
+    if (missing.length) throw new Error(table + ' target schema is missing source columns: ' + missing.join(', '));
+    const requiredTargetOnly = targetColumnRows.filter(column =>
+      !sourceColumnNames.includes(String(column.column_name).toLowerCase()) &&
+      String(column.is_nullable).toUpperCase() !== 'YES' &&
+      column.column_default === null &&
+      !/auto_increment|generated/i.test(String(column.extra || ''))
+    );
+    if (requiredTargetOnly.length) {
+      throw new Error(table + ' has target-only required columns with no default: ' + requiredTargetOnly.map(column => column.column_name).join(', '));
+    }
     const srcRows = await source.query('SELECT * FROM "' + table + '"');
     const [targetResult] = await target.query('SELECT COUNT(*) AS count FROM `' + table + '`');
     sourceCounts[table] = srcRows.length;
