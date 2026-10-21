@@ -18,7 +18,7 @@ for (const table of ["users","sessions","auth_attempts","site_pages","articles",
 assert.ok(html.includes('id="rs-login-form"'), "Login form missing");
 assert.ok(html.includes('id="rs-register-form"'), "Register form missing");
 const authRuntime = html.slice(html.indexOf('<script id="rs-auth-runtime">'), html.indexOf("</script>", html.indexOf('<script id="rs-auth-runtime">')));
-for (const handler of ["submitBootstrap","submitLogin","submitRegister"]) {
+for (const handler of ["submitLogin","submitRegister"]) {
   const start = authRuntime.indexOf("async function " + handler + "(event){");
   assert.ok(start >= 0, "Missing form handler: " + handler);
   const next = authRuntime.indexOf("\n  async function ", start + 1);
@@ -26,10 +26,8 @@ for (const handler of ["submitBootstrap","submitLogin","submitRegister"]) {
   assert.ok(body.includes("const form = event.target;"), handler + " must read the submitted form from event.target");
   assert.ok(!body.includes("event.currentTarget"), handler + " must not use currentTarget inside a delegated listener");
 }
-assert.ok(html.includes('id="rs-bootstrap-form"'), "One-time administrator bootstrap form missing");
-assert.ok(html.includes("x-admin-bootstrap-secret"), "Bootstrap secret must be sent only as the request header");
-assert.ok(html.includes('name="password_confirm"') && html.includes('minlength="6"'), "Administrator bootstrap must require a confirmed password of at least six characters");
-assert.ok(api.includes("if (password.length < 6 || password.length > 128)"), "Admin bootstrap API must accept passwords from six to 128 characters");
+assert.ok(html.includes('data-page="setup-admin"') && html.includes('data-route="login"'), "Admin setup route must point to the normal login page");
+assert.ok(!html.includes('id="rs-bootstrap-form"') && !html.includes("x-admin-bootstrap-secret"), "Complex admin setup form must not be exposed in the public UI");
 assert.ok(html.includes('id="admin-panel-content"'), "Admin dashboard mount missing");
 assert.ok(html.includes("raz-sahra-cms-runtime.js"), "CMS inquiry runtime is not loaded");
 assert.ok(cmsRuntime.includes('fetch("/api/inquiries"'), "Inquiry forms must use the backend endpoint");
@@ -85,4 +83,4 @@ await access("db/schema.sql");
 await access("assets/raz-sahra-cms-runtime.js");
 await access("_headers");
 await access(".github/workflows/pages.yml");
-console.log("Checks passed: public and protected routes, one-time admin bootstrap, inquiry persistence/fallback, database schema, security headers and Cloudflare Pages workflow.");
+console.log("Checks passed: public and protected routes, simple role-based login, inquiry persistence/fallback, database schema, security headers and Cloudflare Pages workflow.");
