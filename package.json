@@ -5,10 +5,11 @@
   "type": "module",
   "scripts": {
     "build": "node scripts/build.mjs",
-    "check": "node --check 'functions/api/[[path]].js' && node --check assets/raz-sahra-cms-runtime.js && node scripts/check.mjs",
+    "check": "node --check 'functions/api/[[path]].js' && node --check assets/raz-sahra-cms-runtime.js && node scripts/check.mjs && node scripts/check-mysql-schema.mjs",
     "dev": "wrangler pages dev dist",
     "migrate:cms:dry-run": "node scripts/migrate-cms-data.mjs",
-    "migrate:cms:apply": "node scripts/migrate-cms-data.mjs --apply"
+    "migrate:cms:apply": "node scripts/migrate-cms-data.mjs --apply",
+    "check:mysql-schema": "node scripts/check-mysql-schema.mjs"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.2.0",
