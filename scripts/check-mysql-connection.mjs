@@ -14,11 +14,7 @@ const requiredTables = [
   'users', 'sessions', 'auth_attempts', 'site_pages', 'articles',
   'site_settings', 'inquiries', 'audit_logs', 'app_catalog',
 ];
-const db = await mysql.createConnection({
-  uri: url,
-  connectTimeout: 10000,
-  multipleStatements: false,
-});
+const db = await mysql.createConnection(url);
 try {
   const [[server]] = await db.query('SELECT VERSION() AS version, DATABASE() AS database_name');
   const version = String(server.version).split('-')[0].split('.').map(Number);
