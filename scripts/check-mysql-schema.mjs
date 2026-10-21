@@ -18,19 +18,14 @@ for (const table of ['users', 'articles', 'inquiries']) {
   assert(/id CHAR\(36\) NOT NULL DEFAULT \(UUID\(\)\) PRIMARY KEY/i.test(match[1]), `${table}.id must generate a UUID for new runtime inserts`);
 }
 
-const forbidden = [
-  [new RegExp('\\\\bJSONB\\\\b', 'i'), 'PostgreSQL JSONB type'],
-  [new RegExp('\\\\bTIMESTAMPTZ\\\\b', 'i'), 'PostgreSQL TIMESTAMPTZ type'],
-  [new RegExp('::(?:jsonb|int|text|uuid)\\\\b', 'i'), 'PostgreSQL cast syntax'],
-  [new RegExp('\\\\bON CONFLICT\\\\b', 'i'), 'PostgreSQL ON CONFLICT clause'],
-  [new RegExp('\\\\bRETURNING\\\\b', 'i'), 'PostgreSQL RETURNING clause'],
-];
-for (const [pattern, label] of forbidden) assert(!pattern.test(schema), `MySQL schema contains unsupported ${label}`);
-
+const normalizedSchema = schema.toUpperCase();
+for (const token of ['JSONB', 'TIMESTAMPTZ', '::JSONB', '::INT', '::TEXT', '::UUID', 'ON CONFLICT', 'RETURNING']) {
+  assert(!normalizedSchema.includes(token), `MySQL schema contains unsupported PostgreSQL token: ${token}`);
+}
 for (const relation of [
-  new RegExp('FOREIGN KEY \\\\(user_id\\\\) REFERENCES users\\\\(id\\\\)', 'i'),
-  new RegExp('FOREIGN KEY \\\\(actor_id\\\\) REFERENCES users\\\\(id\\\\)', 'i'),
-  new RegExp('FOREIGN KEY \\\\(updated_by\\\\) REFERENCES users\\\\(id\\\\)', 'i'),
-]) assert(relation.test(schema), 'A required CMS foreign-key relation is missing');
+  'FOREIGN KEY (USER_ID) REFERENCES USERS(ID)',
+  'FOREIGN KEY (ACTOR_ID) REFERENCES USERS(ID)',
+  'FOREIGN KEY (UPDATED_BY) REFERENCES USERS(ID)',
+]) assert(normalizedSchema.includes(relation), 'A required CMS foreign-key relation is missing');
 
 console.log(`MySQL schema static check passed: ${requiredTables.length} tables, UUID defaults, and PostgreSQL syntax checks.`);
