@@ -3,6 +3,8 @@ name: Build and deploy Raz Sahra to Cloudflare Pages
 on:
   push:
     branches: ["main"]
+  pull_request:
+    branches: ["main"]
   workflow_dispatch:
 
 permissions:
@@ -77,8 +79,22 @@ jobs:
           grep -R -q '/api/medar' dist/madar/assets
           grep -q '/madar/' _redirects
 
+      - name: Ensure the intended Cloudflare Pages project exists
+        if: ${{ github.ref == 'refs/heads/main' && env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != '' }}
+        run: |
+          set -euo pipefail
+          # Fail closed if account authentication/listing fails; only create when the
+          # configured account was successfully queried and the project is absent.
+          project_list="$(npx wrangler pages project list)"
+          if grep -Eq '(^|[^[:alnum:]_-])razsahra([^[:alnum:]_-]|$)' <<< "$project_list"; then
+            echo "Found Cloudflare Pages project razsahra in the configured account."
+          else
+            echo "Cloudflare Pages project razsahra is absent from the configured account; creating it with main as production branch."
+            npx wrangler pages project create razsahra --production-branch=main
+          fi
+
       - name: Deploy to Cloudflare Pages
-        if: ${{ env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != '' }}
+        if: ${{ github.ref == 'refs/heads/main' && env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != '' }}
         run: npx wrangler pages deploy dist --project-name=razsahra --branch=main
 
       - name: Explain skipped deployment
