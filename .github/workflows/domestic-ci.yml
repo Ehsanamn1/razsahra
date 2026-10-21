@@ -29,6 +29,8 @@ jobs:
         run: npm install --no-audit --no-fund
       - name: Static checks and repository contract checks
         run: npm run check
+      - name: Validate the guarded CMS data-transfer utility syntax
+        run: node --check scripts/migrate-cms-data.mjs
       - name: Build static site bundle
         env:
           SITE_URL: https://razsahra.pages.dev
