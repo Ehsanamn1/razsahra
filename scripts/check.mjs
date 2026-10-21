@@ -33,7 +33,7 @@ assert.ok(cloudflareWorkflow.includes("Ensure CMS database secret is configured 
 assert.ok(cloudflareWorkflow.includes("pages secret put DATABASE_URL") && cloudflareWorkflow.includes("RAZ_SAHRA_DATABASE_URL"), "Deployment must support secure provisioning of the Pages CMS database secret");
 assert.ok(cloudflareWorkflow.includes("/madar/app/home"), "Production smoke test must verify a nested Madar route refresh");
 assert.ok(madarRouteFallback.includes("context.env.ASSETS.fetch") && madarRouteFallback.includes('text/html'), "Madar deep-link fallback must serve the application shell for HTML navigations");
-assert.ok(html.includes('class="section madar-product-section"') && html.includes('id="madar-product-title"'), "Public homepage must expose the integrated Madar product section");
+assert.ok(html.includes('class="section compact madar-product-section"') && html.includes('id="madar-product-title"'), "Public homepage must expose the integrated Madar product section");
 
 assert.ok(cloudflareWorkflow.includes("SITE_BUILD_VERSION"), "Deployment build version must be supplied for cache busting");
 assert.ok(build.includes("process.env.SITE_BUILD_VERSION") && build.includes("${buildVersion}"), "Build must bust CSS/JS caches on each deployment");
