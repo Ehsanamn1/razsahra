@@ -38,6 +38,8 @@ jobs:
           node --check 'functions/api/[[path]].js'
           test -f dist/index.html
           test -f dist/assets/raz-sahra-premium.css
+          test -f dist/assets/raz-sahra-cms-runtime.js
+          test -f dist/_headers
           test -f dist/manifest.webmanifest
 
       - name: Deploy to Cloudflare Pages
