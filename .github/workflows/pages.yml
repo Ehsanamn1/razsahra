@@ -22,6 +22,7 @@ jobs:
       CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID || secrets.CLOUDFLARE_ACCOUNT_ID }}
       SITE_URL: ${{ vars.SITE_URL || 'https://razsahra.pages.dev' }}
       SITE_BUILD_VERSION: ${{ github.sha }}
+      RAZ_SAHRA_DATABASE_URL: ${{ secrets.RAZ_SAHRA_DATABASE_URL || secrets.DATABASE_URL }}
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -94,6 +95,27 @@ jobs:
             npx wrangler pages project create razsahra --production-branch=main
           fi
 
+      - name: Ensure CMS database secret is configured before deployment
+        if: ${{ github.ref == 'refs/heads/main' && env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != '' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ -n "${RAZ_SAHRA_DATABASE_URL:-}" ]]; then
+            # Push the dedicated Raz Sahra DB URL to Pages without printing it.
+            printf '%s' "$RAZ_SAHRA_DATABASE_URL" | npx wrangler pages secret put DATABASE_URL --project-name=razsahra
+            echo "Provisioned the Pages DATABASE_URL secret from the dedicated Raz Sahra GitHub secret."
+          else
+            # The value is never read back; this only checks whether the binding exists.
+            configured_secrets="$(npx wrangler pages secret list --project-name=razsahra)"
+            if grep -q 'DATABASE_URL' <<< "$configured_secrets"; then
+              echo "A DATABASE_URL secret is already configured in the Cloudflare Pages project."
+            else
+              echo "::error::Missing the CMS database secret. Add Cloudflare Pages Production secret DATABASE_URL, or add GitHub Actions secret RAZ_SAHRA_DATABASE_URL so this workflow can provision it securely."
+              echo "Required action: set Cloudflare Pages secret DATABASE_URL to the pooled connection string for the dedicated Neon project raz-sahra-site; alternatively set the GitHub Actions secret RAZ_SAHRA_DATABASE_URL." >> "$GITHUB_STEP_SUMMARY"
+              exit 1
+            fi
+          fi
+
       - name: Deploy to Cloudflare Pages
         id: deploy
         if: ${{ github.ref == 'refs/heads/main' && env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != '' }}
@@ -134,6 +156,17 @@ jobs:
               fi
               rm -f "$body_file"
             done
+            nested_file="$(mktemp)"
+            nested_status="$(curl --silent --show-error --location --retry 5 --retry-all-errors --retry-delay 2 --max-time 25 --header 'Accept: text/html' --output "$nested_file" --write-out '%{http_code}' "$origin/madar/app/home")" || nested_status="curl-error"
+            if [[ "$nested_status" != "200" ]] || ! grep -q 'id="root"' "$nested_file"; then
+              echo "Madar deep-link refresh failed at $origin/madar/app/home (HTTP $nested_status)."
+              head -c 250 "$nested_file" || true
+              echo
+              failure=1
+            else
+              echo "HTTP 200 and application shell verified: $origin/madar/app/home"
+            fi
+            rm -f "$nested_file"
             health_file="$(mktemp)"
             health_status="$(curl --silent --show-error --location --retry 5 --retry-all-errors --retry-delay 2 --output "$health_file" --write-out '%{http_code}' "$origin/api/health")" || health_status="curl-error"
             if ! node -e 'const fs=require("node:fs");const raw=fs.readFileSync(process.argv[1],"utf8");const status=process.argv[2];let d;try{d=JSON.parse(raw)}catch{console.error("Health endpoint HTTP "+status+" returned non-JSON: "+raw.slice(0,250).replace(/\s+/g," "));process.exit(1)}if(status!=="200"||d.ok!==true||d.database!=="connected"){console.error("Health check failed: "+JSON.stringify({status,ok:d.ok,database:d.database,error:d.error&&d.error.code}));process.exit(1)}console.log("API healthy; Neon database connected.")' "$health_file" "$health_status"; then
