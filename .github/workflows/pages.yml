@@ -1,4 +1,4 @@
-name: Deploy static site to GitHub Pages
+name: Build and deploy Raz Sahra to Cloudflare Pages
 
 on:
   push:
@@ -7,150 +7,40 @@ on:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 concurrency:
-  group: "pages"
-  cancel-in-progress: false
+  group: cloudflare-pages-production
+  cancel-in-progress: true
 
 jobs:
-  deploy:
-    environment:
-      name: github-pages
+  validate-build-deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
-      - name: Set up Node.js for JavaScript syntax validation
+
+      - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "22"
-      - name: Validate HTML, required routes, and sitemap
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-          import re
-          import xml.etree.ElementTree as ET
+          cache: "npm"
 
-          html = Path("index.html").read_text(encoding="utf-8")
-          expected = {"home", "about", "business", "supply", "partnerships", "contact", "insights", "privacy"}
-          found = set(re.findall(r'data-page="([^"]+)"', html))
-          missing = expected - found
-          if missing:
-              raise SystemExit("Missing page views: " + ", ".join(sorted(missing)))
-          scripts = re.findall(r"<script>([\s\S]*?)</script>", html)
-          if len(scripts) != 1:
-              raise SystemExit("Expected one inline application script")
-          Path("/tmp/raz-sahra-app.js").write_text(scripts[0], encoding="utf-8")
-          ET.parse("sitemap.xml")
-          if 'lang="fa"' not in html or 'dir="rtl"' not in html:
-              raise SystemExit("Persian language and RTL direction must be set")
-          print("Static checks passed: all 8 page views, Persian RTL, and sitemap XML.")
-          PY
-          node --check /tmp/raz-sahra-app.js
-          node --check assets/raz-sahra-interactions.js
-          node --check assets/raz-sahra-language.js
-          test -f assets/raz-sahra-premium.css
-          test -f assets/raz-sahra-symbol.webp
-          test -f assets/raz-sahra-logo-lockup.webp
-          test -f assets/raz-sahra-hero-banner.webp
-          test -f manifest.webmanifest
-          grep -q 'assets/raz-sahra-premium.css' index.html
-          grep -q 'assets/raz-sahra-interactions.js' index.html
-          grep -q 'assets/raz-sahra-language.js' index.html
-          grep -q '"lang": "fa"' manifest.webmanifest
-          test -f assets/raz-sahra-articles.html
-          test -f assets/raz-sahra-articles-en.html
-          test -f assets/raz-sahra-image-credits.html
-          grep -q 'assets/raz-sahra-symbol.webp' index.html
-          grep -q 'assets/raz-sahra-logo-lockup.webp' index.html
-          grep -q 'data-language-toggle' index.html
-          grep -q 'data-hero-slider' index.html
-          grep -q 'data-cta-slider' index.html
-          grep -q 'data-magazine-carousel' index.html
-          grep -q 'article-reader-dialog' assets/raz-sahra-premium.css
-          grep -q 'data-articles-src="assets/raz-sahra-articles.html"' index.html
-          if grep -Eqi 'Coturnix|Iran_1395_Coturnix|Arian_chicken|pussalla\.lk|globalagmedia\.com|wixstatic\.com|wattagnet\.com' index.html assets/raz-sahra-premium.css assets/raz-sahra-articles.html assets/raz-sahra-articles-en.html; then echo "Legacy/unverified image reference remains"; exit 1; fi
-          grep -q 'assets/raz-sahra-hero-banner.webp' index.html
-          grep -q 'assets/raz-sahra-logo-lockup.webp' index.html
-          grep -q 'assets/raz-sahra-symbol.webp' manifest.webmanifest
-          if grep -q 'assets/raz-sahra-symbol.svg' index.html; then echo "Hand-drawn SVG mark still referenced by main page"; exit 1; fi
-          python - <<'PY'
-          from pathlib import Path
-          import re
-          html = Path("index.html").read_text(encoding="utf-8")
-          articles = Path("assets/raz-sahra-articles.html").read_text(encoding="utf-8")
-          english = Path("assets/raz-sahra-articles-en.html").read_text(encoding="utf-8")
-          for label, source in [("Persian", articles), ("English", english)]:
-              count = len(re.findall(r'data-article-card', source))
-              if count != 8:
-                  raise SystemExit(f"Expected 8 {label} editorial guides, found {count}")
-              cover_count = len(re.findall(r'class="article-cover"', source))
-              if cover_count != 8:
-                  raise SystemExit(f"Each {label} guide needs a cover image; found {cover_count}")
-              image_sources = re.findall(r'class="article-cover" src="([^"]+)"', source)
-              if len(set(image_sources)) != 8:
-                  raise SystemExit(f"Each {label} article must use a distinct cover image")
-              for required in ["data-article-open", "data-save-article", "article-takeaway"]:
-                  if required not in source:
-                      raise SystemExit(f"{label} editorial feature missing: {required}")
-          for required in ["data-hero-slide", "data-cta-slide", "data-hero-dot", "data-cta-dot", "data-language-toggle", "assets/raz-sahra-logo-lockup.webp"]:
-              if required not in html:
-                  raise SystemExit(f"Homepage feature missing: {required}")
-          if len(re.findall(r'<article class="hero-slide', html)) != 4:
-              raise SystemExit("Homepage must contain exactly 4 hero slides")
-          if len(re.findall(r'<article class="collaboration-slide', html)) != 4:
-              raise SystemExit("Collaboration carousel must contain exactly 4 slides")
-          if len(re.findall(r'data-cta-dot="\d+"', html)) != 4:
-              raise SystemExit("Collaboration carousel must have four matching navigation dots")
-          css = Path("assets/raz-sahra-premium.css").read_text(encoding="utf-8")
-          interactions = Path("assets/raz-sahra-interactions.js").read_text(encoding="utf-8")
-          if ".footer-lockup-link{display:inline-flex;align-items:center;justify-content:center;width:min(100%,220px)" not in css or ".footer-lockup-image{display:block;width:100%;height:auto;max-width:100%;max-height:none;object-fit:contain" not in css:
-              raise SystemExit("Footer logo must preserve its full canvas without cropping")
-          if "brand-lockup-image-frame" not in html or "brand-lockup-image-frame" not in css:
-              raise SystemExit("About-page supplied logo frame is missing")
-          if "raz-sahra-logo-lockup-hq.webp" in html:
-              raise SystemExit("Reference to a non-existent high-resolution logo asset remains")
-          if ".page-view section,.site-footer" not in interactions:
-              raise SystemExit("Section-wide ember particles are missing")
-          if "interval:4800" not in interactions or "interval:5400" not in interactions:
-              raise SystemExit("Carousel timings were not updated")
-          if len(re.findall(r'class="magazine-card"', html)) < 4:
-              raise SystemExit("Homepage magazine must contain at least 4 featured cards")
-          if "photos/3184465" in html or "photos/4480984" in html:
-              raise SystemExit("Generic handshake/meeting photos remain in the homepage carousels")
-          if 'assets/raz-sahra-image-credits.html' not in html or not Path("assets/raz-sahra-image-credits.html").is_file():
-              raise SystemExit("The footer image-credit link or its target page is missing")
-          if "rs-image-credit" in html:
-              raise SystemExit("Image-credit block should not appear in the footer")
-          print("Editorial and interaction checks passed: 8 distinct illustrated articles per language, 4 hero slides, 4 collaboration slides, section ember motion and a magazine carousel.")
-          PY
-          if grep -qi 'images.unsplash.com' index.html; then echo "Unexpected hotlinked Unsplash image found in main page"; exit 1; fi
-          python - <<'PY'
-          from pathlib import Path
-          import json
-          manifest = json.loads(Path("manifest.webmanifest").read_text(encoding="utf-8"))
-          if manifest.get("dir") != "rtl" or manifest.get("lang") != "fa":
-              raise SystemExit("Manifest must be Persian and RTL")
-          if manifest.get("icons", [{}])[0].get("src") != "/razsahra/assets/raz-sahra-symbol.webp":
-              raise SystemExit("Manifest must use the exact supplied brand symbol")
-          if manifest.get("icons", [{}])[0].get("sizes") != "256x256":
-              raise SystemExit("Manifest icon dimensions must match the 256x256 symbol asset")
-          if not Path("assets/raz-sahra-symbol.webp").is_file():
-              raise SystemExit("Missing exact supplied brand symbol")
-          if not Path("assets/raz-sahra-logo-lockup.webp").is_file():
-              raise SystemExit("Missing exact supplied logo lockup")
-          print("Asset, manifest, script syntax, and source checks passed.")
-          PY
-      - name: Configure GitHub Pages
-        uses: actions/configure-pages@v5
-        with:
-          enablement: true
-      - name: Upload static site
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: "."
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Validate frontend, API, schema and build
+        run: |
+          npm run check
+          npm run build
+          node --check 'functions/api/[[path]].js'
+          test -f dist/index.html
+          test -f dist/assets/raz-sahra-premium.css
+          test -f dist/manifest.webmanifest
+        env:
+          SITE_URL: ${{ vars.SITE_URL || 'https://razsahra.pages.dev' }}
+
+      - name: Deploy to Cloudflare Pages
+        run: npx wrangler pages deploy dist --project-name=razsahra --branch=main
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
