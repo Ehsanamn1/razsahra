@@ -11,8 +11,9 @@ permissions:
   contents: read
 
 concurrency:
-  group: cloudflare-pages-production
-  cancel-in-progress: true
+  # Pull-request validation must never cancel an in-flight production release.
+  group: ${{ github.event_name == 'pull_request' && format('cloudflare-pages-pr-{0}', github.event.pull_request.number) || 'cloudflare-pages-production' }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   validate-build-deploy:
