@@ -65,9 +65,9 @@ The exact integrated frontend revision is kept in the canonical manifest at `int
 
 The current pin is:
 
-426889daa35c5520b4572531f2866cfd26900931
+6fa62e1826d8f4a3ebbd8ef137b043fecda646ab
 
-This is the Medar main revision verified by the successful Worker deployment workflow (run [39631181645](https://github.com/Ehsanamn1/simorgh/actions/runs/39631181645)) and the successful parent-site release (run [39635161486](https://github.com/Ehsanamn1/razsahra/actions/runs/39635161486)). The standalone Worker release and the embedded `/madar/` bundle are separate artifacts and must be verified separately.
+This pinned Medar main revision (`6fa62e1826d8f4a3ebbd8ef137b043fecda646ab`) passed Medar CI [run 39641706342](https://github.com/Ehsanamn1/simorgh/actions/runs/39641706342), operational Worker deployment [run 39641706299](https://github.com/Ehsanamn1/simorgh/actions/runs/39641706299), Android build [run 39641706082](https://github.com/Ehsanamn1/simorgh/actions/runs/39641706082), and iOS simulator build [run 39641706298](https://github.com/Ehsanamn1/simorgh/actions/runs/39641706298). The last completed parent release [run 39641856036](https://github.com/Ehsanamn1/razsahra/actions/runs/39641856036) still embedded the previous pin; the current PR's validation and the next post-merge parent release must confirm this new pin is built and live before it is marked deployed. The standalone Worker release and the embedded `/madar/` bundle are separate artifacts and must be verified separately.
 
 To upgrade the integrated bundle, first identify a specific Medar commit merged into `main`, verify its required Medar CI and Worker deployment results, then update `integration/medar-source.json` in a reviewed parent-site change. Do not change the source back to a moving branch, and do not duplicate the pin in the workflow. The workflow embeds both the parent-site SHA and Medar SHA in the app version marker so deployed assets can be attributed to the exact pair.
 
@@ -90,9 +90,9 @@ The Medar Worker's own deployment and authorization checks remain separately req
 
 - **Raz Sahra parent + integrated Medar:** parent commit `7b6f8198ddec29d45e437441d8ca87fc2c13a865`, workflow run [39641032144](https://github.com/Ehsanamn1/razsahra/actions/runs/39641032144), conclusion: **success**. The run deployed https://7f1ac571.razsahra.pages.dev and verified both that unique deployment origin and the canonical `https://razsahra.pages.dev/` origin.
 - The post-deploy runner confirmed the public Medar entry point, HTTP 200 for `/` and `/madar/`, HTTP 200 and app shell for `/madar/app/home`, CMS health (`ok: true`, `database: "connected"`), upstream Medar health (`ok: true`, `database: true`), and HTTP 401 for unauthenticated GET `/api/admin/pages` at both origins.
-- **Embedded Medar source:** `426889daa35c5520b4572531f2866cfd26900931`, read from `integration/medar-source.json`. Its operational Worker deployment was verified by [run 39631181645](https://github.com/Ehsanamn1/simorgh/actions/runs/39631181645); the current Medar main also includes subsequent documentation-only work.
+- **Embedded Medar source:** `6fa62e1826d8f4a3ebbd8ef137b043fecda646ab`, read from `integration/medar-source.json`. Its operational Worker deployment was verified by [run 39631181645](https://github.com/Ehsanamn1/simorgh/actions/runs/39631181645); the current Medar main also includes subsequent documentation-only work.
 - The workflow now separates pull-request concurrency groups from the production group so PR validation does not cancel a running production release. Main releases share a production group without cancelling the in-flight run; the repository check asserts this configuration.
-- The app's runtime configuration uses the combined parent/Medar source ID as its app version. The post-merge artifact-verification gate checks that the exact `7b6f8198ddec29d45e437441d8ca87fc2c13a865-426889daa35c5520b4572531f2866cfd26900931` marker is present in generated Medar JavaScript; a passing build alone is not a substitute for the live route and security smoke tests.
+- The app's runtime configuration uses the combined parent/Medar source ID as its app version. The post-merge artifact-verification gate checks that the exact `7b6f8198ddec29d45e437441d8ca87fc2c13a865-6fa62e1826d8f4a3ebbd8ef137b043fecda646ab` marker is present in generated Medar JavaScript; a passing build alone is not a substitute for the live route and security smoke tests.
 
 
 ## 7. Out of scope
