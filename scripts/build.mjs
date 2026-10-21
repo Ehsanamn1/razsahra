@@ -8,6 +8,7 @@ const cloudflareBase = "https://razsahra.pages.dev/";
 let siteUrl = process.env.SITE_URL || cloudflareBase;
 if (!/^https?:\/\//i.test(siteUrl)) throw new Error("SITE_URL must be an absolute HTTPS URL");
 siteUrl = siteUrl.replace(/\/+$/, "") + "/";
+const buildVersion = String(process.env.SITE_BUILD_VERSION || process.env.GITHUB_SHA || "dev").slice(0, 12);
 await rm(out, { recursive: true, force: true });
 await mkdir(out, { recursive: true });
 for (const file of files) {
@@ -17,10 +18,10 @@ for (const file of files) {
 await cp(path.join(root, "assets"), path.join(out, "assets"), { recursive: true });
 let html = await readFile(path.join(out, "index.html"), "utf8");
 html = html.split(oldBase).join(siteUrl);
-html = html.replace(/raz-sahra-premium\.css\?v=[^"]+/g, "raz-sahra-premium.css?v=20261021-07");
-html = html.replace(/raz-sahra-interactions\.js\?v=[^"]+/g, "raz-sahra-interactions.js?v=20261021-06");
-html = html.replace(/raz-sahra-language\.js\?v=[^"]+/g, "raz-sahra-language.js?v=20261021-06");
-html = html.replace(/raz-sahra-cms-runtime\.js\?v=[^"]+/g, "raz-sahra-cms-runtime.js?v=20261021-03");
+html = html.replace(/raz-sahra-premium\.css\?v=[^"]+/g, `raz-sahra-premium.css?v=${buildVersion}`);
+html = html.replace(/raz-sahra-interactions\.js\?v=[^"]+/g, `raz-sahra-interactions.js?v=${buildVersion}`);
+html = html.replace(/raz-sahra-language\.js\?v=[^"]+/g, `raz-sahra-language.js?v=${buildVersion}`);
+html = html.replace(/raz-sahra-cms-runtime\.js\?v=[^"]+/g, `raz-sahra-cms-runtime.js?v=${buildVersion}`);
 await writeFile(path.join(out, "index.html"), html);
 let manifest = await readFile(path.join(out, "manifest.webmanifest"), "utf8");
 manifest = manifest.replaceAll("/razsahra/assets/", "/assets/").replaceAll('"/razsahra/"', '"/"').replaceAll('"/razsahra/?source=pwa"', '"/?source=pwa"');
