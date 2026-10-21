@@ -84,12 +84,19 @@ jobs:
         run: npm run build -- --base=/madar/ --outDir ../dist/madar --emptyOutDir
 
       - name: Verify combined website and Medar artifact
+        env:
+          PARENT_SOURCE_SHA: ${{ github.sha }}
+          MEDAR_SOURCE_SHA: ${{ steps.medar-source.outputs.ref }}
         run: |
+          set -euo pipefail
           test -f dist/madar/index.html
           test -f dist/madar/manifest.webmanifest
           test -f dist/madar/sw.js
           grep -R -q '/api/medar' dist/madar/assets
           grep -q '/madar/' _redirects
+          # The app reports this build ID through its authenticated client-presence heartbeat.
+          # Assert the exact parent+Medar revision pair exists in the built JavaScript bundle.
+          grep -R -F -q "${PARENT_SOURCE_SHA}-${MEDAR_SOURCE_SHA}" dist/madar/assets
 
       - name: Ensure the intended Cloudflare Pages project exists
         if: ${{ github.ref == 'refs/heads/main' && env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != '' }}
