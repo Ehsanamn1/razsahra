@@ -17,7 +17,7 @@ for (const file of files) {
 await cp(path.join(root, "assets"), path.join(out, "assets"), { recursive: true });
 let html = await readFile(path.join(out, "index.html"), "utf8");
 html = html.split(oldBase).join(siteUrl);
-html = html.replace(/raz-sahra-premium\.css\?v=[^"]+/g, "raz-sahra-premium.css?v=20261021-06");
+html = html.replace(/raz-sahra-premium\.css\?v=[^"]+/g, "raz-sahra-premium.css?v=20261021-07");
 html = html.replace(/raz-sahra-interactions\.js\?v=[^"]+/g, "raz-sahra-interactions.js?v=20261021-06");
 html = html.replace(/raz-sahra-language\.js\?v=[^"]+/g, "raz-sahra-language.js?v=20261021-06");
 html = html.replace(/raz-sahra-cms-runtime\.js\?v=[^"]+/g, "raz-sahra-cms-runtime.js?v=20261021-03");
