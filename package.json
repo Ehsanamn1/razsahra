@@ -1,0 +1,17 @@
+{
+  "name": "raz-sahra-web",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "check": "node --check 'functions/api/[[path]].js' && node scripts/check.mjs",
+    "dev": "wrangler pages dev dist"
+  },
+  "dependencies": {
+    "@neondatabase/serverless": "^1.2.0"
+  },
+  "devDependencies": {
+    "wrangler": "^4.151.3"
+  }
+}
