@@ -1,3 +1,5 @@
 # Copy to .dev.vars for local Cloudflare Pages development.
 # Never commit real values; use Cloudflare Pages environment secrets in production.
 DATABASE_URL="postgresql://APP_USER:APP_PASSWORD@YOUR-NEON-HOST/neondb?sslmode=require"
+# Used only for the one-time first-admin bootstrap. Generate a random value of at least 32 characters.
+ADMIN_BOOTSTRAP_SECRET="replace-this-with-a-long-random-one-time-secret"
