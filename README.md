@@ -23,7 +23,7 @@ https://ehsanamn1.github.io/razsahra/
 
 https://razsahra.pages.dev/
 
-انتشار Cloudflare از گردش‌کار `.github/workflows/cloudflare-pages.yml` انجام می‌شود. تا وقتی پروژه Cloudflare ساخته و مقادیر دسترسی زیر پیکربندی نشده‌اند، workflow فقط build و check را اجرا می‌کند و در Summary علت ردشدن استقرار را می‌نویسد. پس از اتصال Cloudflare و ثبت مقادیر، هر push معتبر به `main` می‌تواند نسخه جدید را منتشر کند.
+انتشار Cloudflare از گردش‌کار `.github/workflows/pages.yml` انجام می‌شود. تا وقتی پروژه Cloudflare ساخته و مقادیر دسترسی زیر پیکربندی نشده‌اند، workflow فقط build و check را اجرا می‌کند و در Summary علت ردشدن استقرار را می‌نویسد. پس از اتصال Cloudflare و ثبت مقادیر، هر push معتبر به `main` می‌تواند نسخه جدید را منتشر کند.
 
 ## راه‌اندازی Cloudflare Pages
 
@@ -31,7 +31,7 @@ https://razsahra.pages.dev/
 2. در تنظیمات مخزن GitHub، یک Repository Variable با نام `CLOUDFLARE_ACCOUNT_ID` بسازید و Account ID خود را در آن قرار دهید.
 3. یک Repository Secret با نام `CLOUDFLARE_API_TOKEN` بسازید. توکن فقط باید دسترسی لازم برای انتشار Cloudflare Pages روی همان حساب را داشته باشد؛ آن را در فایل‌های پروژه یا پیام‌های عمومی قرار ندهید.
 4. در صورت داشتن دامنه اختصاصی، یک Repository Variable با نام `SITE_URL` برابر آدرس نهایی و کامل سایت (HTTPS) بسازید. در غیر این صورت workflow از `https://razsahra.pages.dev` استفاده می‌کند.
-5. workflow با Node.js 22، دستورهای `npm ci`، `npm run check`، `npm run build` و سپس `wrangler pages deploy dist --project-name=razsahra --branch=main` را اجرا می‌کند.
+5. workflow با Node.js 22، دستورهای `npm install --no-audit --no-fund`، `npm run check`، `npm run build` و سپس `wrangler pages deploy dist --project-name=razsahra --branch=main` را اجرا می‌کند.
 
 ## راه‌اندازی پایگاه‌داده Neon
 
@@ -62,7 +62,7 @@ curl -i -X POST "https://razsahra.pages.dev/api/auth/bootstrap-admin" \
 ## توسعه محلی
 
 ```bash
-npm ci
+npm install --no-audit --no-fund
 cp .dev.vars.example .dev.vars
 # مقدارهای DATABASE_URL و ADMIN_BOOTSTRAP_SECRET را فقط در .dev.vars محلی قرار دهید.
 npm run check
