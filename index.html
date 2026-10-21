@@ -309,7 +309,7 @@
       <div class="container">
         <div class="hero-panel hero-slider" data-hero-slider>
           <article class="hero-slide is-active" data-hero-slide aria-hidden="false">
-            <img class="hero-slide-bg hero-slide-bg-rooster" src="https://images.pexels.com/photos/8586377/pexels-photo-8586377.jpeg?auto=compress&cs=tinysrgb&w=2560&q=90" alt="" fetchpriority="high" decoding="async">
+            <img class="hero-slide-bg hero-slide-bg-rooster" src="https://images.pexels.com/photos/8586377/pexels-photo-8586377.jpeg?auto=compress&cs=tinysrgb&w=1440&q=82" srcset="https://images.pexels.com/photos/8586377/pexels-photo-8586377.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=640&amp;q=72 640w, https://images.pexels.com/photos/8586377/pexels-photo-8586377.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=960&amp;q=76 960w, https://images.pexels.com/photos/8586377/pexels-photo-8586377.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=1440&amp;q=82 1440w" sizes="100vw" alt="" fetchpriority="high" decoding="async">
             <div class="hero-slide-overlay"></div>
             <div class="hero-slide-copy">
               <span class="eyebrow"><img class="eyebrow-mark" src="assets/raz-sahra-symbol.webp" alt="" width="22" height="22"> راهبران زنجیره ارزش صحرا</span>
@@ -744,6 +744,12 @@
     if(!root) return;
     api("public/pages?slug=" + encodeURIComponent(page) + "&lang=" + language()).then((result) => {
       if(!result.page) return;
+      if(page !== "home"){
+        const heroTitle = one(".page-hero-inner h1",root);
+        const heroDescription = one(".page-hero-inner p",root);
+        if(heroTitle && result.page.title) heroTitle.textContent = result.page.title;
+        if(heroDescription && result.page.description) heroDescription.textContent = result.page.description;
+      }
       const data = result.page.content_json || {};
       all("[data-cms-key]",root).forEach((node) => {
         const key = node.getAttribute("data-cms-key");
@@ -923,8 +929,11 @@
   }
   async function showLoginNoticeIfUnavailable(){
     try { await api("health"); } catch(error) {
-      const message = error.status === 503 ? "بک‌اند هنوز به نسخه عمومی متصل نیست؛ پس از استقرار Cloudflare Pages و تنظیم متغیر DATABASE_URL، ورود و ثبت‌نام فعال می‌شود." : "";
-      if(message){setStatus("rs-login-status",message,"");setStatus("rs-register-status",message,"");}
+      const message = (error.status === 503 || error.status === 404)
+        ? "ورود آنلاین هنوز روی این آدرس فعال نیست. نسخه عمومی باید روی Cloudflare Pages منتشر شود و متغیر محرمانه DATABASE_URL تنظیم باشد."
+        : "ارتباط با سرویس ورود برقرار نشد. چند لحظه دیگر دوباره تلاش کنید.";
+      setStatus("rs-login-status",message,"");
+      setStatus("rs-register-status",message,"");
     }
   }
   async function handlePageChange(){
@@ -967,8 +976,8 @@
 })();
 
 </script>
-<script src="assets/raz-sahra-cms-runtime.js?v=20261021-01" defer></script>
-<script src="assets/raz-sahra-interactions.js?v=20261021-04" defer></script>
-<script src="assets/raz-sahra-language.js?v=20261021-04" defer></script>
+<script src="assets/raz-sahra-cms-runtime.js?v=20261021-02" defer></script>
+<script src="assets/raz-sahra-interactions.js?v=20261021-05" defer></script>
+<script src="assets/raz-sahra-language.js?v=20261021-05" defer></script>
 </body>
 </html>
