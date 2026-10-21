@@ -8,37 +8,45 @@
 
 | Item | Current evidence |
 |---|---|
-| Raz Sahra main release commit | `73f452ea20e06c892b021091a7e95f4d7662c2f5` |
-| Medar main / integrated source pin | `6fa62e1826d8f4a3ebbd8ef137b043fecda646ab` |
-| Canonical source-pin manifest | `integration/medar-source.json` |
-| Latest verified Raz Sahra Pages release | [Run 39642992636](https://github.com/Ehsanamn1/razsahra/actions/runs/39642992636), conclusion: success |
-| Unique deployment URL | [8c1c3e64.razsahra.pages.dev](https://8c1c3e64.razsahra.pages.dev/) |
-| Medar Worker deployment for current pin | [Run 39641706299](https://github.com/Ehsanamn1/simorgh/actions/runs/39641706299), conclusion: success |
-| Medar main CI for current pin | [Run 39641706342](https://github.com/Ehsanamn1/simorgh/actions/runs/39641706342), conclusion: success |
-| Android build | [Run 39641706082](https://github.com/Ehsanamn1/simorgh/actions/runs/39641706082), conclusion: success |
-| iOS Simulator build | [Run 39641706298](https://github.com/Ehsanamn1/simorgh/actions/runs/39641706298), conclusion: success |
+| Raz Sahra main at the start of this pin update | `ce18fbad7f32655ecc92ef36bc71c1cbe92457d1` |
+| Latest Medar main and verified operational release | `70329106d6cd921e1c036714157986b72e0ea201` |
+| Proposed embedded Medar pin in this change | `70329106d6cd921e1c036714157986b72e0ea201` in `integration/medar-source.json`; the parent release is still pending |
+| Last verified Raz Sahra Pages release | [Run 39642992636](https://github.com/Ehsanamn1/razsahra/actions/runs/39642992636), conclusion: success |
+| Last verified parent deployment URL | [8c1c3e64.razsahra.pages.dev](https://8c1c3e64.razsahra.pages.dev/) |
+| Current Medar Worker deployment and live smoke tests | [Run 39653283449](https://github.com/Ehsanamn1/simorgh/actions/runs/39653283449), conclusion: success |
+| Current Medar main CI | [Run 39653283320](https://github.com/Ehsanamn1/simorgh/actions/runs/39653283320), conclusion: success |
+| Android build for the current Medar pin | [Run 39653283373](https://github.com/Ehsanamn1/simorgh/actions/runs/39653283373), conclusion: success |
+| iOS Simulator build for the current Medar pin | [Run 39653283318](https://github.com/Ehsanamn1/simorgh/actions/runs/39653283318), conclusion: success |
+| Complete Medar source archive | [Run 39653283462](https://github.com/Ehsanamn1/simorgh/actions/runs/39653283462), conclusion: success |
 | Canonical contract reference in Medar | [PR #117](https://github.com/Ehsanamn1/simorgh/pull/117), merged at `3856a65a553e365114269cb0be35242e62220472` |
 
 ## Task register
 
 | ID | Task | Owner | Status | Evidence / next action |
 |---|---|---|---|---|
-| INT-001 | Publish Medar at `/madar/`, support deep-link refresh, and proxy the operational API through the parent origin | Raz Sahra + Medar | verified | Run 39642992636 returned HTTP 200 for `/`, `/madar/`, and `/madar/app/home` at the canonical and unique deployment origins; both independent database-health probes passed. |
-| INT-002 | Pin the embedded Medar source to the latest verified operational revision | Raz Sahra | verified | PR #7 merged. Current manifest pin is `6fa62e1826d8f4a3ebbd8ef137b043fecda646ab`; run 39642992636 built the bundle, checked the combined `73f452ea20e06c892b021091a7e95f4d7662c2f5-6fa62e1826d8f4a3ebbd8ef137b043fecda646ab` marker, deployed it, and passed the live smoke test. |
-| SEC-001 | Verify unauthenticated CMS administration is denied | Raz Sahra | verified | Run 39642992636 observed HTTP 401 for unauthenticated GET `/api/admin/pages` at `razsahra.pages.dev` and the unique deployment origin. |
-| REL-001 | Prevent PR validation from cancelling the production Pages release | Raz Sahra | verified | PR #5 made pull-request concurrency PR-specific; the concurrency check passed and main release 39642992636 completed with conclusion success. |
+| INT-001 | Publish Medar at `/madar/`, support deep-link refresh, and proxy the operational API through the parent origin | Raz Sahra + Medar | verified for the previous pin | Run 39642992636 returned HTTP 200 for `/`, `/madar/`, and `/madar/app/home` at the canonical and unique deployment origins; both database-health probes passed. This run embedded the older Medar pin `6fa62e1826d8f4a3ebbd8ef137b043fecda646ab`; re-run parent smoke after this pin update. |
+| INT-002 | Pin the embedded Medar source to the latest verified operational revision | Raz Sahra | tested; parent deploy pending | This change sets the manifest to `70329106d6cd921e1c036714157986b72e0ea201`. Medar CI, Worker release/live auth smoke, Android, and iOS all passed for the exact revision. Parent CI must find the combined marker made from the exact parent source SHA selected by that workflow plus `70329106d6cd921e1c036714157986b72e0ea201` in built JS; the pre-merge base SHA is not assumed to equal the build SHA. Only the post-merge live Pages smoke can promote this to verified. |
+| SEC-001 | Verify unauthenticated CMS administration is denied | Raz Sahra | verified for the previous parent release | Run 39642992636 observed HTTP 401 for unauthenticated GET `/api/admin/pages` at `razsahra.pages.dev` and the unique deployment origin. Reconfirm in the parent deployment triggered by this pin update. |
+| MED-SEC-001 | Keep the operational Worker separated from public demo mode | Medar | verified | Run 39653283449 confirmed `service: "medar-ops"`, `database: true`, username/password authentication, public signup/invite signup disabled, unauthorized workspace denial, hostile-origin mutation rejection, native credentialed CORS preflights, and a public demo redirect to operational Medar. |
+| MED-OPS-001 | Keep order/account administration limited to operational roles | Medar | verified in main | PR [#123](https://github.com/Ehsanamn1/simorgh/pull/123) merged to commit `70329106d6cd921e1c036714157986b72e0ea201`; the accepted code restricts new roles to admin/staff/supplier/driver, hides customer-commerce routes, blocks customer order and order-item creation, and preserves legacy data rather than deleting it. Main CI [39653283320](https://github.com/Ehsanamn1/simorgh/actions/runs/39653283320) and release [39653283449](https://github.com/Ehsanamn1/simorgh/actions/runs/39653283449) passed. |
+| REL-001 | Prevent PR validation from cancelling the production Pages release | Raz Sahra | verified | PR #5 made pull-request concurrency PR-specific; the concurrency check passed and main release 39641032144 completed successfully. |
 | PR-002 | Reconcile the older flagship-branding pull request | Raz Sahra | verified | [PR #2](https://github.com/Ehsanamn1/razsahra/pull/2) was closed without merging because it was divergent and duplicated the current product section. |
-| PR-097 | Reconcile stale member-provisioning/help UI implementation | Medar | verified | [PR #97](https://github.com/Ehsanamn1/simorgh/pull/97) was closed without merging because its branch was 111 commits ahead and 31 behind current main. Current main contains the normalized-username account insert, schema-generated-column fallback, profile completion endpoint, customer role, help guide, and tests; CI for current main ran those SQL and E2E checks. |
+| PR-097 | Reconcile stale member-provisioning/help UI implementation | Medar | verified | [PR #97](https://github.com/Ehsanamn1/simorgh/pull/97) was closed without merging because it was 111 commits ahead and 31 behind current main; intended help/member behaviors already existed on current main. |
 | DOC-001 | Keep Medar's deployment guide linked to the canonical integration contract | Medar | verified | [PR #117](https://github.com/Ehsanamn1/simorgh/pull/117) merged; the Medar guide links to this repository's canonical contract. |
 
 ## Confirmed limitations and safeguards
 
-- The latest production run [39642992636](https://github.com/Ehsanamn1/razsahra/actions/runs/39642992636) verified the live routes, exact combined source marker, CMS health, Medar upstream health, and HTTP 401 for unauthenticated CMS administration at both origins.
-- Medar CI [39641706342](https://github.com/Ehsanamn1/simorgh/actions/runs/39641706342) passed the schema migration chain and exact member-provisioning SQL against disposable PostgreSQL test databases and ran desktop/mobile/auth/operations browser checks. These are not a substitute for an authorized owner-session test against the actual business workflow.
-- Automated tests do not fully prove an actual owner can provision a real staff/supplier/driver/customer account and that the resulting user can log in with the intended permissions. That final owner-session validation remains unverified; it must be performed through the authorized owner interface. Do not create production fixture accounts or ask for account passwords in chat.
-- No production schema, business data, member accounts, or secrets were changed by the integration and release fixes documented here.
-- Public/demo compatibility URLs are not proof of live operational business records.
+- The last parent release [39642992636](https://github.com/Ehsanamn1/razsahra/actions/runs/39642992636) verified routes, the combined marker for the old pin, CMS health, upstream Medar health, and HTTP 401 for unauthenticated CMS administration at both origins. It does **not** prove the new pin is live in Raz Sahra.
+- Medar CI [39653283320](https://github.com/Ehsanamn1/simorgh/actions/runs/39653283320) and live deployment [39653283449](https://github.com/Ehsanamn1/simorgh/actions/runs/39653283449) passed the clean PostgreSQL migration/account SQL checks, desktop/mobile operational and demo browser suites, live runtime-mode identity, database health, signup denial, route protection, CORS, and public-demo redirect.
+- The customer account/order boundary is now enforced in the API as well as in navigation: new accounts are limited to operational roles and customer memberships cannot create order/order-item records or submit/cancel an order. Historical customer records/memberships are retained for scoped read compatibility.
+- Automated tests still do not fully prove a real owner can provision a real staff/supplier/driver account and then log in with intended permissions. That final owner-session acceptance remains unverified; it must be done via the authorized owner interface. Do not create production fixture accounts or expose passwords in chat.
+- Web Push credentials are configured and secret presence is checked by the Worker release, but a signed-in owner session has not yet confirmed the live `/api/push/config` response through a real authorized account. Do not claim push delivery acceptance until that session-gated check is performed.
+- No production schema, business data, member accounts, or secrets were changed by the source-pin/docs update. Medar release migrations were versioned and CI verified; the parent CMS database remains isolated from Medar operational data.
+- Public/demo URLs and seeded example records are not proof of live operational business records.
 
-## Immediate next action
+## Immediate next actions
 
-Complete one authorized end-to-end owner-session test of member provisioning and role permissions, without exposing credentials in chat or creating synthetic production data. The repository, deployment, routing, source pin, version marker, health probes, and unauthenticated CMS denial gates are now verified.
+1. Pass parent PR CI with the new source pin and verify the combined parent/Medar commit marker in the generated JS.
+2. Verify the post-merge Pages release and live route, deep-link, CMS health, upstream health, and unauthenticated CMS-admin denial smoke checks.
+3. After the parent release succeeds, update this register with the exact parent release commit, run ID, unique deployment URL, and marker.
+4. Complete an authorized owner-session test for member provisioning/role permissions and the authenticated Web Push config endpoint; do not create synthetic production fixtures.
