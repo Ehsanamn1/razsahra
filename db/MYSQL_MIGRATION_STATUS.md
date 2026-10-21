@@ -6,11 +6,15 @@ This migration is intended to make the Raz Sahra public website and CMS usable f
 
 ## Current status
 
-- [x] Add a first MySQL 8 schema draft for the Raz Sahra CMS tables: `db/schema.mysql.sql`.
+- [x] Add the MySQL CMS schema in `db/schema.mysql.sql`; keep optional first-install rows separate in `db/seed.mysql.sql` so imports start with empty target tables.
+- [x] Add static source/target column parity checks for all nine CMS tables.
+- [x] Add a disposable MySQL 8.4 integration check that applies the schema and optional seed.
+- [x] Add connection preflight for server version, required tables, InnoDB, utf8mb4, and UUID support.
+- [x] Add a guarded first-load CMS importer with source/target column compatibility checks, row counts, transaction, and rollback.
 - [ ] Implement a Node.js HTTP runtime for the CMS API on the Iranian host.
 - [ ] Port every CMS query from PostgreSQL syntax to parameterized MySQL queries.
 - [ ] Preserve session security, admin authorization, rate limits, audit logging, and inquiry validation.
-- [ ] Add a separate MySQL database and import content/account data with row-count verification.
+- [ ] Create the actual separate MySQL staging database and run the guarded import against the real source and target; disposable CI does not migrate production data.
 - [ ] Test registration, login/logout, bootstrap, article editing, page/settings editing, app catalogue, inquiry submission/status changes, and admin role checks.
 - [ ] Publish the static site and Node.js API to the Iranian host and test from an Iranian network.
 - [ ] Keep Cloudflare/Neon as the external deployment until the domestic deployment is verified.
@@ -36,7 +40,7 @@ Before production cutover, verify with the provider:
 ## Safety and cutover
 
 1. Create a separate staging MySQL database.
-2. Apply `db/schema.mysql.sql` only to that empty staging database.
+2. Apply `db/schema.mysql.sql` only to that empty staging database. Do not apply `db/seed.mysql.sql` before importing existing content.
 3. Implement and test the MySQL API before importing production records.
 4. Take and test a restorable Neon backup before data migration.
 5. Compare table row counts and representative records after import.
