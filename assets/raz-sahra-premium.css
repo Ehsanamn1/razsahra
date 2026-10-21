@@ -1252,3 +1252,49 @@ html.lang-en .route-card,html.lang-en .status-chip,html.lang-en .slide-vertical-
 .footer-brand-lockup:hover { transform: translateY(-2px); }
 
 /* Preserve the original low-opacity, breathing fireball orb and responsive sizing defined above. */
+
+
+/* Madar flagship product block: clear parent/product relationship with a restrained, responsive layout. */
+.madar-product-section{position:relative;isolation:isolate;overflow:hidden}
+.madar-product-section:before{content:"";position:absolute;z-index:-1;inset:8% -12% auto auto;width:min(44vw,560px);aspect-ratio:1;border:1px solid rgba(183,122,83,.12);border-radius:50%;pointer-events:none}
+.madar-product-label{display:inline-flex;align-items:center;gap:9px;white-space:nowrap;color:var(--rs-copper);font-size:11px;letter-spacing:.12em;font-weight:800}
+.madar-product-label span{display:grid;place-items:center;width:32px;height:32px;border:1px solid rgba(183,122,83,.35);border-radius:10px;background:rgba(183,122,83,.06);font-size:18px}
+.madar-product-card{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(240px,.65fr);align-items:stretch;gap:clamp(22px,4vw,54px);position:relative;overflow:hidden;padding:clamp(26px,4.5vw,56px);border:1px solid rgba(255,255,255,.08);border-radius:28px;background:radial-gradient(ellipse at 8% 5%,rgba(183,122,83,.16),transparent 40%),linear-gradient(135deg,#172b3b 0%,#1c3445 55%,#243b4b 100%);color:#f7f3eb;box-shadow:0 24px 60px rgba(23,43,59,.16)}
+.madar-product-copy{position:relative;z-index:1;min-width:0}
+.madar-product-kicker{display:inline-flex;align-items:center;gap:9px;color:#d7a27f;font-size:11px;font-weight:800;letter-spacing:.035em}
+.madar-product-kicker:before{content:"";width:22px;height:1px;background:currentColor}
+.madar-product-copy h3{max-width:680px;margin:15px 0 12px;color:#fff;font-size:clamp(25px,3vw,38px);line-height:1.45;letter-spacing:-.035em}
+.madar-product-copy>p{max-width:730px;margin:0;color:#d4dce0;font-size:14px;line-height:2.05}
+.madar-capability-list{display:flex;flex-wrap:wrap;gap:9px;margin:22px 0 25px}
+.madar-capability-list span{display:inline-flex;align-items:center;min-height:33px;padding:6px 12px;border:1px solid rgba(238,243,244,.16);border-radius:999px;background:rgba(255,255,255,.045);color:#e9eeef;font-size:11px}
+.madar-product-actions{display:flex;flex-wrap:wrap;align-items:center;gap:11px}
+.madar-product-actions .btn{min-height:46px}
+.madar-product-card .btn-primary{background:var(--rs-copper);border-color:var(--rs-copper);color:#fff}
+.madar-product-card .btn-dark-outline{border-color:rgba(255,255,255,.25);color:#f7f3eb}
+.madar-product-side{display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:0}
+.madar-product-orbit{position:relative;display:grid;place-items:center;width:min(100%,300px);aspect-ratio:1;border:1px solid rgba(240,228,213,.12);border-radius:50%;background:radial-gradient(circle,rgba(183,122,83,.13),rgba(255,255,255,.018) 53%,transparent 70%)}
+.madar-product-orbit:before,.madar-product-orbit:after{content:"";position:absolute;inset:12%;border:1px solid rgba(240,228,213,.14);border-radius:50%}
+.madar-product-orbit:after{inset:26%;border-color:rgba(183,122,83,.35)}
+.orbit-core{position:relative;z-index:1;display:flex;align-items:center;justify-content:center;flex-direction:column;width:112px;height:112px;border:1px solid rgba(215,162,127,.5);border-radius:30px;background:linear-gradient(145deg,#263f50,#172b3b);box-shadow:0 10px 35px rgba(0,0,0,.2),inset 0 0 24px rgba(183,122,83,.08);transform:rotate(-4deg)}
+.orbit-core span{color:#d7a27f;font-size:22px;line-height:1.2}
+.orbit-core b{color:#fff;font-size:19px}
+.orbit-core small{margin-top:2px;color:#a8b8c0;font-size:7px;letter-spacing:.16em}
+.orbit-node{position:absolute;z-index:2;display:grid;place-items:center;min-width:68px;padding:9px 11px;border:1px solid rgba(232,239,240,.16);border-radius:12px;background:#203747;color:#eaf0f0;font-size:11px;box-shadow:0 8px 22px rgba(0,0,0,.14)}
+.node-supply{top:5%;right:34%}.node-work{top:39%;right:-2%}.node-stock{bottom:6%;right:36%}.node-flow{top:39%;left:-2%}
+.madar-product-side>p{margin:18px 0 0;text-align:center;color:#b8c8cd;font-size:10px;line-height:1.8}
+@media(max-width:780px){
+ .madar-product-section:before{width:78vw;opacity:.6}
+ .madar-product-card{grid-template-columns:minmax(0,1fr);gap:26px;padding:25px 22px;border-radius:23px}
+ .madar-product-side{order:-1}
+ .madar-product-orbit{width:min(70vw,248px)}
+ .orbit-core{width:94px;height:94px;border-radius:25px}
+ .orbit-core b{font-size:17px}
+ .orbit-node{min-width:61px;padding:8px 9px;font-size:10px}
+ .madar-product-side>p{margin-top:12px}
+ .madar-product-copy h3{font-size:clamp(23px,7vw,31px)}
+ .madar-product-copy>p{font-size:13px}
+ .madar-product-actions .btn{flex:1 1 180px;justify-content:center}
+}
+@media(prefers-reduced-motion:reduce){
+ .madar-product-card,.madar-product-actions .btn{transition:none}
+}
