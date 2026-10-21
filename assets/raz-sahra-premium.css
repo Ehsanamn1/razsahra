@@ -1251,41 +1251,4 @@ html.lang-en .route-card,html.lang-en .status-chip,html.lang-en .slide-vertical-
 .footer-brand-lockup .brand-legal { color: #aebac4 !important; }
 .footer-brand-lockup:hover { transform: translateY(-2px); }
 
-/* Hero ember sphere: keep the requested fireball, restrained enough not to mask Iranian farm photography or copy. */
-.hero-slide:before {
-  content: "";
-  position: absolute;
-  z-index: 0;
-  pointer-events: none;
-  width: clamp(176px, 22vw, 300px);
-  aspect-ratio: 1;
-  left: clamp(24px, 9%, 140px);
-  top: clamp(26px, 8%, 82px);
-  border-radius: 50%;
-  opacity: .62;
-  mix-blend-mode: screen;
-  background:
-    radial-gradient(circle at 47% 45%,
-      rgba(255, 243, 211, .40) 0 1.5%,
-      rgba(255, 185, 112, .35) 3%,
-      rgba(239, 130, 65, .22) 10%,
-      rgba(208, 86, 37, .12) 23%,
-      transparent 57%),
-    radial-gradient(ellipse at 48% 50%,
-      rgba(245, 128, 62, .13),
-      rgba(219, 97, 47, .06) 37%,
-      transparent 69%);
-  filter: blur(.35px);
-  transform: translateZ(0);
-}
-@media (max-width: 720px) {
-  .hero-slide:before {
-    width: 168px;
-    left: 4%;
-    top: 6%;
-    opacity: .36;
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .hero-slide:before { animation: none; }
-}
+/* Preserve the original low-opacity, breathing fireball orb and responsive sizing defined above. */
