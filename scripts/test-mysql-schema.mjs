@@ -6,6 +6,7 @@ const url = process.env.TARGET_MYSQL_URL;
 if (!url) throw new Error('TARGET_MYSQL_URL is required for the disposable MySQL integration test.');
 
 const schema = await readFile(new URL('../db/schema.mysql.sql', import.meta.url), 'utf8');
+const seed = await readFile(new URL('../db/seed.mysql.sql', import.meta.url), 'utf8');
 const statements = schema
   .split(';')
   .map(statement => statement.split('\n').filter(line => !/^\s*--/.test(line)).join('\n').trim())
@@ -36,7 +37,16 @@ try {
   for (const table of requiredTables) assert(names.has(table), 'Missing table after schema apply: ' + table);
   const [[uuid]] = await db.query('SELECT UUID() AS id');
   assert.match(uuid.id, /^[0-9a-f-]{36}$/i);
-  console.log('Schema integration test passed:', statements.length, 'statements,', requiredTables.length, 'required tables.');
+  for (const statement of seed.split(';').map(part => part.split('\\n').filter(line => !/^\\s*--/.test(line)).join('\\n').trim()).filter(Boolean)) {
+    await db.query(statement);
+  }
+  const [[seedCounts]] = await db.query(
+    "SELECT (SELECT COUNT(*) FROM site_pages) AS pages, (SELECT COUNT(*) FROM site_settings) AS settings, (SELECT COUNT(*) FROM app_catalog) AS apps",
+  );
+  assert(Number(seedCounts.pages) >= 16, 'Optional seed must populate Persian and English CMS page rows.');
+  assert(Number(seedCounts.settings) >= 2, 'Optional seed must populate base site settings.');
+  assert(Number(seedCounts.apps) >= 1, 'Optional seed must populate the Madar catalogue entry.');
+  console.log('Schema + optional seed integration test passed:', statements.length, 'schema statements,', requiredTables.length, 'tables.');
 } finally {
   await db.end();
 }
