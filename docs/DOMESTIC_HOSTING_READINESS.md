@@ -4,13 +4,13 @@
 This branch prepares a safe migration from Cloudflare Pages/Functions + Neon PostgreSQL to the Iranian shared host. It does not switch production traffic and must not be treated as a finished MySQL port.
 
 ## CI
-`.github/workflows/domestic-ci.yml` runs repository checks and creates a review artifact. It deliberately does not deploy to the host because the provider's supported deployment protocol, Node runtime/process model, HTTPS and MySQL details have not been verified.
+`.github/workflows/domestic-ci.yml` runs repository checks, applies the MySQL schema and optional seed to a disposable MySQL 8.4 service, checks required tables and connection assumptions, and creates a review artifact. It deliberately does not deploy to the host because the provider's supported deployment protocol, Node runtime/process model, HTTPS and MySQL details have not been verified.
 
 ## Confirmed source facts
 - Current API: `functions/api/[[path]].js`, built for a Cloudflare Pages Function runtime.
 - Current database client: `@neondatabase/serverless`.
 - Current SQL uses PostgreSQL placeholders, JSONB, intervals, casts and data-modifying CTEs. A MySQL schema file alone does not make the API compatible.
-- The existing `db/schema.mysql.sql` is a draft. The live API still uses PostgreSQL and must not be pointed at MySQL.
+- The `db/schema.mysql.sql` draft is now exercised against disposable MySQL 8.4 in CI; `db/seed.mysql.sql` is separated so the guarded importer can use a truly empty target. This validates schema syntax only, not the runtime API. The existing schema is still not a completed backend migration. The live API still uses PostgreSQL and must not be pointed at MySQL.
 
 ## Required migration work before a host deployment
 1. Implement a Node.js HTTP API adapter for the existing routes without weakening origin checks, password hashing, session cookies, one-time admin bootstrap, rate limits, authorization or audit logging.
