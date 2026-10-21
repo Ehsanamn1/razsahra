@@ -108,7 +108,7 @@ jobs:
           }
 
           request "$base/" "$RUNNER_TEMP/razsahra-home.html"
-          grep -q 'ورود به سامانه مدار' "$RUNNER_TEMP/razsahra-home.html"
+          grep -q 'ورود به مدار' "$RUNNER_TEMP/razsahra-home.html"
           grep -q '/madar/' "$RUNNER_TEMP/razsahra-home.html"
           request "$base/madar/" "$RUNNER_TEMP/madar-index.html"
           grep -qi '<html' "$RUNNER_TEMP/madar-index.html"
