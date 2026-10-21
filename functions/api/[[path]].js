@@ -39,6 +39,19 @@ function randomToken(length = 32) {
   crypto.getRandomValues(bytes);
   return b64url(bytes);
 }
+function constantTimeEqual(left, right) {
+  const a = enc.encode(String(left == null ? "" : left));
+  const b = enc.encode(String(right == null ? "" : right));
+  let mismatch = a.length ^ b.length;
+  const length = Math.max(a.length, b.length);
+  for (let i = 0; i < length; i++) mismatch |= (a[i] || 0) ^ (b[i] || 0);
+  return mismatch === 0;
+}
+async function bootstrapSecretMatches(provided, configured) {
+  if (!provided || !configured || provided.length > 512 || configured.length < 32) return false;
+  const [providedHash, configuredHash] = await Promise.all([digest(provided), digest(configured)]);
+  return constantTimeEqual(providedHash, configuredHash);
+}
 async function verifyPassword(password, encoded) {
   try {
     const [algorithm, count, saltText, hashText] = String(encoded || "").split("$");
@@ -182,6 +195,43 @@ async function handle(request, env) {
       if (String(error?.code) === "23505") return fail("این نام کاربری یا ایمیل قبلاً ثبت شده است.", 409, "account_exists");
       return fail("ساخت حساب مدیر انجام نشد.", 500, "admin_setup_failed");
     }
+  }
+
+  if (path === "auth/bootstrap-admin" && method === "POST") {
+    if (!originOkay(request)) return fail("درخواست از مبدأ نامعتبر رد شد.", 403, "origin_denied");
+    const configuredSecret = String(env.ADMIN_BOOTSTRAP_SECRET || "");
+    if (configuredSecret.length < 32) return fail("راه‌اندازی اولیه مدیر در تنظیمات میزبان فعال نشده است.", 503, "bootstrap_not_configured");
+    if (!(await rateOkay(sql, request, "bootstrap-admin"))) return fail("تعداد تلاش‌ها زیاد است. ۱۵ دقیقه دیگر دوباره امتحان کنید.", 429, "rate_limited");
+    const providedSecret = request.headers.get("x-admin-bootstrap-secret") || "";
+    if (!(await bootstrapSecretMatches(providedSecret, configuredSecret))) return fail("کلید راه‌اندازی معتبر نیست.", 403, "bootstrap_secret_invalid");
+
+    let data;
+    try { data = await bodyJson(request); } catch { return fail("اطلاعات راه‌اندازی معتبر نیست.", 400, "invalid_body"); }
+    const username = text(data.username, 48).toLowerCase();
+    const email = text(data.email, 254).toLowerCase();
+    const displayName = text(data.display_name, 120);
+    const password = String(data.password || "");
+    if (!/^[a-z0-9][a-z0-9_.-]{2,47}$/.test(username)) return fail("نام کاربری باید ۳ تا ۴۸ نویسه انگلیسی، عدد، نقطه، خط تیره یا زیرخط باشد.");
+    if (!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)) return fail("نشانی ایمیل معتبر وارد کنید.");
+    if (password.length < 16 || password.length > 128) return fail("رمز عبور مدیر باید ۱۶ تا ۱۲۸ نویسه داشته باشد.");
+    const salt = randomToken(16);
+    const material = await crypto.subtle.importKey("raw", enc.encode(password), "PBKDF2", false, ["deriveBits"]);
+    const hash = new Uint8Array(await crypto.subtle.deriveBits({ name: "PBKDF2", hash: "SHA-256", salt: fromB64url(salt), iterations: PASSWORD_ITERATIONS }, material, 256));
+    const passwordHash = "pbkdf2$" + PASSWORD_ITERATIONS + "$" + salt + "$" + b64url(hash);
+    let rows;
+    try {
+      rows = await q(sql,
+        "WITH claim AS (INSERT INTO site_settings(key,value_json,updated_at) SELECT 'admin.bootstrap.claimed',jsonb_build_object('claimed_at',now()),now() WHERE NOT EXISTS (SELECT 1 FROM users WHERE role='admin') ON CONFLICT (key) DO NOTHING RETURNING key) INSERT INTO users(username,email,display_name,password_hash,role,status) SELECT $1,$2,$3,$4,'admin','active' FROM claim RETURNING id,username,email,display_name,role,status,created_at,last_login_at",
+        [username, email, displayName || username, passwordHash]);
+    } catch (error) {
+      if (String(error?.code) === "23505") return fail("نام کاربری یا ایمیل قبلاً ثبت شده است.", 409, "account_exists");
+      throw error;
+    }
+    const user = rows[0];
+    if (!user) return fail("راه‌اندازی مدیر قبلاً انجام شده یا حساب مدیر از قبل وجود دارد.", 409, "bootstrap_already_used");
+    const token = await newSession(sql, user, request);
+    await logEvent(sql, user.id, "auth.bootstrap_admin", "user", user.id, { username }, request);
+    return json({ ok: true, user: userPublic(user), redirect: "admin" }, 201, { "set-cookie": sessionCookie(token, request) });
   }
 
   if (path === "auth/register" && method === "POST") {
