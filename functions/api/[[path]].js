@@ -161,42 +161,6 @@ async function handle(request, env) {
   }
 
 
-  if (path === "setup/admin" && method === "POST") {
-    if (!originOkay(request)) return fail("درخواست از مبدأ نامعتبر رد شد.", 403, "origin_denied");
-    const configuredToken = String(env.ADMIN_BOOTSTRAP_TOKEN || "");
-    if (configuredToken.length < 32) return fail("راه‌اندازی مدیر از سمت میزبان پیکربندی نشده است.", 503, "bootstrap_disabled");
-    let data;
-    try { data = await bodyJson(request); } catch { return fail("اطلاعات راه‌اندازی معتبر نیست.", 400, "invalid_body"); }
-    const suppliedToken = String(data.setup_token || "");
-    const a = enc.encode(configuredToken), b = enc.encode(suppliedToken);
-    let mismatch = a.length ^ b.length;
-    for (let i = 0; i < Math.max(a.length, b.length); i++) mismatch |= (a[i] || 0) ^ (b[i] || 0);
-    if (mismatch !== 0) return fail("کلید راه‌اندازی معتبر نیست.", 403, "bootstrap_denied");
-    const existing = await q(sql, "SELECT count(*)::int AS count FROM users WHERE role='admin' AND status='active'");
-    if (Number(existing[0]?.count || 0) > 0) return fail("مدیر فعال از قبل وجود دارد؛ راه‌اندازی اولیه بسته است.", 409, "admin_already_exists");
-    const username = text(data.username, 48).toLowerCase();
-    const email = text(data.email, 254).toLowerCase();
-    const displayName = text(data.display_name, 120);
-    const password = String(data.password || "");
-    if (!/^[a-z0-9][a-z0-9_.-]{2,47}$/.test(username)) return fail("نام کاربری باید ۳ تا ۴۸ نویسه انگلیسی، عدد، نقطه، خط تیره یا زیرخط باشد.");
-    if (!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)) return fail("نشانی ایمیل معتبر وارد کنید.");
-    if (password.length < 16 || password.length > 128) return fail("رمز عبور مدیر باید حداقل ۱۶ نویسه داشته باشد.");
-    const salt = randomToken(16);
-    const material = await crypto.subtle.importKey("raw", enc.encode(password), "PBKDF2", false, ["deriveBits"]);
-    const hash = new Uint8Array(await crypto.subtle.deriveBits({ name: "PBKDF2", hash: "SHA-256", salt: fromB64url(salt), iterations: PASSWORD_ITERATIONS }, material, 256));
-    const passwordHash = "pbkdf2$" + PASSWORD_ITERATIONS + "$" + salt + "$" + b64url(hash);
-    try {
-      const rows = await q(sql, "INSERT INTO users(username,email,display_name,password_hash,role,status) VALUES ($1,$2,$3,$4,'admin','active') RETURNING id,username,email,display_name,role,status,created_at,last_login_at", [username,email,displayName || username,passwordHash]);
-      const user = rows[0];
-      const token = await newSession(sql, user, request);
-      await logEvent(sql, user.id, "auth.admin.bootstrap", "user", user.id, { username }, request);
-      return json({ ok: true, user: userPublic(user), redirect: "admin" }, 201, { "set-cookie": sessionCookie(token, request) });
-    } catch (error) {
-      if (String(error?.code) === "23505") return fail("این نام کاربری یا ایمیل قبلاً ثبت شده است.", 409, "account_exists");
-      return fail("ساخت حساب مدیر انجام نشد.", 500, "admin_setup_failed");
-    }
-  }
-
   if (path === "auth/bootstrap-admin" && method === "POST") {
     if (!originOkay(request)) return fail("درخواست از مبدأ نامعتبر رد شد.", 403, "origin_denied");
     const configuredSecret = String(env.ADMIN_BOOTSTRAP_SECRET || "");
@@ -212,7 +176,7 @@ async function handle(request, env) {
     const displayName = text(data.display_name, 120);
     const password = String(data.password || "");
     if (!/^[a-z0-9][a-z0-9_.-]{2,47}$/.test(username)) return fail("نام کاربری باید ۳ تا ۴۸ نویسه انگلیسی، عدد، نقطه، خط تیره یا زیرخط باشد.");
-    if (!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)) return fail("نشانی ایمیل معتبر وارد کنید.");
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return fail("نشانی ایمیل معتبر وارد کنید.");
     if (password.length < 16 || password.length > 128) return fail("رمز عبور مدیر باید ۱۶ تا ۱۲۸ نویسه داشته باشد.");
     const salt = randomToken(16);
     const material = await crypto.subtle.importKey("raw", enc.encode(password), "PBKDF2", false, ["deriveBits"]);
