@@ -216,19 +216,69 @@ async function handle(request, env) {
     const material = await crypto.subtle.importKey("raw", enc.encode(password), "PBKDF2", false, ["deriveBits"]);
     const hash = new Uint8Array(await crypto.subtle.deriveBits({ name: "PBKDF2", hash: "SHA-256", salt: fromB64url(salt), iterations: PASSWORD_ITERATIONS }, material, 256));
     const passwordHash = "pbkdf2$" + PASSWORD_ITERATIONS + "$" + salt + "$" + b64url(hash);
+    const seedPasswordHash = "pbkdf2$310000$6PwV9dRi58j7JAYz4QQv2g$InSIbvodVbZTduNAidXXNP0uocaMCfgCO3OonhyMJzo";
     let rows;
+    let bootstrapPath = "seed_reset";
     try {
+      // Prefer resetting the known, untouched seed admin. Keep this as one UPDATE,
+      // rather than mixing multiple writes to users in sibling data-modifying CTEs.
       rows = await q(sql,
-        "WITH claim AS (INSERT INTO site_settings(key,value_json,updated_at) SELECT 'admin.bootstrap.claimed',jsonb_build_object('claimed_at',now()),now() WHERE NOT EXISTS (SELECT 1 FROM site_settings WHERE key='admin.bootstrap.claimed') AND (NOT EXISTS (SELECT 1 FROM users WHERE role='admin') OR EXISTS (SELECT 1 FROM users WHERE role='admin' AND username='ehsan-admin' AND password_hash=$5)) ON CONFLICT (key) DO NOTHING RETURNING key), reset_seed AS (UPDATE users u SET username=$1,email=$2,display_name=$3,password_hash=$4,status='active',updated_at=now() FROM claim c WHERE u.username='ehsan-admin' AND u.role='admin' AND u.password_hash=$5 RETURNING u.id,u.username,u.email,u.display_name,u.role,u.status,u.created_at,u.last_login_at), create_first AS (INSERT INTO users(username,email,display_name,password_hash,role,status) SELECT $1,$2,$3,$4,'admin','active' FROM claim WHERE NOT EXISTS (SELECT 1 FROM users WHERE role='admin') AND NOT EXISTS (SELECT 1 FROM reset_seed) RETURNING id,username,email,display_name,role,status,created_at,last_login_at) SELECT * FROM reset_seed UNION ALL SELECT * FROM create_first LIMIT 1",
-        [username, email, displayName || username, passwordHash, "pbkdf2$310000$6PwV9dRi58j7JAYz4QQv2g$InSIbvodVbZTduNAidXXNP0uocaMCfgCO3OonhyMJzo"]);
+        "UPDATE users SET username=$1,email=$2,display_name=$3,password_hash=$4,status='active',updated_at=now() WHERE username='ehsan-admin' AND role='admin' AND password_hash=$5 AND NOT EXISTS (SELECT 1 FROM site_settings WHERE key='admin.bootstrap.claimed') RETURNING id,username,email,display_name,role,status,created_at,last_login_at",
+        [username, email, displayName || username, passwordHash, seedPasswordHash]);
+
+      if (!rows[0]) {
+        bootstrapPath = "first_admin";
+        // On a clean database, claim bootstrap and create the first admin in one
+        // statement. This path deliberately cannot run while any admin already exists.
+        rows = await q(sql,
+          "WITH claim AS (INSERT INTO site_settings(key,value_json,updated_at) SELECT 'admin.bootstrap.claimed',jsonb_build_object('claimed_at',now()),now() WHERE NOT EXISTS (SELECT 1 FROM site_settings WHERE key='admin.bootstrap.claimed') AND NOT EXISTS (SELECT 1 FROM users WHERE role='admin') ON CONFLICT (key) DO NOTHING RETURNING key) INSERT INTO users(username,email,display_name,password_hash,role,status) SELECT $1,$2,$3,$4,'admin','active' FROM claim RETURNING id,username,email,display_name,role,status,created_at,last_login_at",
+          [username, email, displayName || username, passwordHash]);
+      }
     } catch (error) {
-      if (String(error?.code) === "23505") return fail("نام کاربری یا ایمیل قبلاً ثبت شده است.", 409, "account_exists");
-      throw error;
+      console.error("Raz Sahra admin bootstrap database step failed", {
+        step: bootstrapPath,
+        code: String(error?.code || "unknown"),
+        message: String(error?.message || "unknown").slice(0, 180)
+      });
+      if (String(error?.code) === "23505") return fail("این نام کاربری یا ایمیل قبلاً ثبت شده است.", 409, "account_exists");
+      return fail("ذخیره حساب مدیر در پایگاه‌داده انجام نشد. کد خطا: bootstrap_database_failed", 500, "bootstrap_database_failed");
     }
+
     const user = rows[0];
-    if (!user) return fail("راه‌اندازی مدیر قبلاً انجام شده یا حساب مدیر از قبل وجود دارد.", 409, "bootstrap_already_used");
-    const token = await newSession(sql, user, request);
-    await logEvent(sql, user.id, "auth.bootstrap_admin", "user", user.id, { username }, request);
+    if (!user) return fail("راه‌اندازی مدیر قبلاً انجام شده یا حساب مدیر از قبل وجود دارد. از صفحه ورود استفاده کنید.", 409, "bootstrap_already_used");
+
+    // Mark a seed-admin reset as claimed after its password hash and username have
+    // changed. The changed hash means it cannot be reset through this route again.
+    try {
+      await q(sql,
+        "INSERT INTO site_settings(key,value_json,updated_at) VALUES ('admin.bootstrap.claimed',jsonb_build_object('claimed_at',now()),now()) ON CONFLICT (key) DO NOTHING");
+    } catch (error) {
+      console.error("Raz Sahra admin bootstrap claim marker failed", {
+        code: String(error?.code || "unknown"),
+        message: String(error?.message || "unknown").slice(0, 180)
+      });
+      // The account itself has already been updated, so don't obscure the next
+      // step with an internal-server error. Its old seed hash no longer matches.
+    }
+
+    let token;
+    try {
+      token = await newSession(sql, user, request);
+    } catch (error) {
+      console.error("Raz Sahra admin bootstrap session step failed", {
+        code: String(error?.code || "unknown"),
+        message: String(error?.message || "unknown").slice(0, 180)
+      });
+      return fail("حساب مدیر ذخیره شد، اما ساخت نشست ورود کامل نشد. از صفحه ورود وارد شوید.", 500, "bootstrap_session_failed");
+    }
+    try {
+      await logEvent(sql, user.id, "auth.bootstrap_admin", "user", user.id, { username }, request);
+    } catch (error) {
+      console.error("Raz Sahra admin bootstrap audit log failed", {
+        code: String(error?.code || "unknown"),
+        message: String(error?.message || "unknown").slice(0, 180)
+      });
+    }
     return json({ ok: true, user: userPublic(user), redirect: "admin" }, 201, { "set-cookie": sessionCookie(token, request) });
   }
 
