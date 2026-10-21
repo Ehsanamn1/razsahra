@@ -16,7 +16,10 @@ for (const view of views) assert.ok(html.includes('data-page="' + view + '"'), "
 for (const route of ["auth/register","auth/login","auth/me","auth/logout","auth/bootstrap-admin","admin/overview","admin/pages","admin/articles","admin/users","admin/inquiries","admin/apps","admin/settings","admin/audit","inquiries"]) assert.ok(api.includes(route), "Missing API route: " + route);
 for (const table of ["users","sessions","auth_attempts","site_pages","articles","site_settings","inquiries","audit_logs","app_catalog"]) assert.ok(schema.includes("CREATE TABLE IF NOT EXISTS " + table), "Missing database table: " + table);
 assert.ok(html.includes('id="rs-login-form"'), "Login form missing");
-assert.ok(html.includes('id="rs-register-form"'), "Register form missing");\nassert.ok(html.includes('id="rs-bootstrap-form"'), "One-time administrator bootstrap form missing");\nassert.ok(html.includes("x-admin-bootstrap-secret"), "Bootstrap secret must be sent only as the request header");\nassert.ok(html.includes('name="password_confirm"') && html.includes('minlength="16"'), "Administrator bootstrap must require a strong confirmed password");
+assert.ok(html.includes('id="rs-register-form"'), "Register form missing");
+assert.ok(html.includes('id="rs-bootstrap-form"'), "One-time administrator bootstrap form missing");
+assert.ok(html.includes("x-admin-bootstrap-secret"), "Bootstrap secret must be sent only as the request header");
+assert.ok(html.includes('name="password_confirm"') && html.includes('minlength="16"'), "Administrator bootstrap must require a strong confirmed password");
 assert.ok(html.includes('id="admin-panel-content"'), "Admin dashboard mount missing");
 assert.ok(html.includes("raz-sahra-cms-runtime.js"), "CMS inquiry runtime is not loaded");
 assert.ok(cmsRuntime.includes('fetch("/api/inquiries"'), "Inquiry forms must use the backend endpoint");
