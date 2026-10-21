@@ -27,14 +27,9 @@ if (!APPLY) {
   console.log('DRY RUN ONLY. No target rows will be written. Add --apply to execute the import.');
 }
 const source = neon(sourceUrl);
-const target = await mysql.createConnection({
-  uri: targetUrl,
-  charset: 'utf8mb4',
-  timezone: 'Z',
-  multipleStatements: false,
-  supportBigNumbers: true,
-  bigNumberStrings: true,
-});
+const target = await mysql.createConnection(targetUrl);
+await target.query("SET NAMES utf8mb4");
+await target.query("SET time_zone = '+00:00'");
 const sourceCounts = {};
 const targetCounts = {};
 function encode(value) {
@@ -70,10 +65,6 @@ try {
         if (!columns.length) continue;
         const colSql = columns.map(column => '`' + column.replace(/`/g, '``') + '`').join(',');
         const placeholders = '(' + columns.map(() => '?').join(',') + ')';
-        const insertSql = 'INSERT INTO `' + table + '` (' + colSql + ') VALUES ' +
-          rows.map(() => placeholders).join(',');
-        const params = [];
-        for (const row of rows) for (const column of columns) params.push(encode(row[column]));
         // Keep each statement modest to avoid max_allowed_packet failures on shared hosting.
         const chunkSize = 100;
         for (let offset = 0; offset < rows.length; offset += chunkSize) {
@@ -84,8 +75,6 @@ try {
           for (const row of chunk) for (const column of columns) chunkParams.push(encode(row[column]));
           await target.query(chunkSql, chunkParams);
         }
-        void insertSql;
-        void params;
         console.log('Imported ' + rows.length + ' rows into ' + table);
       }
       for (const table of TABLES) {
