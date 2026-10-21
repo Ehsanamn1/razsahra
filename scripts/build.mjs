@@ -2,7 +2,7 @@ import { cp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 const root = process.cwd();
 const out = path.join(root, "dist");
-const files = ["index.html", "404.html", "manifest.webmanifest", "robots.txt", "sitemap.xml", ".nojekyll"];
+const files = ["index.html", "404.html", "manifest.webmanifest", "robots.txt", "sitemap.xml", "_headers", ".nojekyll"];
 const oldBase = "https://ehsanamn1.github.io/razsahra/";
 let siteUrl = process.env.SITE_URL || oldBase;
 if (!/^https?:\/\//i.test(siteUrl)) throw new Error("SITE_URL must be an absolute HTTPS URL");
