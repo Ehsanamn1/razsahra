@@ -21,7 +21,7 @@ https://ehsanamn1.github.io/razsahra/
 
 هدف استقرار کامل:
 
-https://razsahra.pages.dev/
+https://razsahra.pages.dev/ (هدف استقرار؛ دامنه تا تنظیم Cloudflare تأیید نشده است)
 
 انتشار Cloudflare از گردش‌کار `.github/workflows/pages.yml` انجام می‌شود. تا وقتی پروژه Cloudflare ساخته و مقادیر دسترسی زیر پیکربندی نشده‌اند، workflow فقط build و check را اجرا می‌کند و در Summary علت ردشدن استقرار را می‌نویسد. پس از اتصال Cloudflare و ثبت مقادیر، هر push معتبر به `main` می‌تواند نسخه جدید را منتشر کند.
 
