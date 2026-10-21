@@ -27,6 +27,7 @@ assert.ok(headers.includes("X-Content-Type-Options: nosniff"), "Baseline securit
 assert.ok(cloudflareWorkflow.includes("wrangler pages deploy dist"), "Cloudflare Pages deployment step missing");
 assert.ok(cloudflareWorkflow.includes("Smoke-test deployed site, Madar route and backend"), "Post-deployment live smoke test missing");
 assert.ok(cloudflareWorkflow.includes("/api/health") && cloudflareWorkflow.includes("database!==\"connected\""), "Live health test must verify Neon database connectivity");
+assert.ok(cloudflareWorkflow.includes("/api/medar/api/health") && cloudflareWorkflow.includes("d.database!==true"), "Live smoke test must verify the separate operational Madar API");
 assert.ok(cloudflareWorkflow.includes("SITE_BUILD_VERSION"), "Deployment build version must be supplied for cache busting");
 assert.ok(build.includes("process.env.SITE_BUILD_VERSION") && build.includes("${buildVersion}"), "Build must bust CSS/JS caches on each deployment");
 
