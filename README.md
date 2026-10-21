@@ -19,15 +19,15 @@ https://ehsanamn1.github.io/razsahra/
 
 این نشانی **نسخه ایستا** است؛ GitHub Pages فایل‌های رابط کاربری را منتشر می‌کند اما Cloudflare Pages Functions و اتصال Neon را اجرا نمی‌کند. بنابراین، ورود و ذخیره آنلاین فرم‌ها در آن فعال نیست و فرم‌ها در صورت نبود API به‌صورت شفاف فایل پشتیبان محلی تولید می‌کنند.
 
-هدف استقرار کامل:
+نشانی اصلی منتشرشده:
 
-https://razsahra.pages.dev/ (هدف استقرار؛ دامنه تا تنظیم Cloudflare تأیید نشده است)
+https://razsahra.pages.dev/ (انتشار Cloudflare Pages تأیید شده؛ [گزارش آخرین استقرار](https://github.com/Ehsanamn1/razsahra/actions/runs/39621052198))
 
-انتشار Cloudflare از گردش‌کار `.github/workflows/pages.yml` انجام می‌شود. تا وقتی پروژه Cloudflare ساخته و مقادیر دسترسی زیر پیکربندی نشده‌اند، workflow فقط build و check را اجرا می‌کند و در Summary علت ردشدن استقرار را می‌نویسد. پس از اتصال Cloudflare و ثبت مقادیر، هر push معتبر به `main` می‌تواند نسخه جدید را منتشر کند.
+گردش‌کار `.github/workflows/pages.yml` وب‌سایت و سورس مدار را بررسی و build می‌کند، نسخه وب مدار را در `/madar/` می‌سازد، سپس در شاخه `main` با اعتبارنامه معتبر پروژه Cloudflare Pages را در صورت نبودن ایجاد و منتشر می‌کند. بعد از انتشار، آزمون زنده باید پاسخ HTTP 200 سایت و مسیر مدار و اتصال `/api/health` به Neon را تأیید کند. اجرای Pull Request فقط build و test را اجرا می‌کند و چیزی را منتشر نمی‌کند. اگر انتشار یا بررسی سلامت رد شود، وضعیت گردش‌کار شکست می‌خورد و باید علت گزارش‌شده رفع شود.
 
 ## راه‌اندازی Cloudflare Pages
 
-1. در Cloudflare، از بخش **Workers & Pages** یک Pages project با نام دقیق `razsahra` بسازید و شاخه production را `main` قرار دهید.
+1. گردش‌کار GitHub در صورت دسترسی معتبر به حساب Cloudflare و نبودن پروژه، Pages project با نام دقیق `razsahra` را خودکار با شاخه production برابر `main` می‌سازد؛ نیازی به ساخت دستی پروژه نیست. اگر احراز هویت حساب/فهرست پروژه‌ها خطا بدهد، گردش‌کار fail-closed متوقف می‌شود.
 2. در تنظیمات مخزن GitHub، یک Repository Variable با نام `CLOUDFLARE_ACCOUNT_ID` بسازید و Account ID حساب مقصد را در آن قرار دهید. گردش‌کار فعال ابتدا فهرست Pages projectهای همین حساب را می‌خواند؛ اگر پروژه `razsahra` وجود نداشته باشد، آن را با شاخهٔ production برابر `main` ایجاد می‌کند و سپس انتشار را ادامه می‌دهد. اگر فهرست‌گیری از حساب شکست بخورد، انتشار متوقف می‌شود و پروژه‌ای در حساب ناشناخته ساخته نمی‌شود.
 3. یک Repository Secret با نام `CLOUDFLARE_API_TOKEN` بسازید. توکن فقط باید دسترسی لازم برای انتشار Cloudflare Pages روی همان حساب را داشته باشد؛ آن را در فایل‌های پروژه یا پیام‌های عمومی قرار ندهید.
 4. در صورت داشتن دامنه اختصاصی، یک Repository Variable با نام `SITE_URL` برابر آدرس نهایی و کامل سایت (HTTPS) بسازید. در غیر این صورت workflow از `https://razsahra.pages.dev` استفاده می‌کند.
