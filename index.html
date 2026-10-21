@@ -1061,7 +1061,8 @@
     if(error.status === 403) navigate("account");
   }
   document.addEventListener("submit",function(event){
-    if(event.target && event.target.id === "rs-bootstrap-form") submitBootstrap(event);\n    else if(event.target && event.target.id === "rs-login-form") submitLogin(event);
+    if(event.target && event.target.id === "rs-bootstrap-form") submitBootstrap(event);
+    else if(event.target && event.target.id === "rs-login-form") submitLogin(event);
     else if(event.target && event.target.id === "rs-register-form") submitRegister(event);
     else if(event.target && event.target.matches("form[data-admin-form]")) submitAdminForm(event);
   });
