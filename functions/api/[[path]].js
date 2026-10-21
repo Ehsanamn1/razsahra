@@ -147,10 +147,40 @@ async function rateOkay(sql, request, identifier) {
   return Number(rows[0]?.attempts || 0) < 8;
 }
 
+
+async function proxyMedar(request, path) {
+  if (!originOkay(request)) return fail("درخواست از مبدأ نامعتبر رد شد.", 403, "origin_denied");
+  const upstream = new URL("https://medar-ops.dengxiao445.workers.dev");
+  const forwardedPath = path.slice("medar/".length);
+  if (!forwardedPath.startsWith("api/")) return fail("مسیر مدار پیدا نشد.", 404, "not_found");
+  const target = new URL("/" + forwardedPath, upstream);
+  const headers = new Headers(request.headers);
+  headers.delete("host");
+  headers.delete("content-length");
+  headers.delete("cf-connecting-ip");
+  if (request.headers.has("origin")) headers.set("origin", upstream.origin);
+  const method = request.method.toUpperCase();
+  const init = { method, headers, redirect: "manual" };
+  if (method !== "GET" && method !== "HEAD") init.body = request.body;
+  const proxiedRequest = new Request(target.toString(), init);
+  const upstreamResponse = await fetch(proxiedRequest);
+  const responseHeaders = new Headers(upstreamResponse.headers);
+  responseHeaders.delete("content-length");
+  responseHeaders.set("cache-control", "no-store");
+  responseHeaders.set("x-content-type-options", "nosniff");
+  responseHeaders.set("referrer-policy", "same-origin");
+  return new Response(upstreamResponse.body, {
+    status: upstreamResponse.status,
+    statusText: upstreamResponse.statusText,
+    headers: responseHeaders
+  });
+}
+
 async function handle(request, env) {
   const url = new URL(request.url);
   const path = url.pathname.replace(/^\/api\/?/, "").replace(/\/+$/, "");
   const method = request.method.toUpperCase();
+  if (path.startsWith("medar/") && method !== "OPTIONS") return await proxyMedar(request, path);
   if (method === "OPTIONS") return new Response(null, { status: 204, headers: { "access-control-allow-methods": "GET,POST,PUT,PATCH,OPTIONS", "access-control-allow-headers": "content-type" } });
   if (!env.DATABASE_URL) return fail("سرویس حساب کاربری هنوز در محیط میزبانی پیکربندی نشده است.", 503, "backend_not_configured");
   let sql;
