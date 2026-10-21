@@ -43,6 +43,9 @@ for (const fragment of html.split("<script").slice(1)) {
 }
 
 assert.ok(html.includes('data-route="register"'), "Footer registration link missing");
+assert.ok(html.includes('class="brand footer-brand-lockup"'), "Footer must reuse the approved header brand lockup");
+assert.ok(!html.includes('class="footer-lockup-image"'), "Obsolete square footer lockup must not return");
+assert.ok(css.includes("Hero ember sphere: keep the requested fireball"), "Subtle hero fireball treatment missing");
 assert.ok(css.includes("Mobile performance and editor-reader fix"), "Responsive fix missing");
 assert.ok(interactive.includes("window.matchMedia('(max-width: 850px)').matches"), "Mobile particle budget missing");
 await access("db/schema.sql");
