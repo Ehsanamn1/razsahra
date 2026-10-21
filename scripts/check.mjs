@@ -9,6 +9,7 @@ const interactive = await read("assets/raz-sahra-interactions.js");
 const cmsRuntime = await read("assets/raz-sahra-cms-runtime.js");
 const headers = await read("_headers");
 const cloudflareWorkflow = await read(".github/workflows/pages.yml");
+const medarSourcePin = JSON.parse(await read("integration/medar-source.json"));
 const madarRouteFallback = await read("functions/madar/[[path]].js");
 const integrationContract = await read("docs/INTEGRATION_CONTRACT.md");
 const build = await read("scripts/build.mjs");
@@ -59,6 +60,14 @@ assert.ok(!html.includes("در انتظار فایل PWA") && !html.includes("پ
 assert.ok(schema.includes("'/madar/','',true"), "New installs must seed Madar as an active integrated web app");
 assert.ok((await read("_redirects")).includes("/madar /madar/ 301"), "Madar path normalization redirect missing");
 assert.ok(cloudflareWorkflow.includes("repository: Ehsanamn1/simorgh") && cloudflareWorkflow.includes("dist/madar"), "Madar app bundle build is not part of the deployment");
+assert.equal(medarSourcePin.repository, "Ehsanamn1/simorgh", "Canonical Medar source pin must point to the operational repository");
+assert.match(medarSourcePin.commit, /^[0-9a-f]{40}$/, "Canonical Medar source pin must use an immutable full commit SHA");
+assert.equal(medarSourcePin.mountPath, "/madar/", "Medar integration mount path mismatch");
+assert.equal(medarSourcePin.apiBasePath, "/api/medar", "Medar same-origin API base path mismatch");
+assert.ok(cloudflareWorkflow.includes("integration/medar-source.json"), "Pages workflow must load the canonical Medar source pin");
+assert.ok(cloudflareWorkflow.includes("ref: ${{ steps.medar-source.outputs.ref }}"), "Pages workflow must checkout the pinned Medar commit, not a moving branch");
+assert.ok(cloudflareWorkflow.includes("VITE_APP_VERSION: ${{ github.sha }}-${{ steps.medar-source.outputs.ref }}"), "Integrated asset version must identify both parent and Medar commits");
+
 assert.ok(cloudflareWorkflow.includes("VITE_API_BASE_URL: /api/medar"), "Madar API must use the same-origin proxy");
 const medarSourceRef = cloudflareWorkflow.match(/repository: Ehsanamn1\/simorgh\s+ref: ([0-9a-f]{40})/);
 assert.ok(medarSourceRef, "Integrated Medar source must be pinned to an immutable commit SHA");
