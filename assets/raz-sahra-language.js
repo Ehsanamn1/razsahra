@@ -2,6 +2,21 @@
 (function(){
   'use strict';
   var dictionary={
+    "محصول دیجیتال راز صحرا":"Raz Sahra digital product",
+    "مدار؛ نظم عملیاتی برای زنجیره ارزش":"Madar: operational control for the value chain",
+    "مدار، محصول نرم‌افزاری راز صحرا برای مدیریت عملیات و هماهنگی زنجیره تأمین است. این سامانه به سازمان‌دهی اطلاعات مزارع، ظرفیت تولید، سفارش‌ها، موجودی، کیفیت، حمل‌ونقل و امور مالی در یک فضای نقش‌محور کمک می‌کند.":"Madar is Raz Sahra’s software product for operations and supply-chain coordination. It helps organise farm information, production capacity, orders, inventory, quality, transport and finance in a role-based workspace.",
+    "نسخه وب مدار از مسیر اختصاصی همین دامنه ارائه می‌شود؛ دسترسی به عملیات بر اساس حساب و نقش کاربر کنترل می‌شود.":"Madar’s web app is served from a dedicated path on this domain; operational access is controlled by each user’s account and role.",
+    "نسخه وب یکپارچه":"Integrated web app",
+    "ورود به سامانه مدار":"Open Madar",
+    "مرکز عملیات و هماهنگی":"Operations & coordination hub",
+    "مدار":"Madar",
+    "تأمین":"Sourcing",
+    "عملیات":"Operations",
+    "توزیع":"Distribution",
+    "ظرفیت تولید":"Production capacity",
+    "سفارش و موجودی":"Orders & inventory",
+    "کیفیت و حمل":"Quality & transport",
+    "گزارش مدیریتی":"Management reporting",
     "صفحه اصلی":"Home","درباره ما":"About","حوزه‌های فعالیت":"Our fields","زنجیره تأمین":"Supply chain","همکاری با ما":"Partnerships","مجله تخصصی":"Magazine","ارتباط با ما":"Contact","حریم خصوصی":"Privacy",
     "شروع همکاری":"Start a partnership","پیشنهاد همکاری":"Partnership request","معرفی ظرفیت تولید":"Share production capacity","ارتباط با راز صحرا":"Contact Raz Sahra",
     "راهبران زنجیره ارزش صحرا":"Sahra Value Chain Leaders","راز صحرا":"Raz Sahra","از تأمین تا ارزش‌آفرینی":"From supply to value creation","از تأمین":"From supply","ارزش‌آفرینی":"value creation",
