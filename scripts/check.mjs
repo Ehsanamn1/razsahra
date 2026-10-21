@@ -68,6 +68,8 @@ assert.equal(medarSourcePin.apiBasePath, "/api/medar", "Medar same-origin API ba
 assert.ok(cloudflareWorkflow.includes("integration/medar-source.json"), "Pages workflow must load the canonical Medar source pin");
 assert.ok(cloudflareWorkflow.includes("ref: ${{ steps.medar-source.outputs.ref }}"), "Pages workflow must checkout the pinned Medar commit, not a moving branch");
 assert.ok(cloudflareWorkflow.includes("VITE_APP_VERSION: ${{ github.sha }}-${{ steps.medar-source.outputs.ref }}"), "Integrated asset version must identify both parent and Medar commits");
+assert.ok(cloudflareWorkflow.includes("PARENT_SOURCE_SHA: ${{ github.sha }}") && cloudflareWorkflow.includes("MEDAR_SOURCE_SHA: ${{ steps.medar-source.outputs.ref }}"), "The artifact check must receive both exact source revisions");
+assert.ok(cloudflareWorkflow.includes("PARENT_SOURCE_SHA}-${MEDAR_SOURCE_SHA}") && cloudflareWorkflow.includes("dist/madar/assets"), "The deployed bundle check must search for the combined source marker");
 
 assert.ok(cloudflareWorkflow.includes("VITE_API_BASE_URL: /api/medar"), "Madar API must use the same-origin proxy");
 const medarSourceRef = cloudflareWorkflow.match(/ref:\s*\$\{\{\s*steps\.medar-source\.outputs\.ref\s*\}\}/);

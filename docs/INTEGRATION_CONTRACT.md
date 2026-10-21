@@ -88,9 +88,12 @@ The Medar Worker's own deployment and authorization checks remain separately req
 
 ## 6. Last verified release evidence
 
-- **Raz Sahra:** commit e0c603e237925acd546470341ff6755d30c80931, workflow run [39635161486](https://github.com/Ehsanamn1/razsahra/actions/runs/39635161486), successful. The run deployed https://680e57ec.razsahra.pages.dev; its runner verified the canonical origin and that unique deployment URL returned HTTP 200 for /, /madar/, and /madar/app/home, and confirmed both separate database health checks.
-- **Medar:** commit 426889daa35c5520b4572531f2866cfd26900931, Worker deployment run [39631181645](https://github.com/Ehsanamn1/simorgh/actions/runs/39631181645), successful. The associated Medar CI run [39631181984](https://github.com/Ehsanamn1/simorgh/actions/runs/39631181984) also succeeded.
-- The cited parent release predates the new CMS-authorization negative smoke check added alongside this contract. That extra check is not considered live-verified until the updated parent workflow passes after merge.
+- **Raz Sahra parent + integrated Medar:** parent commit `7b6f8198ddec29d45e437441d8ca87fc2c13a865`, workflow run [39641032144](https://github.com/Ehsanamn1/razsahra/actions/runs/39641032144), conclusion: **success**. The run deployed https://7f1ac571.razsahra.pages.dev and verified both that unique deployment origin and the canonical `https://razsahra.pages.dev/` origin.
+- The post-deploy runner confirmed the public Medar entry point, HTTP 200 for `/` and `/madar/`, HTTP 200 and app shell for `/madar/app/home`, CMS health (`ok: true`, `database: "connected"`), upstream Medar health (`ok: true`, `database: true`), and HTTP 401 for unauthenticated GET `/api/admin/pages` at both origins.
+- **Embedded Medar source:** `426889daa35c5520b4572531f2866cfd26900931`, read from `integration/medar-source.json`. Its operational Worker deployment was verified by [run 39631181645](https://github.com/Ehsanamn1/simorgh/actions/runs/39631181645); the current Medar main also includes subsequent documentation-only work.
+- The workflow now separates pull-request concurrency groups from the production group so PR validation does not cancel a running production release. Main releases share a production group without cancelling the in-flight run; the repository check asserts this configuration.
+- The app's runtime configuration uses the combined parent/Medar source ID as its app version. The post-merge artifact-verification gate checks that the exact `7b6f8198ddec29d45e437441d8ca87fc2c13a865-426889daa35c5520b4572531f2866cfd26900931` marker is present in generated Medar JavaScript; a passing build alone is not a substitute for the live route and security smoke tests.
+
 
 ## 7. Out of scope
 
