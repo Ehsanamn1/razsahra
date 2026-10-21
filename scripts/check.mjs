@@ -69,7 +69,7 @@ assert.ok(cloudflareWorkflow.includes("ref: ${{ steps.medar-source.outputs.ref }
 assert.ok(cloudflareWorkflow.includes("VITE_APP_VERSION: ${{ github.sha }}-${{ steps.medar-source.outputs.ref }}"), "Integrated asset version must identify both parent and Medar commits");
 
 assert.ok(cloudflareWorkflow.includes("VITE_API_BASE_URL: /api/medar"), "Madar API must use the same-origin proxy");
-const medarSourceRef = cloudflareWorkflow.match(/ref:\\s*\\$\\{\\{\\s*steps\\.medar-source\\.outputs\\.ref\\s*\\}\\}/);
+const medarSourceRef = cloudflareWorkflow.match(/ref:\s*\$\{\{\s*steps\.medar-source\.outputs\.ref\s*\}\}/);
 assert.ok(medarSourceRef, "Integrated Medar checkout must use the output resolved from the canonical source pin");
 assert.ok(cloudflareWorkflow.includes("integration/medar-source.json"), "Pages workflow must resolve Medar source from the canonical manifest");
 assert.ok(integrationContract.includes(medarSourcePin.commit), "The integration contract must record the exact pinned Medar source revision");
