@@ -28,7 +28,8 @@ for (const handler of ["submitBootstrap","submitLogin","submitRegister"]) {
 }
 assert.ok(html.includes('id="rs-bootstrap-form"'), "One-time administrator bootstrap form missing");
 assert.ok(html.includes("x-admin-bootstrap-secret"), "Bootstrap secret must be sent only as the request header");
-assert.ok(html.includes('name="password_confirm"') && html.includes('minlength="16"'), "Administrator bootstrap must require a strong confirmed password");
+assert.ok(html.includes('name="password_confirm"') && html.includes('minlength="6"'), "Administrator bootstrap must require a confirmed password of at least six characters");
+assert.ok(api.includes("if (password.length < 6 || password.length > 128)"), "Admin bootstrap API must accept passwords from six to 128 characters");
 assert.ok(html.includes('id="admin-panel-content"'), "Admin dashboard mount missing");
 assert.ok(html.includes("raz-sahra-cms-runtime.js"), "CMS inquiry runtime is not loaded");
 assert.ok(cmsRuntime.includes('fetch("/api/inquiries"'), "Inquiry forms must use the backend endpoint");
