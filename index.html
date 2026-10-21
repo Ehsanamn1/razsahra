@@ -569,13 +569,13 @@
     <section class="page-hero"><div class="container page-hero-inner"><div class="breadcrumbs"><a href="?page=home" data-route="home">صفحه اصلی</a><span>←</span><span>راه‌اندازی مدیر</span></div><span class="eyebrow">راه‌اندازی اولیه · فقط یک‌بار</span><h1 class="display">فعال‌سازی مدیر اصلی</h1><p>برای ایجاد دسترسی مدیریتی، اطلاعات حساب و کلید راه‌اندازی را وارد کنید. این صفحه در منوهای عمومی سایت نمایش داده نمی‌شود.</p></div></section>
     <section class="section"><div class="container auth-layout">
       <aside class="auth-aside"><span class="eyebrow">دسترسی محافظت‌شده</span><h2>کنترل دسترسی از سرور</h2><p>ساخت حساب مدیر فقط در صورتی انجام می‌شود که کلید محرمانه در تنظیمات Production پروژهٔ Cloudflare Pages ثبت شده باشد و راه‌اندازی قبلی انجام نشده باشد.</p><div class="auth-aside-note"><strong>مهم</strong><span>کلید محرمانه را با کسی به اشتراک نگذارید. این فرم آن را فقط برای درخواست HTTPS می‌فرستد و در پایگاه‌داده یا فضای ذخیره‌سازی مرورگر نگه نمی‌دارد.</span></div></aside>
-      <form class="auth-form" id="rs-bootstrap-form" novalidate><h2>ایجاد مدیر اصلی</h2><p class="auth-form-intro">نام کاربری را با حروف انگلیسی وارد کنید. رمز عبور باید دست‌کم ۱۶ نویسه داشته باشد.</p>
+      <form class="auth-form" id="rs-bootstrap-form" novalidate><h2>ایجاد مدیر اصلی</h2><p class="auth-form-intro">نام کاربری را با حروف انگلیسی وارد کنید. رمز عبور باید دست‌کم ۶ نویسه داشته باشد.</p>
         <div class="field"><label for="rs-bootstrap-secret">کلید راه‌اندازی محرمانه</label><input id="rs-bootstrap-secret" name="bootstrap_secret" type="password" autocomplete="off" minlength="32" maxlength="512" required spellcheck="false" placeholder="کلید ثبت‌شده در Cloudflare"></div>
         <div class="field"><label for="rs-bootstrap-name">نام نمایشی مدیر</label><input id="rs-bootstrap-name" name="display_name" autocomplete="name" maxlength="120" required placeholder="نام مدیر"></div>
         <div class="field"><label for="rs-bootstrap-username">نام کاربری مدیر</label><input id="rs-bootstrap-username" name="username" autocomplete="username" minlength="3" maxlength="48" pattern="[A-Za-z0-9][A-Za-z0-9_.-]{2,47}" required placeholder="مثلاً site-admin"></div>
         <div class="field"><label for="rs-bootstrap-email">ایمیل (اختیاری)</label><input id="rs-bootstrap-email" name="email" type="email" autocomplete="email" maxlength="254" placeholder="admin@example.com"></div>
-        <div class="field"><label for="rs-bootstrap-password">رمز عبور مدیر</label><input id="rs-bootstrap-password" name="password" type="password" autocomplete="new-password" minlength="16" maxlength="128" required placeholder="حداقل ۱۶ نویسه"></div>
-        <div class="field"><label for="rs-bootstrap-confirm">تکرار رمز عبور</label><input id="rs-bootstrap-confirm" name="password_confirm" type="password" autocomplete="new-password" minlength="16" maxlength="128" required placeholder="رمز را دوباره وارد کنید"></div>
+        <div class="field"><label for="rs-bootstrap-password">رمز عبور مدیر</label><input id="rs-bootstrap-password" name="password" type="password" autocomplete="new-password" minlength="6" maxlength="128" required placeholder="حداقل ۶ نویسه"></div>
+        <div class="field"><label for="rs-bootstrap-confirm">تکرار رمز عبور</label><input id="rs-bootstrap-confirm" name="password_confirm" type="password" autocomplete="new-password" minlength="6" maxlength="128" required placeholder="رمز را دوباره وارد کنید"></div>
         <button class="btn btn-primary auth-submit" type="submit">فعال‌سازی امن مدیر <span aria-hidden="true">←</span></button><p class="form-status" id="rs-bootstrap-status" role="status" aria-live="polite"></p>
         <p class="auth-privacy-note">پس از موفقیت، نشست امن مدیر ساخته می‌شود و پنل مدیریت باز خواهد شد. این فرآیند فقط یک‌بار قابل اجراست.</p>
       </form>
@@ -767,8 +767,8 @@
       form.elements.display_name.focus();
       return;
     }
-    if(data.password.length < 16 || data.password.length > 128){
-      setStatus("rs-bootstrap-status","رمز عبور مدیر باید ۱۶ تا ۱۲۸ نویسه داشته باشد.","error");
+    if(data.password.length < 6 || data.password.length > 128){
+      setStatus("rs-bootstrap-status","رمز عبور مدیر باید ۶ تا ۱۲۸ نویسه داشته باشد.","error");
       form.elements.password.focus();
       return;
     }
