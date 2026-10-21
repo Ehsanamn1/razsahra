@@ -9,6 +9,7 @@ const interactive = await read("assets/raz-sahra-interactions.js");
 const cmsRuntime = await read("assets/raz-sahra-cms-runtime.js");
 const headers = await read("_headers");
 const cloudflareWorkflow = await read(".github/workflows/pages.yml");
+const build = await read("scripts/build.mjs");
 const views = ["home","about","business","supply","partnerships","contact","insights","privacy","login","register","account","admin"];
 for (const view of views) assert.ok(html.includes('data-page="' + view + '"'), "Missing page: " + view);
 for (const route of ["auth/register","auth/login","auth/me","auth/logout","auth/bootstrap-admin","admin/overview","admin/pages","admin/articles","admin/users","admin/inquiries","admin/apps","admin/settings","admin/audit","inquiries"]) assert.ok(api.includes(route), "Missing API route: " + route);
@@ -24,9 +25,17 @@ assert.ok(!api.includes('path === "setup/admin"'), "Legacy insecure admin bootst
 assert.ok(api.includes('rateOkay(sql, request, "inquiry")'), "Public inquiry submissions must be rate limited");
 assert.ok(headers.includes("X-Content-Type-Options: nosniff"), "Baseline security headers missing");
 assert.ok(cloudflareWorkflow.includes("wrangler pages deploy dist"), "Cloudflare Pages deployment step missing");
+assert.ok(cloudflareWorkflow.includes("Smoke-test deployed site, Madar route and backend"), "Post-deployment live smoke test missing");
+assert.ok(cloudflareWorkflow.includes("/api/health") && cloudflareWorkflow.includes("database!==\"connected\""), "Live health test must verify Neon database connectivity");
+assert.ok(cloudflareWorkflow.includes("SITE_BUILD_VERSION"), "Deployment build version must be supplied for cache busting");
+assert.ok(build.includes("process.env.SITE_BUILD_VERSION") && build.includes("${buildVersion}"), "Build must bust CSS/JS caches on each deployment");
 
 assert.ok(api.includes('path.startsWith("medar/")') && api.includes("proxyMedar(request, path)"), "Same-origin Medar API proxy missing");
 assert.ok(html.includes('href="/madar/"'), "Same-origin Medar entry point missing");
+assert.ok(html.includes('class="madar-product-section"') && html.includes('id="madar-product-title"'), "Homepage must introduce Madar as a Raz Sahra product");
+assert.ok(html.includes('class="mobile-product-link"'), "Mobile navigation must expose the Madar entry point");
+assert.ok(!html.includes("در انتظار فایل PWA") && !html.includes("پس از اتصال بسته وب/PWA نهایی فعال می‌شود"), "Stale Madar pending-bundle copy must not return");
+assert.ok(schema.includes("'/madar/','',true"), "New installs must seed Madar as an active integrated web app");
 assert.ok((await read("_redirects")).includes("/madar /madar/ 301"), "Madar path normalization redirect missing");
 assert.ok(cloudflareWorkflow.includes("repository: Ehsanamn1/simorgh") && cloudflareWorkflow.includes("dist/madar"), "Madar app bundle build is not part of the deployment");
 assert.ok(cloudflareWorkflow.includes("VITE_API_BASE_URL: /api/medar"), "Madar API must use the same-origin proxy");
