@@ -24,6 +24,16 @@ assert.ok(!api.includes('path === "setup/admin"'), "Legacy insecure admin bootst
 assert.ok(api.includes('rateOkay(sql, request, "inquiry")'), "Public inquiry submissions must be rate limited");
 assert.ok(headers.includes("X-Content-Type-Options: nosniff"), "Baseline security headers missing");
 assert.ok(cloudflareWorkflow.includes("wrangler pages deploy dist"), "Cloudflare Pages deployment step missing");
+
+assert.ok(api.includes('path.startsWith("medar/")') && api.includes("proxyMedar(request, path)"), "Same-origin Medar API proxy missing");
+assert.ok(html.includes('href="/madar/"'), "Same-origin Medar entry point missing");
+assert.ok((await read("_redirects")).includes("/madar /madar/ 301"), "Madar path normalization redirect missing");
+assert.ok(cloudflareWorkflow.includes("repository: Ehsanamn1/simorgh") && cloudflareWorkflow.includes("dist/madar"), "Madar app bundle build is not part of the deployment");
+assert.ok(cloudflareWorkflow.includes("VITE_API_BASE_URL: /api/medar"), "Madar API must use the same-origin proxy");
+for (const match of html.matchAll(/<script(?:\\s[^>]*)?>([\\s\\S]*?)<\\/script>/g)) {
+  if (match[1].trim()) new Function(match[1]);
+}
+
 assert.ok(html.includes('data-route="register"'), "Footer registration link missing");
 assert.ok(css.includes("Mobile performance and editor-reader fix"), "Responsive fix missing");
 assert.ok(interactive.includes("window.matchMedia('(max-width: 850px)').matches"), "Mobile particle budget missing");
