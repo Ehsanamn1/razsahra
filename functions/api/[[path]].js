@@ -211,7 +211,7 @@ async function handle(request, env) {
     const password = String(data.password || "");
     if (!/^[a-z0-9][a-z0-9_.-]{2,47}$/.test(username)) return fail("نام کاربری باید ۳ تا ۴۸ نویسه انگلیسی، عدد، نقطه، خط تیره یا زیرخط باشد.");
     if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return fail("نشانی ایمیل معتبر وارد کنید.");
-    if (password.length < 16 || password.length > 128) return fail("رمز عبور مدیر باید ۱۶ تا ۱۲۸ نویسه داشته باشد.");
+    if (password.length < 6 || password.length > 128) return fail("رمز عبور مدیر باید ۶ تا ۱۲۸ نویسه داشته باشد.");
     const salt = randomToken(16);
     const material = await crypto.subtle.importKey("raw", enc.encode(password), "PBKDF2", false, ["deriveBits"]);
     const hash = new Uint8Array(await crypto.subtle.deriveBits({ name: "PBKDF2", hash: "SHA-256", salt: fromB64url(salt), iterations: PASSWORD_ITERATIONS }, material, 256));
