@@ -19,18 +19,18 @@ for (const table of ['users', 'articles', 'inquiries']) {
 }
 
 const forbidden = [
-  [/\\bJSONB\\b/i, 'PostgreSQL JSONB type'],
-  [/\\bTIMESTAMPTZ\\b/i, 'PostgreSQL TIMESTAMPTZ type'],
-  [/::(?:jsonb|int|text|uuid)\\b/i, 'PostgreSQL cast syntax'],
-  [/\\bON CONFLICT\\b/i, 'PostgreSQL ON CONFLICT clause'],
-  [/\\bRETURNING\\b/i, 'PostgreSQL RETURNING clause'],
+  [new RegExp('\\\\bJSONB\\\\b', 'i'), 'PostgreSQL JSONB type'],
+  [new RegExp('\\\\bTIMESTAMPTZ\\\\b', 'i'), 'PostgreSQL TIMESTAMPTZ type'],
+  [new RegExp('::(?:jsonb|int|text|uuid)\\\\b', 'i'), 'PostgreSQL cast syntax'],
+  [new RegExp('\\\\bON CONFLICT\\\\b', 'i'), 'PostgreSQL ON CONFLICT clause'],
+  [new RegExp('\\\\bRETURNING\\\\b', 'i'), 'PostgreSQL RETURNING clause'],
 ];
 for (const [pattern, label] of forbidden) assert(!pattern.test(schema), `MySQL schema contains unsupported ${label}`);
 
 for (const relation of [
-  /FOREIGN KEY \\(user_id\\) REFERENCES users\\(id\\)/i,
-  /FOREIGN KEY \\(actor_id\\) REFERENCES users\\(id\\)/i,
-  /FOREIGN KEY \\(updated_by\\) REFERENCES users\\(id\\)/i,
+  new RegExp('FOREIGN KEY \\\\(user_id\\\\) REFERENCES users\\\\(id\\\\)', 'i'),
+  new RegExp('FOREIGN KEY \\\\(actor_id\\\\) REFERENCES users\\\\(id\\\\)', 'i'),
+  new RegExp('FOREIGN KEY \\\\(updated_by\\\\) REFERENCES users\\\\(id\\\\)', 'i'),
 ]) assert(relation.test(schema), 'A required CMS foreign-key relation is missing');
 
 console.log(`MySQL schema static check passed: ${requiredTables.length} tables, UUID defaults, and PostgreSQL syntax checks.`);
