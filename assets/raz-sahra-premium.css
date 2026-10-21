@@ -1252,3 +1252,57 @@ html.lang-en .route-card,html.lang-en .status-chip,html.lang-en .slide-vertical-
 .footer-brand-lockup:hover { transform: translateY(-2px); }
 
 /* Preserve the original low-opacity, breathing fireball orb and responsive sizing defined above. */
+
+
+/* Madar — Raz Sahra's integrated digital operations product. */
+.madar-product-section{padding-top:24px}
+.madar-product-card{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr);min-height:335px;overflow:hidden;border:1px solid rgba(36,54,74,.12);border-radius:25px;background:var(--navy);box-shadow:0 22px 55px rgba(25,38,51,.11)}
+.madar-product-copy{position:relative;z-index:1;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;padding:clamp(25px,4.2vw,48px);color:#fff}
+.madar-product-copy .eyebrow{color:var(--copper-light)}
+.madar-product-copy .section-title{margin:13px 0 14px;color:#fff;font-size:clamp(24px,2.8vw,35px);line-height:1.65}
+.madar-product-description{max-width:590px;margin:0 0 12px;color:#d8e0e6;font-size:13px;line-height:2.15}
+.madar-product-note{max-width:590px;margin:0;color:#aebdc8;font-size:11px;line-height:2}
+.madar-product-actions{display:flex;align-items:center;gap:17px;flex-wrap:wrap;margin-top:23px}
+.madar-product-actions .btn{min-height:42px;padding:10px 16px}
+.madar-product-label{display:inline-flex;align-items:center;gap:8px;color:#d5dddF;font-size:10px;font-weight:600}
+.madar-product-label i{width:7px;height:7px;border-radius:50%;background:var(--copper-light);box-shadow:0 0 0 4px rgba(215,162,123,.12)}
+.madar-product-visual{position:relative;display:flex;flex-direction:column;justify-content:center;gap:16px;min-width:0;padding:clamp(20px,3vw,34px);overflow:hidden;background:radial-gradient(ellipse at 53% 44%,rgba(183,116,75,.19),transparent 62%),linear-gradient(140deg,#1d3042,#132332)}
+.madar-product-visual:before,.madar-product-visual:after{position:absolute;content:"";pointer-events:none;border:1px solid rgba(215,162,123,.16);border-radius:50%;aspect-ratio:1;width:330px;right:50%;top:50%;transform:translate(50%,-50%)}
+.madar-product-visual:after{width:250px;border-color:rgba(215,162,123,.1)}
+.madar-product-visual-kicker,.madar-product-visual-foot{position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between;gap:10px;color:#9eafbc;font-family:Arial,sans-serif;font-size:9px;letter-spacing:.12em;direction:ltr}
+.madar-product-ui{position:relative;z-index:1;padding:20px;border:1px solid rgba(255,255,255,.12);border-radius:17px;background:rgba(244,240,232,.075);box-shadow:0 18px 45px rgba(0,0,0,.13);backdrop-filter:blur(12px)}
+.madar-product-ui-head{display:flex;align-items:center;gap:12px;padding-bottom:17px;border-bottom:1px solid rgba(255,255,255,.1)}
+.madar-product-ui-symbol{display:grid;place-items:center;width:42px;height:42px;flex:0 0 42px;border:1px solid rgba(215,162,123,.55);border-radius:12px;color:var(--copper-light);font-family:Arial,sans-serif;font-size:18px;font-weight:700}
+.madar-product-ui-head div{display:grid;gap:1px}
+.madar-product-ui-head strong{color:#fff;font-size:16px}
+.madar-product-ui-head small{color:#adbbc5;font-size:10px}
+.madar-product-ui-dot{width:7px;height:7px;margin-inline-start:auto;border-radius:50%;background:var(--copper-light);box-shadow:0 0 0 5px rgba(215,162,123,.1)}
+.madar-product-flow{display:flex;align-items:center;justify-content:space-between;gap:7px;padding:19px 0 15px}
+.madar-product-flow span{display:inline-flex;align-items:center;justify-content:center;min-width:60px;padding:8px 10px;border:1px solid rgba(255,255,255,.12);border-radius:9px;color:#f1e9df;background:rgba(255,255,255,.045);font-size:10px}
+.madar-product-flow i{height:1px;min-width:8px;flex:1;background:linear-gradient(90deg,rgba(215,162,123,.22),rgba(215,162,123,.75))}
+.madar-product-modules{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.madar-product-modules span{padding:9px 10px;border-radius:8px;background:rgba(7,17,26,.24);color:#bfcbd3;font-size:10px;line-height:1.6}
+.madar-product-visual-foot{font-size:8px;color:#758c9c}
+.mobile-product-link{display:none}
+@media(max-width:850px){
+ .madar-product-section{padding-top:16px}
+ .madar-product-card{grid-template-columns:minmax(0,1fr);border-radius:20px}
+ .madar-product-copy{padding:29px 25px 24px}
+ .madar-product-visual{padding:20px 22px 25px;min-height:265px}
+ .madar-product-ui{padding:16px}
+ .madar-product-visual:before{width:275px}
+ .madar-product-visual:after{width:205px}
+ .mobile-product-link{display:flex!important;align-items:center;gap:12px;margin-top:12px;padding:12px!important;border:1px solid rgba(183,116,75,.28)!important;border-radius:12px;background:rgba(183,116,75,.07);color:var(--navy)!important}
+ .mobile-product-mark{display:grid;place-items:center;width:34px;height:34px;flex:0 0 34px;border:1px solid rgba(183,116,75,.45);border-radius:10px;color:var(--copper);font-family:Arial,sans-serif;font-weight:800}
+ .mobile-product-arrow{margin-inline-start:auto;color:var(--copper);font-weight:800}
+}
+@media(max-width:540px){
+ .madar-product-actions{align-items:stretch;width:100%;gap:12px}
+ .madar-product-actions .btn{width:100%}
+ .madar-product-label{justify-content:center}
+ .madar-product-copy .section-title{font-size:25px}
+ .madar-product-description{font-size:12px}
+ .madar-product-flow{gap:4px}
+ .madar-product-flow span{min-width:0;flex:1;padding:7px 5px;font-size:9px}
+ .madar-product-modules span{font-size:9px;padding:9px 7px}
+}
