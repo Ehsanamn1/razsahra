@@ -9,6 +9,7 @@ const interactive = await read("assets/raz-sahra-interactions.js");
 const cmsRuntime = await read("assets/raz-sahra-cms-runtime.js");
 const headers = await read("_headers");
 const cloudflareWorkflow = await read(".github/workflows/pages.yml");
+const madarRouteFallback = await read("functions/madar/[[path]].js");
 const build = await read("scripts/build.mjs");
 const views = ["home","about","business","supply","partnerships","contact","insights","privacy","login","register","account","admin"];
 for (const view of views) assert.ok(html.includes('data-page="' + view + '"'), "Missing page: " + view);
@@ -28,6 +29,12 @@ assert.ok(cloudflareWorkflow.includes("wrangler pages deploy dist"), "Cloudflare
 assert.ok(cloudflareWorkflow.includes("Smoke-test deployed site, Madar route and backend"), "Post-deployment live smoke test missing");
 assert.ok(cloudflareWorkflow.includes("/api/health") && cloudflareWorkflow.includes("database!==\"connected\""), "Live health test must verify Neon database connectivity");
 assert.ok(cloudflareWorkflow.includes("/api/medar/api/health") && cloudflareWorkflow.includes("d.database!==true"), "Live smoke test must verify the separate operational Madar API");
+assert.ok(cloudflareWorkflow.includes("Ensure CMS database secret is configured before deployment"), "Production deploy must fail fast when the dedicated CMS database secret is missing");
+assert.ok(cloudflareWorkflow.includes("pages secret put DATABASE_URL") && cloudflareWorkflow.includes("RAZ_SAHRA_DATABASE_URL"), "Deployment must support secure provisioning of the Pages CMS database secret");
+assert.ok(cloudflareWorkflow.includes("/madar/app/home"), "Production smoke test must verify a nested Madar route refresh");
+assert.ok(madarRouteFallback.includes("context.env.ASSETS.fetch") && madarRouteFallback.includes('text/html'), "Madar deep-link fallback must serve the application shell for HTML navigations");
+assert.ok(html.includes('class="section madar-product-section"') && html.includes('id="madar-product-title"'), "Public homepage must expose the integrated Madar product section");
+
 assert.ok(cloudflareWorkflow.includes("SITE_BUILD_VERSION"), "Deployment build version must be supplied for cache busting");
 assert.ok(build.includes("process.env.SITE_BUILD_VERSION") && build.includes("${buildVersion}"), "Build must bust CSS/JS caches on each deployment");
 
