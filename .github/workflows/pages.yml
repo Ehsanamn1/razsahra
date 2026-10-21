@@ -97,6 +97,50 @@ jobs:
         if: ${{ github.ref == 'refs/heads/main' && env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != '' }}
         run: npx wrangler pages deploy dist --project-name=razsahra --branch=main
 
+      - name: Smoke-test public site, CMS authorization, and Madar API
+        if: ${{ github.ref == 'refs/heads/main' && env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != '' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          base="${SITE_URL%/}"
+          request() {
+            curl --silent --show-error --fail --retry 8 --retry-all-errors --retry-delay 3 --max-time 25 "$1" -o "$2"
+          }
+
+          request "$base/" "$RUNNER_TEMP/razsahra-home.html"
+          grep -q 'ورود به سامانه مدار' "$RUNNER_TEMP/razsahra-home.html"
+          grep -q '/madar/' "$RUNNER_TEMP/razsahra-home.html"
+          request "$base/madar/" "$RUNNER_TEMP/madar-index.html"
+          grep -qi '<html' "$RUNNER_TEMP/madar-index.html"
+          request "$base/assets/raz-sahra-premium.css" "$RUNNER_TEMP/razsahra-premium.css"
+          test -s "$RUNNER_TEMP/razsahra-premium.css"
+
+          request "$base/api/health" "$RUNNER_TEMP/razsahra-health.json"
+          node --input-type=module <<'NODE'
+          import { readFile } from 'node:fs/promises';
+          import assert from 'node:assert/strict';
+          const result = JSON.parse(await readFile(process.env.RUNNER_TEMP + '/razsahra-health.json', 'utf8'));
+          assert.equal(result.ok, true, 'Raz Sahra API health must be successful');
+          assert.equal(result.database, 'connected', 'Raz Sahra Neon database must be connected');
+          console.log('Verified Raz Sahra API and Neon database health.');
+          NODE
+
+          request "$base/api/medar/api/health" "$RUNNER_TEMP/medar-health.json"
+          node --input-type=module <<'NODE'
+          import { readFile } from 'node:fs/promises';
+          import assert from 'node:assert/strict';
+          const result = JSON.parse(await readFile(process.env.RUNNER_TEMP + '/medar-health.json', 'utf8'));
+          assert.equal(result.ok, true, 'Madar operational API health must be successful');
+          assert.equal(result.database, true, 'Madar Neon database must be connected');
+          console.log('Verified Madar operational Worker and Neon database health.');
+          NODE
+
+          admin_status="$(curl --silent --show-error --output "$RUNNER_TEMP/admin-unauthenticated.json" --write-out '%{http_code}' --max-time 25 "$base/api/admin/pages")"
+          case "$admin_status" in
+            401|403) echo "Verified unauthenticated CMS admin access is denied (HTTP $admin_status)." ;;
+            *) echo "Expected HTTP 401/403 for unauthenticated CMS admin API; received HTTP $admin_status." >&2; exit 1 ;;
+          esac
+
       - name: Explain skipped deployment
         if: ${{ env.CLOUDFLARE_API_TOKEN == '' || env.CLOUDFLARE_ACCOUNT_ID == '' }}
         run: |
