@@ -565,6 +565,22 @@
       </form>
     </div></section>
   </div>
+  <div class="page-view" data-page="setup-admin" aria-hidden="true">
+    <section class="page-hero"><div class="container page-hero-inner"><div class="breadcrumbs"><a href="?page=home" data-route="home">صفحه اصلی</a><span>←</span><span>راه‌اندازی مدیر</span></div><span class="eyebrow">راه‌اندازی اولیه · فقط یک‌بار</span><h1 class="display">فعال‌سازی مدیر اصلی</h1><p>برای ایجاد دسترسی مدیریتی، اطلاعات حساب و کلید راه‌اندازی را وارد کنید. این صفحه در منوهای عمومی سایت نمایش داده نمی‌شود.</p></div></section>
+    <section class="section"><div class="container auth-layout">
+      <aside class="auth-aside"><span class="eyebrow">دسترسی محافظت‌شده</span><h2>کنترل دسترسی از سرور</h2><p>ساخت حساب مدیر فقط در صورتی انجام می‌شود که کلید محرمانه در تنظیمات Production پروژهٔ Cloudflare Pages ثبت شده باشد و راه‌اندازی قبلی انجام نشده باشد.</p><div class="auth-aside-note"><strong>مهم</strong><span>کلید محرمانه را با کسی به اشتراک نگذارید. این فرم آن را فقط برای درخواست HTTPS می‌فرستد و در پایگاه‌داده یا فضای ذخیره‌سازی مرورگر نگه نمی‌دارد.</span></div></aside>
+      <form class="auth-form" id="rs-bootstrap-form" novalidate><h2>ایجاد مدیر اصلی</h2><p class="auth-form-intro">نام کاربری را با حروف انگلیسی وارد کنید. رمز عبور باید دست‌کم ۱۶ نویسه داشته باشد.</p>
+        <div class="field"><label for="rs-bootstrap-secret">کلید راه‌اندازی محرمانه</label><input id="rs-bootstrap-secret" name="bootstrap_secret" type="password" autocomplete="off" minlength="32" maxlength="512" required spellcheck="false" placeholder="کلید ثبت‌شده در Cloudflare"></div>
+        <div class="field"><label for="rs-bootstrap-name">نام نمایشی مدیر</label><input id="rs-bootstrap-name" name="display_name" autocomplete="name" maxlength="120" required placeholder="نام مدیر"></div>
+        <div class="field"><label for="rs-bootstrap-username">نام کاربری مدیر</label><input id="rs-bootstrap-username" name="username" autocomplete="username" minlength="3" maxlength="48" pattern="[A-Za-z0-9][A-Za-z0-9_.-]{2,47}" required placeholder="مثلاً site-admin"></div>
+        <div class="field"><label for="rs-bootstrap-email">ایمیل (اختیاری)</label><input id="rs-bootstrap-email" name="email" type="email" autocomplete="email" maxlength="254" placeholder="admin@example.com"></div>
+        <div class="field"><label for="rs-bootstrap-password">رمز عبور مدیر</label><input id="rs-bootstrap-password" name="password" type="password" autocomplete="new-password" minlength="16" maxlength="128" required placeholder="حداقل ۱۶ نویسه"></div>
+        <div class="field"><label for="rs-bootstrap-confirm">تکرار رمز عبور</label><input id="rs-bootstrap-confirm" name="password_confirm" type="password" autocomplete="new-password" minlength="16" maxlength="128" required placeholder="رمز را دوباره وارد کنید"></div>
+        <button class="btn btn-primary auth-submit" type="submit">فعال‌سازی امن مدیر <span aria-hidden="true">←</span></button><p class="form-status" id="rs-bootstrap-status" role="status" aria-live="polite"></p>
+        <p class="auth-privacy-note">پس از موفقیت، نشست امن مدیر ساخته می‌شود و پنل مدیریت باز خواهد شد. این فرآیند فقط یک‌بار قابل اجراست.</p>
+      </form>
+    </div></section>
+  </div>
   <div class="page-view" data-page="account" aria-hidden="true">
     <section class="page-hero"><div class="container page-hero-inner"><span class="eyebrow">فضای شخصی</span><h1 class="display" data-cms-key="title">حساب کاربری من</h1><p data-cms-key="description">مدیریت اطلاعات حساب، دسترسی‌ها و خدمات متصل به راز صحرا.</p></div></section>
     <section class="section"><div class="container account-layout"><div class="account-welcome content-panel"><span class="eyebrow">خوش آمدید</span><h2>سلام، <span data-account-name>کاربر</span></h2><p data-account-email>در حال خواندن اطلاعات حساب…</p><div class="account-actions"><a class="btn btn-outline" href="?page=login" data-route="login" data-account-admin-link hidden>پیشخوان مدیریت</a><button class="btn btn-dark-outline" type="button" data-auth-logout>خروج از حساب</button></div></div>
@@ -607,8 +623,8 @@
 <script>
 (function(){
   "use strict";
-  var pageNames={home:"راز صحرا | از تأمین تا ارزش‌آفرینی",about:"درباره ما | راز صحرا",business:"حوزه‌های فعالیت | راز صحرا",supply:"زنجیره تأمین | راز صحرا",partnerships:"همکاری با ما | راز صحرا",contact:"ارتباط با ما | راز صحرا",insights:"مجله تخصصی | راز صحرا",privacy:"سیاست حریم خصوصی | راز صحرا",login:"ورود به حساب | راز صحرا",register:"ثبت‌نام | راز صحرا",account:"حساب کاربری | راز صحرا",admin:"پیشخوان مدیریت | راز صحرا"};
-  var descriptions={home:"راز صحرا؛ نگاهی یکپارچه به تأمین، تجارت و توزیع در صنعت طیور، از تولیدکننده تا بازار.",about:"هویت، رویکرد تجاری و نگاه زنجیره‌ای راز صحرا به صنعت طیور.",business:"حوزه‌های فعالیت راز صحرا از تأمین و بازرگانی تا توزیع و مسیرهای توسعه در صنعت طیور.",supply:"چارچوب هماهنگی میان تولید، تأمین، توافق تجاری، حمل‌ونقل و بازار.",partnerships:"طرح پیشنهاد همکاری برای تولیدکنندگان، تأمین‌کنندگان، فرآوری، بسته‌بندی، حمل‌ونقل و توزیع محصولات طیور.",contact:"فرم ارتباط تجاری راز صحرا، با امکان ذخیره پیش‌نویس و آماده‌سازی فایل محلی.",insights:"هشت مقاله تخصصی برای فعالان صنعت طیور؛ از تأمین و کنترل کیفیت تا لجستیک، قرارداد و مدیریت ریسک.",privacy:"سیاست حریم خصوصی، وضعیت فرم‌های محلی و حقوق استفاده از تصاویر وب‌سایت راز صحرا.",login:"ورود امن به حساب کاربری راز صحرا؛ حساب‌های مدیر و کاربران بر اساس سطح دسترسی هدایت می‌شوند.",register:"ساخت حساب شخصی در شبکه راز صحرا؛ نقش مدیر فقط از سمت سرور تخصیص داده می‌شود.",account:"فضای شخصی کاربر و خدمات دیجیتال متصل به راز صحرا.",admin:"پیشخوان مدیریت راز صحرا برای محتوای سایت، مقاله‌ها، کاربران، پیام‌ها، تنظیمات و اپلیکیشن‌ها."};
+  var pageNames={home:"راز صحرا | از تأمین تا ارزش‌آفرینی",about:"درباره ما | راز صحرا",business:"حوزه‌های فعالیت | راز صحرا",supply:"زنجیره تأمین | راز صحرا",partnerships:"همکاری با ما | راز صحرا",contact:"ارتباط با ما | راز صحرا",insights:"مجله تخصصی | راز صحرا",privacy:"سیاست حریم خصوصی | راز صحرا",login:"ورود به حساب | راز صحرا",register:"ثبت‌نام | راز صحرا",account:"حساب کاربری | راز صحرا",admin:"پیشخوان مدیریت | راز صحرا","setup-admin":"راه‌اندازی امن مدیر | راز صحرا"};
+  var descriptions={home:"راز صحرا؛ نگاهی یکپارچه به تأمین، تجارت و توزیع در صنعت طیور، از تولیدکننده تا بازار.",about:"هویت، رویکرد تجاری و نگاه زنجیره‌ای راز صحرا به صنعت طیور.",business:"حوزه‌های فعالیت راز صحرا از تأمین و بازرگانی تا توزیع و مسیرهای توسعه در صنعت طیور.",supply:"چارچوب هماهنگی میان تولید، تأمین، توافق تجاری، حمل‌ونقل و بازار.",partnerships:"طرح پیشنهاد همکاری برای تولیدکنندگان، تأمین‌کنندگان، فرآوری، بسته‌بندی، حمل‌ونقل و توزیع محصولات طیور.",contact:"فرم ارتباط تجاری راز صحرا، با امکان ذخیره پیش‌نویس و آماده‌سازی فایل محلی.",insights:"هشت مقاله تخصصی برای فعالان صنعت طیور؛ از تأمین و کنترل کیفیت تا لجستیک، قرارداد و مدیریت ریسک.",privacy:"سیاست حریم خصوصی، وضعیت فرم‌های محلی و حقوق استفاده از تصاویر وب‌سایت راز صحرا.",login:"ورود امن به حساب کاربری راز صحرا؛ حساب‌های مدیر و کاربران بر اساس سطح دسترسی هدایت می‌شوند.",register:"ساخت حساب شخصی در شبکه راز صحرا؛ نقش مدیر فقط از سمت سرور تخصیص داده می‌شود.",account:"فضای شخصی کاربر و خدمات دیجیتال متصل به راز صحرا.",admin:"پیشخوان مدیریت راز صحرا برای محتوای سایت، مقاله‌ها، کاربران، پیام‌ها، تنظیمات و اپلیکیشن‌ها.","setup-admin":"راه‌اندازی یک‌بارهٔ مدیر اصلی سایت؛ فقط با کلید محرمانهٔ ذخیره‌شده در Cloudflare."};
   var pageAliases={"":"home","index.html":"home","home":"home","about":"about","business":"business","business-areas":"business","supply":"supply","supply-chain":"supply","partnerships":"partnerships","contact":"contact","insights":"insights","news":"insights","privacy":"privacy","login":"login","register":"register","account":"account","admin":"admin"};
   var mobileMenu = document.getElementById("mobile-menu");
   var mobileToggle = document.querySelector(".mobile-toggle");
@@ -709,7 +725,7 @@
   }
   function showAuthFailure(error, target){
     if(error.status === 503 || error.code === "backend_not_configured" || error.code === "database_unavailable"){
-      setStatus(target, "بک‌اند هنوز روی میزبان عمومی فعال نشده است. نسخه فعلی روی GitHub Pages فقط فرانت‌اند را اجرا می‌کند؛ پس از انتشار Cloudflare Pages و تنظیم DATABASE_URL ورود فعال می‌شود.", "error");
+      setStatus(target, "سرویس حساب کاربری روی Cloudflare در دسترس نیست. تنظیم DATABASE_URL و وضعیت دیتابیس را بررسی کنید.", "error");
     } else {
       setStatus(target, error.message || "درخواست انجام نشد.", "error");
     }
@@ -723,6 +739,70 @@
     all("[data-auth-only]").forEach((el) => { el.hidden = !currentUser; });
     all("[data-auth-admin]").forEach((el) => { el.hidden = !(currentUser && currentUser.role === "admin"); });
     all("[data-account-admin-link]").forEach((el) => { el.hidden = !(currentUser && currentUser.role === "admin"); });
+  }
+  async function submitBootstrap(event){
+    event.preventDefault();
+    const form = event.currentTarget;
+    const data = {
+      username: form.elements.username.value.trim().toLowerCase(),
+      display_name: form.elements.display_name.value.trim(),
+      email: form.elements.email.value.trim(),
+      password: form.elements.password.value
+    };
+    const secretField = form.elements.bootstrap_secret;
+    const secret = secretField.value;
+    if(secret.length < 32){
+      setStatus("rs-bootstrap-status","کلید راه‌اندازی باید همان کلید محرمانهٔ ثبت‌شده در Cloudflare و حداقل ۳۲ نویسه باشد.","error");
+      secretField.focus();
+      return;
+    }
+    if(!/^[a-z0-9][a-z0-9_.-]{2,47}$/.test(data.username)){
+      setStatus("rs-bootstrap-status","نام کاربری باید ۳ تا ۴۸ نویسه انگلیسی، عدد، نقطه، خط تیره یا زیرخط باشد.","error");
+      form.elements.username.focus();
+      return;
+    }
+    if(!data.display_name){
+      setStatus("rs-bootstrap-status","نام نمایشی مدیر را وارد کنید.","error");
+      form.elements.display_name.focus();
+      return;
+    }
+    if(data.password.length < 16 || data.password.length > 128){
+      setStatus("rs-bootstrap-status","رمز عبور مدیر باید ۱۶ تا ۱۲۸ نویسه داشته باشد.","error");
+      form.elements.password.focus();
+      return;
+    }
+    if(data.password !== form.elements.password_confirm.value){
+      setStatus("rs-bootstrap-status","تکرار رمز عبور با رمز اصلی یکسان نیست.","error");
+      form.elements.password_confirm.focus();
+      return;
+    }
+    const button = one('button[type="submit"]',form);
+    if(button) button.disabled = true;
+    setStatus("rs-bootstrap-status","در حال بررسی کلید و ساخت حساب مدیر…","");
+    try {
+      const result = await api("auth/bootstrap-admin",{
+        method:"POST",
+        headers:{"x-admin-bootstrap-secret":secret},
+        body:JSON.stringify(data)
+      });
+      currentUser = result.user || null;
+      form.reset();
+      setStatus("rs-bootstrap-status","حساب مدیر فعال شد؛ در حال باز کردن پیشخوان…","success");
+      navigate("admin");
+    } catch(error) {
+      if(error.code === "bootstrap_not_configured"){
+        setStatus("rs-bootstrap-status","کلید ADMIN_BOOTSTRAP_SECRET هنوز در بخش Production → Variables and Secrets پروژهٔ Pages با نام درست ثبت نشده است. آن را به‌صورت Secret ذخیره کنید و دوباره تلاش کنید.","error");
+      } else if(error.code === "bootstrap_secret_invalid"){
+        setStatus("rs-bootstrap-status","کلید واردشده با Secret ذخیره‌شده در Cloudflare یکسان نیست. مقدار را بررسی کنید؛ کلید در این صفحه ذخیره نمی‌شود.","error");
+      } else if(error.code === "bootstrap_already_used"){
+        setStatus("rs-bootstrap-status","راه‌اندازی اولیه قبلاً انجام شده است. از صفحه ورود، با حساب مدیر موجود وارد شوید.","error");
+      } else {
+        setStatus("rs-bootstrap-status",error.message || "راه‌اندازی مدیر انجام نشد؛ اتصال و تنظیمات را بررسی کنید.","error");
+      }
+    } finally {
+      secretField.value = "";
+      if(button) button.disabled = false;
+    }
   }
   async function submitLogin(event){
     event.preventDefault();
@@ -981,7 +1061,7 @@
     if(error.status === 403) navigate("account");
   }
   document.addEventListener("submit",function(event){
-    if(event.target && event.target.id === "rs-login-form") submitLogin(event);
+    if(event.target && event.target.id === "rs-bootstrap-form") submitBootstrap(event);\n    else if(event.target && event.target.id === "rs-login-form") submitLogin(event);
     else if(event.target && event.target.id === "rs-register-form") submitRegister(event);
     else if(event.target && event.target.matches("form[data-admin-form]")) submitAdminForm(event);
   });
