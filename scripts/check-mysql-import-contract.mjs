@@ -3,18 +3,18 @@ import assert from 'node:assert/strict';
 
 const source = await readFile(new URL('../db/schema.sql', import.meta.url), 'utf8');
 const target = await readFile(new URL('../db/schema.mysql.sql', import.meta.url), 'utf8');
-const tables = [
-  'users', 'sessions', 'auth_attempts', 'site_pages', 'articles',
-  'site_settings', 'inquiries', 'audit_logs', 'app_catalog',
-];
+const tables = ['users', 'sessions', 'auth_attempts', 'site_pages', 'articles', 'site_settings', 'inquiries', 'audit_logs', 'app_catalog'];
 
 function tableColumns(sql, tableName) {
-  const match = sql.match(new RegExp('CREATE\\s+TABLE\\s+IF\\s+NOT\\s+EXISTS\\s+[`"]?' + tableName + '[`"]?\\s*\\(', 'i'));
-  assert(match, 'Missing CREATE TABLE for ' + tableName);
-  const start = match.index + match[0].length;
+  const lower = sql.toLowerCase();
+  const needle = 'create table if not exists ' + tableName.toLowerCase();
+  const tableStart = lower.indexOf(needle);
+  assert(tableStart >= 0, 'Missing CREATE TABLE for ' + tableName);
+  const start = sql.indexOf('(', tableStart + needle.length);
+  assert(start >= 0, 'Missing column list for ' + tableName);
   let depth = 1;
   let quote = '';
-  let end = start;
+  let end = start + 1;
   for (; end < sql.length && depth > 0; end += 1) {
     const ch = sql[end];
     if (quote) {
@@ -26,13 +26,16 @@ function tableColumns(sql, tableName) {
     if (ch === ')') depth -= 1;
   }
   assert.equal(depth, 0, 'Unclosed table definition: ' + tableName);
-  const body = sql.slice(start, end - 1);
+  const body = sql.slice(start + 1, end - 1);
   const columns = new Set();
-  for (const line of body.split(/\n/)) {
+  const structural = new Set(['PRIMARY', 'UNIQUE', 'CONSTRAINT', 'FOREIGN', 'CHECK', 'KEY', 'INDEX']);
+  for (const line of body.split('\n')) {
     const trimmed = line.trim().replace(/,$/, '');
-    if (!trimmed || /^(PRIMARY|UNIQUE|CONSTRAINT|FOREIGN|CHECK|KEY|INDEX)\\b/i.test(trimmed)) continue;
-    const col = trimmed.match(/^(?:`([^`]+)`|"([^"]+)"|([a-zA-Z_][a-zA-Z0-9_]*))\\s+/);
-    if (col) columns.add((col[1] || col[2] || col[3]).toLowerCase());
+    if (!trimmed) continue;
+    const rawName = trimmed.split(/\s+/, 1)[0];
+    const name = rawName.replace(/^[`"]|[`"]$/g, '');
+    if (structural.has(name.toUpperCase())) continue;
+    if (/^[a-zA-Z_][a-zA-Z0-9_]*$/.test(name)) columns.add(name.toLowerCase());
   }
   return columns;
 }
@@ -41,9 +44,7 @@ const problems = [];
 for (const table of tables) {
   const src = tableColumns(source, table);
   const dst = tableColumns(target, table);
-  for (const column of src) {
-    if (!dst.has(column)) problems.push(table + '.' + column + ' exists in PostgreSQL source schema but not in MySQL target');
-  }
+  for (const column of src) if (!dst.has(column)) problems.push(table + '.' + column + ' is missing from MySQL target schema');
 }
 assert.deepEqual(problems, [], problems.join('\n'));
 console.log('CMS import contract passed: all source columns exist in the MySQL target for', tables.length, 'tables.');
