@@ -91,9 +91,12 @@ function object(value) {
   return {};
 }
 async function bodyJson(request) {
-  const size = Number(request.headers.get("content-length") || 0);
-  if (size > 65536) throw new Error("too_large");
-  const result = await request.json();
+  const declaredSize = Number(request.headers.get("content-length") || 0);
+  if (declaredSize > 65536) throw new Error("too_large");
+  const raw = await request.text();
+  if (enc.encode(raw).byteLength > 65536) throw new Error("too_large");
+  let result;
+  try { result = JSON.parse(raw); } catch { throw new Error("invalid_body"); }
   if (!result || typeof result !== "object" || Array.isArray(result)) throw new Error("invalid_body");
   return result;
 }
