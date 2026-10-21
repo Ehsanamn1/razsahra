@@ -39,6 +39,7 @@ assert.ok(!api.includes('path === "setup/admin"'), "Legacy insecure admin bootst
 assert.ok(api.includes('rateOkay(sql, request, "inquiry")'), "Public inquiry submissions must be rate limited");
 assert.ok(headers.includes("X-Content-Type-Options: nosniff"), "Baseline security headers missing");
 assert.ok(cloudflareWorkflow.includes("wrangler pages deploy dist"), "Cloudflare Pages deployment step missing");
+assert.ok(cloudflareWorkflow.includes("cloudflare-pages-pr-{0}") && cloudflareWorkflow.includes("github.event_name == 'pull_request'"), "Pull-request validation must not cancel production deployment runs");
 assert.ok(cloudflareWorkflow.includes("Smoke-test deployed site, Madar route and backend"), "Post-deployment live smoke test missing");
 assert.ok(cloudflareWorkflow.includes("/api/health") && cloudflareWorkflow.includes("database!==\"connected\""), "Live health test must verify Neon database connectivity");
 assert.ok(cloudflareWorkflow.includes("/api/medar/api/health") && cloudflareWorkflow.includes("d.database!==true"), "Live smoke test must verify the separate operational Madar API");
