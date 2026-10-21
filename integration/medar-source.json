@@ -1,6 +1,6 @@
 {
   "repository": "Ehsanamn1/simorgh",
-  "commit": "426889daa35c5520b4572531f2866cfd26900931",
+  "commit": "6fa62e1826d8f4a3ebbd8ef137b043fecda646ab",
   "mountPath": "/madar/",
   "apiBasePath": "/api/medar",
   "authModel": "Medar-owned username/password session; no cross-product SSO",
