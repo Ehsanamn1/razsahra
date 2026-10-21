@@ -1,0 +1,51 @@
+name: Domestic migration CI — Raz Sahra
+
+on:
+  push:
+    branches: ["feat/mysql-domestic-hosting"]
+  pull_request:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: razsahra-domestic-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+      - name: Static checks and repository contract checks
+        run: npm run check
+      - name: Build static site bundle
+        env:
+          SITE_URL: https://razsahra.pages.dev
+          SITE_BUILD_VERSION: ${{ github.sha }}
+        run: npm run build
+      - name: Verify expected output
+        run: |
+          set -euo pipefail
+          test -s dist/index.html
+          test -s dist/assets/raz-sahra-premium.css
+          test -s dist/assets/raz-sahra-cms-runtime.js
+          test -s dist/_headers
+          test -s dist/manifest.webmanifest
+      - name: Upload build artifact for review (not a production deployment)
+        uses: actions/upload-artifact@v4
+        with:
+          name: razsahra-static-ci-${{ github.sha }}
+          path: dist/
+          if-no-files-found: error
+          retention-days: 7
