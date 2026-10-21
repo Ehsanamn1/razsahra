@@ -8,10 +8,10 @@
 
 | Item | Current evidence |
 |---|---|
-| Raz Sahra main | e0c603e237925acd546470341ff6755d30c80931 |
+| Raz Sahra main | `dcfb31ecfb453feace85b1795bacd78a1903b709` |
 | Medar main / reviewed integrated bundle revision | 426889daa35c5520b4572531f2866cfd26900931 |
-| Raz Sahra latest recorded Pages release | [Run 39635161486](https://github.com/Ehsanamn1/razsahra/actions/runs/39635161486), conclusion: success |
-| Exact Raz Sahra deployment URL reported by that run | [680e57ec.razsahra.pages.dev](https://680e57ec.razsahra.pages.dev/) |
+| Raz Sahra latest recorded Pages release | [Run 39637808854](https://github.com/Ehsanamn1/razsahra/actions/runs/39637808854), conclusion: success |
+| Exact Raz Sahra deployment URL reported by that run | [ff0d1414.razsahra.pages.dev](https://ff0d1414.razsahra.pages.dev/) |
 | Medar Worker deploy | [Run 39631181645](https://github.com/Ehsanamn1/simorgh/actions/runs/39631181645), conclusion: success |
 | Medar main CI | [Run 39631181984](https://github.com/Ehsanamn1/simorgh/actions/runs/39631181984), conclusion: success |
 
@@ -21,13 +21,13 @@
 |---|---|---|---|---|
 | INT-001 | Publish Medar at /madar/, support deep-link refresh, and proxy the operational API through the parent origin | Raz Sahra + Medar | verified | Raz run 39635161486 returned HTTP 200 for /, /madar/, and /madar/app/home at the canonical and unique deployment origins; both database health probes passed. |
 | MED-001 | Deploy the operational Worker and run authorization/browser smoke tests | Medar | verified | Worker run 39631181645 and CI run 39631181984 succeeded for commit 426889daa35c5520b4572531f2866cfd26900931. This is not a penetration test or proof of every role workflow. |
-| INT-002 | Pin the embedded Medar source to an immutable reviewed commit in the parent build | Raz Sahra | implemented | Proposed in this change. It becomes tested only after the PR workflow passes, and deployed/verified only after merge and the new post-deploy run. |
-| SEC-001 | Add a live negative smoke test proving unauthenticated CMS administration is denied | Raz Sahra | implemented | Proposed in this change. Expected status is HTTP 401 or 403 for /api/admin/pages; not yet live-verified by the new test. |
-| PR-002 | Reconcile the older flagship-branding pull request with current main | Raz Sahra | blocked | [PR #2](https://github.com/Ehsanamn1/razsahra/pull/2) is 9 commits ahead and 31 behind current main, with divergent history and a false mergeable result. Its proposed additional product section overlaps the compact Medar product section already present in current main. Do not merge it as-is; after this release is accepted, close it with a note linking the replacement work or port only a specifically reviewed non-duplicate change. |
+| INT-002 | Pin the embedded Medar source to an immutable reviewed commit in the parent build | Raz Sahra | verified | PR #3 merged; the Pages build checked out Medar commit `426889daa35c5520b4572531f2866cfd26900931`; live release run 39637808854 succeeded. |
+| SEC-001 | Add a live negative smoke test proving unauthenticated CMS administration is denied | Raz Sahra | verified | Live release run 39637808854 observed HTTP 401 for an unauthenticated GET to `/api/admin/pages` at both `razsahra.pages.dev` and the unique deployment origin. |
+| PR-002 | Reconcile the older flagship-branding pull request with current main | Raz Sahra | verified | [PR #2](https://github.com/Ehsanamn1/razsahra/pull/2) was closed without merging after current main was verified; it was 9 commits ahead and 31 behind and duplicated the existing compact product section. The rationale and replacement release evidence are recorded in its closing comment. |
 
 ## Confirmed limitations and safeguards
 
-- The latest cited production run checked the routes and independent API/database health. It did not yet run the new CMS admin-denial assertion; that gate is pending the change proposed here.
+- The latest production run [39637808854](https://github.com/Ehsanamn1/razsahra/actions/runs/39637808854) verified the homepage entry point, `/madar/`, `/madar/app/home`, both independent database health checks, and HTTP 401 for unauthenticated CMS administration at both deployment origins.
 - Automated smoke tests do not replace a production owner-session test for member provisioning and real business workflows. Do not create a test account in production merely to complete this report.
 - No production database data, schema, user accounts, or secrets were changed by the investigation that produced this status.
 - Public/demo compatibility URLs must not be used as proof of live operational business records.
@@ -35,7 +35,6 @@
 
 ## Immediate next actions
 
-1. Review and merge the source-pin and smoke-test change only after the pull-request workflow passes.
-2. Verify the resulting Pages deployment and the new CMS authorization denial assertion in the post-merge workflow logs.
-3. Reconcile/close stale PR #2 after the current-main replacement is reviewed.
-4. Only then claim the new source pin and CMS authorization smoke test are deployed and verified.
+1. Review the documentation-only Medar summary PR #117 and merge it if its checks and diff remain clean.
+2. Perform an authorized real owner-session test of account provisioning and the priority business workflows when an owner can safely do so; do not create test accounts in production merely for a smoke test.
+3. Keep the integration contract and status register current with each release.
