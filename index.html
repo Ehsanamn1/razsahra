@@ -742,7 +742,8 @@
   }
   async function submitBootstrap(event){
     event.preventDefault();
-    const form = event.currentTarget;
+    const form = event.target;
+    if (!(form instanceof HTMLFormElement)) return;
     const data = {
       username: form.elements.username.value.trim().toLowerCase(),
       display_name: form.elements.display_name.value.trim(),
@@ -806,7 +807,8 @@
   }
   async function submitLogin(event){
     event.preventDefault();
-    const form = event.currentTarget;
+    const form = event.target;
+    if (!(form instanceof HTMLFormElement)) return;
     const data = { identifier:form.elements.identifier.value.trim(), password:form.elements.password.value };
     const button = one('button[type="submit"]',form);
     if(button) button.disabled = true;
@@ -820,7 +822,8 @@
   }
   async function submitRegister(event){
     event.preventDefault();
-    const form = event.currentTarget;
+    const form = event.target;
+    if (!(form instanceof HTMLFormElement)) return;
     const password = form.elements.password.value;
     if(password.length < 12){setStatus("rs-register-status","رمز عبور باید حداقل ۱۲ نویسه داشته باشد.","error");return;}
     const data = {
