@@ -2,7 +2,7 @@ import { cp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 const root = process.cwd();
 const out = path.join(root, "dist");
-const files = ["index.html", "404.html", "manifest.webmanifest", "robots.txt", "sitemap.xml", "_headers", ".nojekyll"];
+const files = ["index.html", "404.html", "manifest.webmanifest", "robots.txt", "sitemap.xml", "_headers", "_redirects", ".nojekyll"];
 const oldBase = "https://ehsanamn1.github.io/razsahra/";
 const cloudflareBase = "https://razsahra.pages.dev/";
 let siteUrl = process.env.SITE_URL || cloudflareBase;
