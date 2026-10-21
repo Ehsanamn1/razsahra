@@ -140,6 +140,12 @@ jobs:
               failure=1
             fi
             rm -f "$health_file"
+            medar_health_file="$(mktemp)"
+            medar_health_status="$(curl --silent --show-error --location --retry 5 --retry-all-errors --retry-delay 2 --output "$medar_health_file" --write-out '%{http_code}' "$origin/api/medar/api/health")" || medar_health_status="curl-error"
+            if ! node -e 'const fs=require("node:fs");const raw=fs.readFileSync(process.argv[1],"utf8");const status=process.argv[2];let d;try{d=JSON.parse(raw)}catch{console.error("Madar API health HTTP "+status+" returned non-JSON: "+raw.slice(0,250).replace(/\s+/g," "));process.exit(1)}if(status!=="200"||d.ok!==true||d.database!==true){console.error("Madar API health check failed: "+JSON.stringify({status,ok:d.ok,database:d.database,service:d.service,code:d.code}));process.exit(1)}console.log("Madar API healthy; upstream database connected.")' "$medar_health_file" "$medar_health_status"; then
+              failure=1
+            fi
+            rm -f "$medar_health_file"
           done
           exit "$failure"
 
