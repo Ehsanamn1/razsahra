@@ -1207,3 +1207,22 @@ html.lang-en .route-card,html.lang-en .status-chip,html.lang-en .slide-vertical-
  .admin-loading>span{animation:none}
  .admin-sidebar button,.auth-form input,.admin-main input,.admin-main textarea,.admin-main select{transition:none}
 }
+
+
+/* Low-cost ember glow across light reading surfaces, including touch devices. */
+.page-view:not([data-page="admin"]){
+  background-image:
+    radial-gradient(ellipse 250px 200px at 9% 13%,rgba(223,128,64,.065) 0%,rgba(223,128,64,.024) 38%,transparent 78%),
+    radial-gradient(ellipse 190px 170px at 91% 54%,rgba(210,99,53,.045) 0%,rgba(210,99,53,.016) 40%,transparent 78%);
+  background-attachment:scroll;
+}
+@media(max-width:850px){
+  .page-view:not([data-page="admin"]){
+    background-image:
+      radial-gradient(ellipse 170px 140px at 7% 10%,rgba(223,128,64,.047) 0%,transparent 78%),
+      radial-gradient(ellipse 140px 135px at 94% 48%,rgba(210,99,53,.031) 0%,transparent 78%);
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  .hero-slide::before,.site-footer:before{animation:none!important}
+}
