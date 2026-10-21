@@ -63,11 +63,13 @@ If unified sign-in is later approved, it requires an explicit identity/session d
 
 The exact integrated frontend revision is kept in the canonical manifest at `integration/medar-source.json`. Its `repository` must remain `Ehsanamn1/simorgh`, and `commit` must be a full 40-character lowercase Git SHA. The Pages workflow reads and validates the manifest, checks out that immutable commit, runs the Medar typecheck/lint/unit tests, and builds the bundle under `/madar/`.
 
-The current pin is:
+The current integrated app-source pin is:
 
-6fa62e1826d8f4a3ebbd8ef137b043fecda646ab
+`70329106d6cd921e1c036714157986b72e0ea201`
 
-This pinned Medar main revision (`6fa62e1826d8f4a3ebbd8ef137b043fecda646ab`) passed Medar CI [run 39641706342](https://github.com/Ehsanamn1/simorgh/actions/runs/39641706342), operational Worker deployment [run 39641706299](https://github.com/Ehsanamn1/simorgh/actions/runs/39641706299), Android build [run 39641706082](https://github.com/Ehsanamn1/simorgh/actions/runs/39641706082), and iOS simulator build [run 39641706298](https://github.com/Ehsanamn1/simorgh/actions/runs/39641706298). The last completed parent release [run 39641856036](https://github.com/Ehsanamn1/razsahra/actions/runs/39641856036) still embedded the previous pin; the current PR's validation and the next post-merge parent release must confirm this new pin is built and live before it is marked deployed. The standalone Worker release and the embedded `/madar/` bundle are separate artifacts and must be verified separately.
+This pin is recorded in `integration/medar-source.json`. Parent Pages release [run 39659265140](https://github.com/Ehsanamn1/razsahra/actions/runs/39659265140) built exactly that revision and verified the combined source marker `49b773d10bb142bd4c9df0cd82127d250a971236-70329106d6cd921e1c036714157986b72e0ea201`. The same release confirmed HTTP 200 for the homepage, `/madar/`, and `/madar/app/home` at both the canonical site and its unique deployment URL; CMS and upstream Medar health checks passed, and unauthenticated CMS administration returned HTTP 401.
+
+Medar main is now `1c00cb216d73137ff5c254648d96f5be5ee38acf`; its latest main CI [run 39667115382](https://github.com/Ehsanamn1/simorgh/actions/runs/39667115382) passed. The latest completed operational Worker deployment is [run 39662243920](https://github.com/Ehsanamn1/simorgh/actions/runs/39662243920) at `e079388eb4e682d1d94d6d70f72d8ed9c25d97af`. Comparing the pin to those later commits shows that the intervening changes are workflow and documentation updates; the application source included by the parent remains unchanged. The embedded web bundle and standalone Worker are separate artifacts and their release evidence must remain separate.
 
 To upgrade the integrated bundle, first identify a specific Medar commit merged into `main`, verify its required Medar CI and Worker deployment results, then update `integration/medar-source.json` in a reviewed parent-site change. Do not change the source back to a moving branch, and do not duplicate the pin in the workflow. The workflow embeds both the parent-site SHA and Medar SHA in the app version marker so deployed assets can be attributed to the exact pair.
 
