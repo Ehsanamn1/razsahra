@@ -6,7 +6,7 @@
 - Runtime/API: Cloudflare Pages Functions under /api/*.
 - Database: portable PostgreSQL on Neon; source schema is db/schema.sql.
 - Security: HttpOnly SameSite=Lax cookie sessions, 14-day expiry, PBKDF2-SHA-256 password hashes, basic authentication throttling, admin-only APIs, and audit logs.
-- Future Madar route: /madar/ is reserved. The app catalogue and admin API are present; the actual Madar web/PWA bundle has not yet been copied into this repository.
+- Madar: `/madar/` is reserved and the Pages workflow attempts to build the current `Ehsanamn1/simorgh` web/PWA source into that path. Its API requests are configured to use `/api/medar/*` on the Raz Sahra origin; the Pages Function proxies these requests to the current Medar Worker. A native Android/iOS binary is not included and cannot be called downloadable until a real signed release artifact exists.
 
 ## Deployment prerequisites
 
@@ -16,7 +16,7 @@ A new Neon project called raz-sahra-site has been created. Its initial schema an
 
 ## Cloudflare Pages setup
 
-1. Create or select a Cloudflare Pages project named razsahra and connect this GitHub repository.
+1. Create or select a Cloudflare Pages project named `razsahra` and connect this GitHub repository. The Pages project and its public domain must be verified in Cloudflare; `razsahra.pages.dev` is currently only the configured default target, not proof of an existing deployment.
 2. Add repository secret CLOUDFLARE_API_TOKEN with Pages deployment permission and CLOUDFLARE_ACCOUNT_ID. Add repository variable SITE_URL with the real public HTTPS origin, including the trailing slash if desired.
 3. In Cloudflare Pages production variables/secrets, set DATABASE_URL from Neon as an encrypted secret. Do not put it in frontend code or Git.
 4. Run the manual GitHub Actions workflow named Deploy to Cloudflare Pages. Verify /api/health, then test registration, login/logout, admin permissions, content edits, and inquiry storage.
@@ -26,7 +26,7 @@ The deployment workflow is manual by design while Cloudflare credentials and the
 
 ## Administrator account
 
-The first administrator account is present in the new Neon database. Its initial login username and one-time password are included in the completion report. Save them in a password manager and change the password after the backend is deployed. No password or database URL has been stored in this repository.
+The admin bootstrap endpoint is protected by the one-time `ADMIN_BOOTSTRAP_SECRET` host secret. Do not commit that secret, a production password, or the database URL. Complete the bootstrap only after production secrets are set, then save the generated credentials in a password manager and change them if exposed.
 
 ## API routes
 
