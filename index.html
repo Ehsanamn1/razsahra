@@ -332,7 +332,7 @@
     @media(max-width:540px){.container{width:calc(100% - 28px)}.announcement-inner{justify-content:center}.announce-side:last-child{display:none}.header-inner{min-height:70px}.brand-mark{width:37px;height:37px;flex-basis:37px}.brand{gap:8px}.brand-persian{font-size:15px}.brand-english{font-size:8px;letter-spacing:.16em}.mobile-menu{padding-inline:14px}.hero{padding:15px 0 32px}.hero-panel{border-radius:18px}.hero-copy{padding:31px 22px 13px}.hero h1{font-size:35px}.hero-description{font-size:12px}.hero-actions .btn{width:100%}.hero-notes{gap:10px 15px;font-size:10px;margin-top:23px}.hero-visual{padding:12px 19px 22px;min-height:255px}.route-card{padding:14px}.route-step{font-size:8px}.route-step b{width:24px;height:24px}.section{padding:52px 0}.section.compact{padding:44px 0}.section-heading{align-items:flex-start;flex-direction:column;gap:10px;margin-bottom:22px}.section-title{font-size:26px}.lead{font-size:12px}.business-grid{grid-template-columns:1fr;gap:12px}.business-card{min-height:0;padding:21px}.card-icon{margin-bottom:15px}.chain-flow{padding:17px 12px}.chain-flow-head{align-items:flex-start;flex-direction:column;gap:4px}.flow-items{grid-template-columns:1fr 1fr;gap:9px}.flow-item:not(:last-child):after{display:none}.flow-item{padding:13px 7px}.flow-item b{font-size:10px}.principles-grid{grid-template-columns:1fr;gap:19px}.principle{padding-top:12px}.partnership-copy{padding:25px 21px}.partnership-copy h2{font-size:27px}.roadmap-item h3{font-size:12px}.insights-preview{gap:12px}.insight-main{padding:22px;min-height:245px}.final-cta{padding:44px 0}.final-cta .btn{width:100%}.footer-grid{grid-template-columns:1fr 1fr;gap:27px 20px}.footer-brand{grid-column:1/-1}.footer-column h3{font-size:11px}.footer-bottom{flex-direction:column;align-items:flex-start;gap:4px}.page-hero{padding:35px 0 30px}.page-hero h1{font-size:31px}.page-hero p{font-size:12px}.content-panel{padding:21px}.value-cards{grid-template-columns:1fr}.process-grid{grid-template-columns:1fr}.form-grid{grid-template-columns:1fr}.field.full{grid-column:auto}.form-actions .btn{width:100%}.activity-item{grid-template-columns:43px 1fr;gap:12px;padding:15px}.activity-no{height:42px;width:42px}.empty-editorial{padding:35px 20px}.back-top{left:12px;bottom:12px}}
     @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
   </style>
-  <link rel="stylesheet" href="assets/raz-sahra-premium.css?v=20261021-07">
+  <link rel="stylesheet" href="assets/raz-sahra-premium.css?v=20261022-01">
 </head>
 <body>
 <a class="skip-link" href="#main-content">رفتن به محتوای اصلی</a>
@@ -712,7 +712,7 @@
     articlesLoading=true;
     var pendingArticle=new URLSearchParams(window.location.search).get("article");
     host.setAttribute("aria-busy","true");
-    fetch(desired+"?v=20261021-02",{credentials:"same-origin"}).then(function(response){if(!response.ok)throw new Error("Article library unavailable");return response.text();}).then(function(markup){
+    fetch(desired+"?v=20261022-01",{credentials:"same-origin"}).then(function(response){if(!response.ok)throw new Error("Article library unavailable");return response.text();}).then(function(markup){
       articlesLoading=false;
       var currentLanguage=window.RSCurrentLanguage==="en"?"en":"fa";
       if(requestLanguage!==currentLanguage){loadArticles(true);return;}
@@ -1075,7 +1075,7 @@
 
 </script>
 <script src="assets/raz-sahra-cms-runtime.js?v=20261021-03" defer></script>
-<script src="assets/raz-sahra-interactions.js?v=20261021-06" defer></script>
+<script src="assets/raz-sahra-interactions.js?v=20261022-01" defer></script>
 <script src="assets/raz-sahra-language.js?v=20261021-06" defer></script>
 <script>(function(){var fallback='assets/raz-sahra-hero-banner.webp';document.addEventListener('error',function(event){var image=event.target;if(!image||image.tagName!=='IMG'||image.dataset.fallbackAttempted)return;image.dataset.fallbackAttempted='1';if(image.getAttribute('src')!==fallback){image.removeAttribute('srcset');image.src=fallback;}else{image.style.visibility='hidden';image.setAttribute('aria-hidden','true');}},true);})();</script>
 </body>
