@@ -4,6 +4,23 @@
   var reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var progress=document.createElement('div');progress.className='rs-scroll-progress';progress.setAttribute('aria-hidden','true');document.body.appendChild(progress);
   var header=document.querySelector('.site-header');
+
+  // Local-image resilience: a missing/cached asset must never leave a broken-image icon over the hero.
+  function recoverImage(img){
+    if(!img||img.dataset.rsImageRecovered==='true')return;
+    img.dataset.rsImageRecovered='true';
+    img.style.display='none';
+    var parent=img.parentElement;
+    if(parent){
+      parent.classList.add('rs-image-fallback');
+      if(img.classList.contains('hero-slide-bg'))parent.classList.add('hero-slide-image-fallback');
+      parent.style.backgroundImage='linear-gradient(135deg, rgba(15,31,43,.96), rgba(48,72,72,.88)), radial-gradient(ellipse at 78% 20%, rgba(216,178,128,.32), transparent 42%)';
+    }
+  }
+  document.querySelectorAll('img').forEach(function(img){
+    img.addEventListener('error',function(){recoverImage(img);},{once:true});
+    if(img.complete&&img.naturalWidth===0)recoverImage(img);
+  });
   var ticking=false;
   function updateScroll(){
     var max=document.documentElement.scrollHeight-window.innerHeight;
