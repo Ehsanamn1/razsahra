@@ -11,13 +11,13 @@ function mysqlPool(url) {
   if (!cachedPool || cachedPoolUrl !== url) {
     if (cachedPool) void cachedPool.end().catch(() => undefined);
     cachedPoolUrl = url;
-    cachedPool = const parsed = new URL(url);
+    const parsed = new URL(url);
     cachedPool = mysql.createPool({
       host: parsed.hostname,
       port: Number(parsed.port || 3306),
       user: decodeURIComponent(parsed.username),
       password: decodeURIComponent(parsed.password),
-      database: parsed.pathname.replace(/^\\//, ""),
+      database: parsed.pathname.slice(1),
       ssl: parsed.searchParams.get("ssl") === "true" ? { rejectUnauthorized: true } : undefined,
       waitForConnections: true,
       connectionLimit: Number(process.env.MYSQL_POOL_SIZE || 8),
@@ -43,6 +43,7 @@ function normalizeMysqlSql(input) {
     .replace(/published_at\s+DESC\s+NULLS\s+LAST/gi, "(published_at IS NULL), published_at DESC")
     .replace(/site_settings\s*\(\s*key\s*,/gi, "site_settings (`key`,")
     .replace(/\bWHERE\s+key\s*=/gi, "WHERE `key` =")
+    .replace(/\bWHERE\s+key\s+NOT\s+LIKE/gi, "WHERE `key` NOT LIKE")
     .replace(/\bAND\s+key\s*=/gi, "AND `key` =")
     .replace(/\bSELECT\s+key\s*,/gi, "SELECT `key`,")
     .replace(/\bORDER BY\s+key\b/gi, "ORDER BY `key`");
