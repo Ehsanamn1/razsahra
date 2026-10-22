@@ -65,7 +65,8 @@ const server = createServer(async (incoming, outgoing) => {
         let size = 0;
         for await (const chunk of incoming) {
           size += chunk.length;
-          if (size > 1024 * 1024) return writeResponse(outgoing, 413, { 'content-type': 'application/json; charset=utf-8' }, JSON.stringify({ ok: false, error: { code: 'request_too_large', message: 'Request body too large' } }));
+          const maxBodySize = url.pathname.startsWith('/api/medar/api/storage/') ? 20 * 1024 * 1024 : 1024 * 1024;
+          if (size > maxBodySize) return writeResponse(outgoing, 413, { 'content-type': 'application/json; charset=utf-8' }, JSON.stringify({ ok: false, error: { code: 'request_too_large', message: 'Request body too large' } }));
           chunks.push(chunk);
         }
         body = Buffer.concat(chunks);
@@ -83,7 +84,7 @@ const server = createServer(async (incoming, outgoing) => {
       const env = {
         MYSQL_URL: process.env.MYSQL_URL,
         ADMIN_BOOTSTRAP_SECRET: process.env.ADMIN_BOOTSTRAP_SECRET,
-        MEDAR_API_URL: process.env.MEDAR_API_URL,
+        MEDAR_API_URL: process.env.MEDAR_API_URL || (process.env.NODE_ENV === 'production' ? 'http://127.0.0.1:8788' : undefined),
       };
       const response = await onRequest({ request, env });
       const responseBody = Buffer.from(await response.arrayBuffer());
