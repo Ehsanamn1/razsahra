@@ -1,7 +1,7 @@
 # Raz Sahra × Medar Integration Contract
 
 **Canonical source:** Ehsanamn1/razsahra → docs/INTEGRATION_CONTRACT.md  
-**Last reconciled:** 2026-10-21  
+**Last reconciled:** 2026-10-22  
 **Scope:** Production web routing, API proxying, identity boundaries, data ownership, and release coordination.
 
 This document describes the checked-in implementation and the last recorded release evidence. It is not a guarantee that later deployments remain healthy; the linked workflows are the operational source of truth for each release.
@@ -59,7 +59,7 @@ If unified sign-in is later approved, it requires an explicit identity/session d
 
 ## 5. Release contract
 
-**Current PR-only integration candidate:** `56ee02fe70a457cf83e1574ba6f6c2fb09b900ba` is pinned in the feature-branch manifest so the parent PR can validate the current Medar UI/runtime work. This is not a production release. The previously deployed production bundle remains pinned to `70329106d6cd921e1c036714157986b72e0ea201` until the candidate passes Medar CI and the parent integration workflow is approved for release.
+**Current PR-only integration candidate:** `f53c6470f9a1129d6c859c9281d49bdfa5e18e75` is pinned in the feature-branch manifest so the parent PR can validate the current Medar UI/runtime work. This is not a production release. The previously deployed production bundle remains pinned to `70329106d6cd921e1c036714157986b72e0ea201` until the candidate passes Medar CI and the parent integration workflow is approved for release.
 
 
 ### Current reviewed Medar source
