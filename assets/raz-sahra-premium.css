@@ -1439,3 +1439,34 @@ html.lang-en .route-card,html.lang-en .status-chip,html.lang-en .slide-vertical-
 
 /* Prevent transformed carousel tracks from expanding the page viewport; carousels retain their own horizontal scrolling. */
 html { overflow-x: clip; }
+
+/* Accessible touch targets for the mobile hero carousel. */
+@media (max-width: 540px) {
+  .hero-slider-controls > button {
+    width: 40px !important;
+    height: 40px !important;
+    flex: 0 0 40px;
+  }
+  .hero-slider-dots button,
+  .hero-slider-dots button.is-active {
+    width: 32px !important;
+    height: 40px !important;
+    min-width: 32px;
+    display: grid;
+    place-items: center;
+    background: transparent !important;
+  }
+  .hero-slider-dots button::before {
+    content: "";
+    display: block;
+    width: 7px;
+    height: 7px;
+    border-radius: 99px;
+    background: rgba(255,255,255,.48);
+  }
+  .hero-slider-dots button.is-active::before {
+    width: 22px;
+    height: 7px;
+    background: var(--copper-light);
+  }
+}
