@@ -21,6 +21,7 @@
     img.addEventListener('error',function(){recoverImage(img);},{once:true});
     if(img.complete&&img.naturalWidth===0)recoverImage(img);
   });
+  document.addEventListener('error',function(event){var img=event.target;if(img&&img.tagName==='IMG')recoverImage(img);},true);
   var ticking=false;
   function updateScroll(){
     var max=document.documentElement.scrollHeight-window.innerHeight;
