@@ -13,7 +13,7 @@ for (const asset of uniqueAssets) {
   try { await access(resolve(process.cwd(), asset)); }
   catch { throw new Error('Referenced local visual asset does not exist: ' + asset); }
 }
-const slides = (html.match(/<article\\b[^>]*class=\"[^\"]*\\bhero-slide\\b[^\"]*\"[^>]*data-hero-slide/g) ?? []).length;
+const slides = (html.match(/<article\b[^>]*class=\"[^\"]*\bhero-slide\b[^\"]*\"[^>]*data-hero-slide/g) ?? []).length;
 if (slides !== 4) throw new Error('Expected four hero slides; found ' + slides);
 if (!html.includes('data-hero-slider') || !html.includes('data-hero-next') || !html.includes('data-hero-prev')) {
   throw new Error('Hero slider controls are incomplete.');
