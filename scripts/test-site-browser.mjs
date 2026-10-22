@@ -49,9 +49,9 @@ try {
   async function assertActiveSlide(expected) {
     await page.waitForFunction((label) => {
       const active = document.querySelector('[data-hero-slide].is-active .slide-index');
-      return active?.textContent?.replace(/\\s+/g, ' ').trim() === label;
+      return active?.textContent?.replace(/\s+/g, ' ').trim() === label;
     }, expected, { timeout: 3000 });
-    assert.equal(await slider.locator('[data-hero-slide].is-active .slide-index').textContent().then(text => text?.replace(/\\s+/g, ' ').trim()), expected);
+    assert.equal(await slider.locator('[data-hero-slide].is-active .slide-index').textContent().then(text => text?.replace(/\s+/g, ' ').trim()), expected);
     assert.equal(await slider.locator('[data-hero-dot].is-active').getAttribute('data-hero-dot'), String(Number(expected.slice(0, 2)) - 1));
   }
   await slider.locator('[data-hero-next]').click();
