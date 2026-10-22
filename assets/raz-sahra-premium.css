@@ -1314,3 +1314,35 @@ html.lang-en .route-card,html.lang-en .status-chip,html.lang-en .slide-vertical-
 .nav-link-madar>span[aria-hidden="true"]{font-size:12px;line-height:1;transition:transform var(--ease)}
 .nav-link-madar:hover>span[aria-hidden="true"]{transform:translate(2px,-2px)}
 @media(max-width:1060px){.nav-link-madar{gap:3px}}
+
+
+/* Mobile performance pass: keep motion GPU-friendly and avoid oversized paint work. */
+.hero-slider { contain: layout paint; content-visibility: auto; contain-intrinsic-size: 540px; }
+.hero-slider .hero-slide { backface-visibility: hidden; }
+.hero-slider .hero-slide-bg { transform: none; }
+.hero-slider .hero-slide.is-active .hero-slide-bg { transform: scale(1.015); }
+@media (max-width: 850px) {
+  .hero-slider { perspective: none; box-shadow: 0 14px 34px rgba(12,26,39,.16); }
+  .hero-slider .hero-slide { transition: opacity .32s ease, visibility .32s ease; transform: none; }
+  .hero-slider .hero-slide-bg { filter: saturate(.8) contrast(1.01); }
+  .hero-slider .hero-slide.is-active .hero-slide-bg { transform: none; }
+  .hero-panel:before { animation: none; }
+  .business-card, .principle, .flow-item, .roadmap-item { scroll-margin-top: 76px; }
+  .rs-particle-field, .collaboration-orbit { display: none; }
+}
+@media (max-width: 540px) {
+  .hero-slider { min-height: 0; height: auto; aspect-ratio: 0.79; max-height: 560px; }
+  .hero-slider .hero-slide { grid-template-columns: minmax(0,1fr) 25px; }
+  .hero-slider .hero-slide-copy { padding: 24px 15px 64px; }
+  .hero-slider .hero-slide-title { font-size: clamp(27px, 7.5vw, 35px); }
+  .hero-slider .hero-slide-bg { object-position: 45% center; }
+  .hero-slider-footer { padding: 8px 12px; }
+  .hero-slider-controls { gap: 7px; }
+  .hero-slider-controls > button { width: 32px; height: 32px; }
+  .hero-slider-dots { gap: 5px; }
+  .hero-slider-hint { display: none; }
+  .rs-mobile-cta { padding-bottom: max(8px, env(safe-area-inset-bottom)); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-slider .hero-slide, .hero-slider .hero-slide-bg { transition: none !important; }
+}
