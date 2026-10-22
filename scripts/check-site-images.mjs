@@ -46,6 +46,18 @@ const heroImages = [...html.matchAll(/<img class="hero-slide-bg[^"]*" src="([^"]
 if (heroImages.length !== 4 || new Set(heroImages).size !== 4 || heroImages.some(path => !path.endsWith('.svg'))) {
   throw new Error('Hero slider must use four distinct local SVG illustrations; found: ' + heroImages.join(', '));
 }
+const collaborationImages = [...html.matchAll(/<img class="collaboration-photo"[^>]*>/g)].map(match => match[0]);
+if (collaborationImages.length !== 4 || collaborationImages.some(tag => !tag.includes('width="1600"') || !tag.includes('height="900"') || !tag.includes('loading="lazy"') || !tag.includes('decoding="async"'))) {
+  throw new Error('Collaboration slide images need intrinsic dimensions and lazy asynchronous decoding.');
+}
+const slideRefs = [...html.matchAll(/<img class="(?:hero-slide-bg[^"]*|collaboration-photo)" src="(assets\/raz-sahra-slide-[^"]+\.svg(?:\?[^"]*)?)"/g)].map(match => match[1]);
+const versionsByAsset = new Map();
+for (const ref of slideRefs) {
+  const [path, query = ''] = ref.split('?');
+  const previous = versionsByAsset.get(path);
+  if (previous !== undefined && previous !== query) throw new Error('The same slide asset uses inconsistent cache URLs: ' + path);
+  versionsByAsset.set(path, query);
+}
 const localAssets = [...allMarkup.matchAll(/(?:src|href|url\()\s*=?\s*["']?(assets\/[a-zA-Z0-9_./-]+\.(?:webp|png|jpe?g|avif|svg)(?:\?[^"')\s>]*)?)["')\s>]?/g)]
   .map(match => match[1].split("?")[0]);
 const uniqueAssets = [...new Set(localAssets)];
