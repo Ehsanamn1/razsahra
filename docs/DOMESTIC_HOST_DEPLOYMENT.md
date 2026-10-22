@@ -13,8 +13,8 @@ This runbook describes the controlled Node.js + MySQL deployment path. It does *
 
 ## Build a reproducible host package
 
-1. Open GitHub Actions and run **Domestic host release package** on `feat/mysql-domestic-hosting`, or push a change to the workflow's watched paths.
-2. Download the artifact named `raz-sahra-domestic-host-<commit>`.
+1. Open the successful **Domestic migration CI — Raz Sahra** run for the reviewed `feat/mysql-domestic-hosting` commit.
+2. Download the artifact named `raz-sahra-domestic-host-<commit SHA>` from that successful CI run.
 3. Verify the archive checksum using the accompanying `.sha256` file before extracting.
 4. Confirm the metadata commit matches the reviewed commit. The workflow builds and packages files; it does not deploy or migrate production data.
 
@@ -30,7 +30,7 @@ Configure these values in the hosting panel, not in Git:
 - `ADMIN_BOOTSTRAP_SECRET=<temporary random secret of at least 32 characters>` only during first-owner bootstrap
 - `TRUST_PROXY_HEADERS=false` unless a trusted reverse proxy is configured to replace the client-IP headers
 
-Use the host's supported process manager to start `node server/start-domestic.mjs`. Install production dependencies from the included lockfile with `npm ci --omit=dev` where the package layout supports it. Never expose MySQL publicly if a private network or host-local database connection is available.
+After extracting the package, install runtime dependencies with `npm install --omit=dev --no-audit --no-fund` (this repository currently does not commit a package lockfile), then use the host's supported process manager to start `node server/start-domestic.mjs`. Never expose MySQL publicly if a private network or host-local database connection is available.
 
 ## Database and migration gates
 
@@ -64,4 +64,4 @@ Do not run a PostgreSQL-to-MySQL conversion by simply replaying PostgreSQL SQL. 
 
 ## Release status policy
 
-A green package workflow proves the artifact can be assembled from that commit. It does not prove production credentials, the live host, migrated data, owner acceptance, tenant isolation, or business workflows. Broad commercial readiness remains **NO-GO** until those live gates have evidence and are signed off by an authorized owner.
+A green domestic CI run proves the tested source passed the listed automated checks and that a versioned host artifact was assembled from that commit. It does not prove production credentials, the live host, migrated data, owner acceptance, tenant isolation, or business workflows. Broad commercial readiness remains **NO-GO** until those live gates have evidence and are signed off by an authorized owner.
