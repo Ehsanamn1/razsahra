@@ -17,7 +17,7 @@ concurrency:
 jobs:
   validate:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 25
     services:
       mysql:
         image: mysql:8.4
@@ -50,12 +50,20 @@ jobs:
         env:
           TARGET_MYSQL_URL: mysql://root:ci-root-password@127.0.0.1:3306/razsahra_ci
         run: node scripts/test-mysql-schema.mjs && node scripts/check-mysql-connection.mjs
+      - name: Apply the complete Medar MySQL schema to the same disposable database
+        env:
+          MEDAR_MYSQL_URL: mysql://root:ci-root-password@127.0.0.1:3306/razsahra_ci
+        run: npm run migrate:medar:mysql:apply
       - name: Exercise Node/MySQL CMS API against disposable schema
         env:
           TARGET_MYSQL_URL: mysql://root:ci-root-password@127.0.0.1:3306/razsahra_ci
           TEST_ADMIN_BOOTSTRAP_SECRET: ci-only-bootstrap-secret-with-at-least-32-characters
         run: node scripts/test-mysql-cms-api.mjs
-      - name: Smoke-test domestic Node HTTP server and Madar deep links
+      - name: Test the domestic Medar API and financial/task workflows against MySQL
+        env:
+          MYSQL_URL: mysql://root:ci-root-password@127.0.0.1:3306/razsahra_ci
+        run: npm run test:medar:api
+      - name: Smoke-test combined domestic Node HTTP server and same-origin Medar proxy
         env:
           TARGET_MYSQL_URL: mysql://root:ci-root-password@127.0.0.1:3306/razsahra_ci
         run: node scripts/test-domestic-node-server.mjs
