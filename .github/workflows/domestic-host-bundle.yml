@@ -112,13 +112,23 @@ jobs:
           test -s dist/index.html
           test -s dist/manifest.webmanifest
           test -s dist/sw.js
-      - name: Mount Medar web bundle into Raz Sahara package
+      - name: Mount and verify the combined Raz Sahara + Medar web bundle
+        env:
+          PARENT_SOURCE_SHA: ${{ github.sha }}
+          MEDAR_SOURCE_SHA: ${{ steps.medar-source.outputs.ref }}
         run: |
+          set -euo pipefail
           test -s simorgh-src/dist/index.html
           mkdir -p host-package/dist/madar
           cp -a simorgh-src/dist/. host-package/dist/madar/
+          test -s host-package/dist/index.html
           test -s host-package/dist/madar/index.html
           test -s host-package/dist/madar/manifest.webmanifest
+          test -s host-package/dist/madar/sw.js
+          test -d host-package/dist/madar/assets
+          grep -R -q '/api/medar' host-package/dist/madar/assets
+          grep -R -F -q "${PARENT_SOURCE_SHA}-${MEDAR_SOURCE_SHA}" host-package/dist/madar/assets
+          node --input-type=module -e 'import fs from "node:fs";const m=JSON.parse(fs.readFileSync("host-package/dist/madar/manifest.webmanifest","utf8"));if(m.start_url!=="./app/home"||m.scope!=="./")throw new Error("Madar PWA manifest start_url/scope mismatch");'
       - name: Install backend runtime dependencies and validate
         working-directory: host-package
         run: |
