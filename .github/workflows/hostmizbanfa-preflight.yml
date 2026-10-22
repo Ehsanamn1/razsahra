@@ -30,10 +30,12 @@ jobs:
               exit 1
             fi
           done
-          [[ "$HOST_SSH_PORT" =~ ^[0-9]+$ ]] || { echo "::error::HOST_SSH_PORT must be numeric"; exit 1; }
-          [[ "$HOST_APP_DIR" == /* ]] || { echo "::error::HOST_APP_DIR must be an absolute path"; exit 1; }
+          [[ "$HOST_SSH_PORT" =~ ^[0-9]+$ ]] || { echo "::error::HOST_SSH_PORT must be numeric" ; exit 1; }
+          (( HOST_SSH_PORT > 0 && HOST_SSH_PORT < 65536 )) || { echo "::error::HOST_SSH_PORT must be between 1 and 65535"; exit 1; }
+          [[ "$HOST_APP_DIR" == /* && "$HOST_APP_DIR" != *$'\n'* && "$HOST_APP_DIR" != *$'\r'* ]] || { echo "::error::HOST_APP_DIR must be an absolute path without newline characters"; exit 1; }
+          [[ "$HOST_SSH_HOST" != *$'\n'* && "$HOST_SSH_HOST" != *$'\r'* && "$HOST_SSH_USER" != *$'\n'* && "$HOST_SSH_USER" != *$'\r'* ]] || { echo "::error::SSH host/user contains invalid newline characters"; exit 1; }
 
-      - name: Validate SSH identity and host key
+      - name: Validate SSH identity and pinned host key
         env:
           SSH_PRIVATE_KEY: ${{ secrets.HOST_SSH_PRIVATE_KEY }}
           SSH_KNOWN_HOSTS: ${{ secrets.HOST_SSH_KNOWN_HOSTS }}
@@ -47,24 +49,29 @@ jobs:
           chmod 600 ~/.ssh/id_ed25519
           printf '%s\n' "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
           chmod 600 ~/.ssh/known_hosts
+          ssh-keygen -y -f ~/.ssh/id_ed25519 > /dev/null
+          ssh-keygen -F "$HOST_SSH_HOST" -f ~/.ssh/known_hosts >/dev/null || ssh-keygen -F "[$HOST_SSH_HOST]:$HOST_SSH_PORT" -f ~/.ssh/known_hosts >/dev/null || {
+            echo "::error::Pinned known_hosts does not contain HOST_SSH_HOST (or [HOST_SSH_HOST]:HOST_SSH_PORT). Verify the fingerprint with the hosting provider."
+            exit 1
+          }
 
-      - name: Check host capabilities without changing production
+      - name: Check host capabilities without modifying the app or database
         shell: bash
         run: |
           set -euo pipefail
-          ssh -i ~/.ssh/id_ed25519 -p "$HOST_SSH_PORT" -o BatchMode=yes -o ConnectTimeout=10 \
+          # Bash-escape the path before passing it to the remote shell.
+          APP_DIR_Q=$(printf '%q' "$HOST_APP_DIR")
+          ssh -i ~/.ssh/id_ed25519 -p "$HOST_SSH_PORT" \
+            -o BatchMode=yes -o ConnectTimeout=10 -o StrictHostKeyChecking=yes \
             "$HOST_SSH_USER@$HOST_SSH_HOST" \
-            "APP_DIR='$HOST_APP_DIR' bash -s" <<'REMOTE'
+            "APP_DIR=$APP_DIR_Q bash -s" <<'REMOTE'
           set -euo pipefail
-          command -v node
-          command -v npm
-          command -v unzip
-          command -v rsync
-          command -v curl
+          for command_name in node npm tar unzip curl; do
+            command -v "$command_name" >/dev/null || { echo "Missing required command: $command_name" >&2; exit 2; }
+          done
           node -e 'if(Number(process.versions.node.split(".")[0])<20){console.error("Node.js 20+ required");process.exit(2)};console.log("Node.js",process.version)'
-          test -d "$APP_DIR"
-          test -w "$APP_DIR"
-          mkdir -p "$APP_DIR/tmp"
-          echo "HOST_PREFLIGHT_OK"
+          test -d "$APP_DIR" || { echo "Application root does not exist: $APP_DIR" >&2; exit 3; }
+          test -w "$APP_DIR" || { echo "Application root is not writable by the deployment user" >&2; exit 4; }
+          printf 'HOST_PREFLIGHT_OK\n'
           REMOTE
-          echo "SSH and host capability checks passed. No application files or database were changed." >> "$GITHUB_STEP_SUMMARY"
+          echo "SSH identity, pinned host key, Node.js/npm and app-root checks passed. No app files or database were changed." >> "$GITHUB_STEP_SUMMARY"
