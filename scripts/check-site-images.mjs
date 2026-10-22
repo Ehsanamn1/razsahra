@@ -2,18 +2,22 @@ import { readFile, access } from 'node:fs/promises';
 import { resolve } from 'node:path';
 
 const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
+const articleFa = await readFile(new URL('../assets/raz-sahra-articles.html', import.meta.url), 'utf8');
+const articleEn = await readFile(new URL('../assets/raz-sahra-articles-en.html', import.meta.url), 'utf8');
+const allMarkup = [html, articleFa, articleEn].join('\n');
 const interactions = await readFile(new URL('../assets/raz-sahra-interactions.js', import.meta.url), 'utf8');
 if (!interactions.includes("document.querySelectorAll('[data-hero-slider]')") ||
     !interactions.includes('data-hero-next') ||
     !interactions.includes('data-hero-prev') ||
     !interactions.includes('visibilitychange') ||
-    !interactions.includes('prefers-reduced-motion')) {
-  throw new Error('Hero carousel runtime must initialize controls, pause in background tabs and respect reduced motion.');
+    !interactions.includes('prefers-reduced-motion') ||
+    !interactions.includes('swipeStart')) {
+  throw new Error('Hero carousel runtime must initialize controls, support touch swipe, pause in background tabs and respect reduced motion.');
 }
 if (!html.includes('زنجیره‌ای منسجم؛') || !html.includes('ارزش‌آفرینی پایدار')) {
   throw new Error('Opening hero copy has not been refreshed to the current value-chain message.');
 }
-const remoteImageReferences = html.match(/(?:src|srcset|url\()\s*=?\s*["']?https:\/\/(?:images\.pexels\.com|upload\.wikimedia\.org|commons\.wikimedia\.org)[^\s"'<>)]*/gi) ?? [];
+const remoteImageReferences = allMarkup.match(/(?:src|srcset|url\()\s*=?\s*["']?https:\/\/(?:images\.pexels\.com|upload\.wikimedia\.org|commons\.wikimedia\.org)[^\s"'<>)]*/gi) ?? [];
 if (remoteImageReferences.length) {
   throw new Error('Remote image dependencies remain in index.html: ' + remoteImageReferences.slice(0, 5).join(' | '));
 }
@@ -24,7 +28,7 @@ const heroImages = [...html.matchAll(/<img class="hero-slide-bg[^"]*" src="([^"]
 if (heroImages.length !== 4 || new Set(heroImages).size !== 4 || heroImages.some(path => !path.endsWith('.svg'))) {
   throw new Error('Hero slider must use four distinct local SVG illustrations; found: ' + heroImages.join(', '));
 }
-const localAssets = [...html.matchAll(/(?:src|href|url\()\s*=?\s*["']?(assets\/[a-zA-Z0-9_./-]+\.(?:webp|png|jpe?g|avif|svg))["')\s>]?/g)]
+const localAssets = [...allMarkup.matchAll(/(?:src|href|url\()\s*=?\s*["']?(assets\/[a-zA-Z0-9_./-]+\.(?:webp|png|jpe?g|avif|svg))["')\s>]?/g)]
   .map(match => match[1]);
 const uniqueAssets = [...new Set(localAssets)];
 for (const asset of uniqueAssets) {
@@ -47,4 +51,4 @@ if (!html.includes('data-hero-slider') || !html.includes('data-hero-next') || !h
   throw new Error('Hero slider controls are incomplete.');
 }
 if (!html.includes('assets/raz-sahra-hero-banner.webp')) throw new Error('Local hero fallback asset is missing from markup.');
-console.log('Site image integrity passed:', uniqueAssets.length, 'local assets,', slides, 'hero slides, no remote image dependencies.');
+console.log('Site image integrity passed:', uniqueAssets.length, 'local assets,', slides, 'hero slides, bilingual article imagery is local, no remote image dependencies.');
