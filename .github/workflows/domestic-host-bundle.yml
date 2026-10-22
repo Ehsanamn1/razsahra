@@ -1,6 +1,19 @@
 name: Build domestic host bundle (staging)
 on:
   workflow_dispatch:
+  pull_request:
+    branches: ["main"]
+    paths:
+      - "host-package/**"
+      - "assets/**"
+      - "index.html"
+      - "404.html"
+      - "manifest.webmanifest"
+      - "robots.txt"
+      - "sitemap.xml"
+      - "scripts/**"
+      - "functions/**"
+      - ".github/workflows/domestic-host-bundle.yml"
   push:
     branches: ["feat/domestic-host-release-bundle"]
     paths:
