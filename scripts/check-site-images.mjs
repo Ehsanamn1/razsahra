@@ -22,10 +22,10 @@ for (const asset of uniqueAssets) {
   catch { throw new Error('Referenced local visual asset does not exist: ' + asset); }
   if (asset.endsWith('.svg')) {
     const svg = await readFile(assetPath, 'utf8');
-    if (!/<svg\\b[^>]*xmlns="http:\\/\\/www\\.w3\\.org\\/2000\\/svg"/i.test(svg) || !/<\\/svg>\\s*$/i.test(svg)) {
+    if (!/<svg\b[^>]*xmlns="http:\/\/www\.w3\.org\/2000\/svg"/i.test(svg) || !/<\/svg>\s*$/i.test(svg)) {
       throw new Error('Malformed local SVG visual asset: ' + asset);
     }
-    if (/https?:\\/\\//i.test(svg) || /<script\\b/i.test(svg)) {
+    if (/https?:\/\//i.test(svg) || /<script\b/i.test(svg)) {
       throw new Error('Local SVG must not depend on external resources or scripts: ' + asset);
     }
   }
