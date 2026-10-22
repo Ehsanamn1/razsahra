@@ -1,37 +1,27 @@
-# HostMizbanFa release automation
+# HostMizbanFa readiness automation
 
-Workflow: `.github/workflows/deploy-hostmizbanfa.yml`
+Workflow: `.github/workflows/hostmizbanfa-preflight.yml`
 
-This is a prepared, manual, guarded deployment workflow. It does not run on every push and cannot deploy until a real host is configured. It downloads the prepared `raz-sahra-host-package-staging` artifact from a successful GitHub Actions run, validates the archive, checks SSH and Node.js, backs up the target directory, uploads the package, installs production dependencies, requests a Passenger-style restart, and checks the HTTPS health endpoint. If health fails, it attempts to restore the previous files.
+This workflow is prepared for the day hosting is purchased. It is manually triggered and **non-destructive**: it verifies SSH access, host key validation, Node.js 20+, npm, required archive/sync/HTTP utilities, and a writable application root. It does not deploy the current staging-only package and does not touch the database.
 
 ## GitHub configuration after buying compatible hosting
 
 Repository **Settings → Secrets and variables → Actions**:
 
 Secrets:
-- `HOST_SSH_HOST`: real SSH host name or IP from the host.
-- `HOST_SSH_PORT`: SSH port, usually 22 only if the host confirms it.
+- `HOST_SSH_HOST`: real SSH host name or IP.
+- `HOST_SSH_PORT`: SSH port confirmed by the host.
 - `HOST_SSH_USER`: dedicated deployment user.
 - `HOST_SSH_PRIVATE_KEY`: private key for that user; never commit it.
-- `HOST_SSH_KNOWN_HOSTS`: verified host-key line supplied/verified using the host's official fingerprint. Do not blindly trust a newly scanned key.
+- `HOST_SSH_KNOWN_HOSTS`: verified host-key line, checked against the provider's official fingerprint.
 
-Variables:
-- `HOST_APP_DIR`: absolute application root, writable by the deployment user.
-- `HOST_HEALTH_URL`: HTTPS URL for the Node app's `/api/health`.
+Variable:
+- `HOST_APP_DIR`: absolute application root writable by the deployment user.
 
-The host must confirm Node.js >=20, npm, SSH, `unzip`, `rsync`, writable application root, outgoing HTTPS, MySQL credentials via environment variables, and that touching `tmp/restart.txt` restarts the application. If its documented restart mechanism differs, change and test the workflow before production use.
+Then open Actions → **HostMizbanFa connection preflight** → Run workflow. It will report missing configuration immediately or validate the actual host without changing application files or database.
 
-## Run
+## Production deployment is intentionally gated
 
-1. Identify a successful CI run that uploaded artifact `raz-sahra-host-package-staging`.
-2. Open Actions → **HostMizbanFa manual deployment** → Run workflow.
-3. Enter that run ID and type exactly `DEPLOY`.
-4. Review the job output and verify the public site and application flows.
+The current host ZIP artifact is explicitly a **staging baseline**, not an approved standalone production release. A production deployment workflow must not consume it until the Node/MySQL backend and Medar API integration have passed parity and acceptance tests. After that, deployment automation should back up the existing release, preserve host-managed secrets, install production dependencies, use the host-confirmed restart method, check the real HTTPS health endpoint, and provide rollback. Database migrations and admin bootstrap must remain separate, explicit operations.
 
-## Safety boundaries
-
-- The workflow intentionally does not run database schema installation or bootstrap an admin account automatically.
-- `.env` is excluded from sync and must be managed in the hosting control panel or the host's secure environment mechanism.
-- A timestamped backup is retained on the host. Rollback is file-based and does not reverse database migrations.
-- The workflow is not considered production-ready until tested on the actual host. It is not possible to validate credentials, restart behavior, filesystem permissions, or the real health endpoint before hosting exists.
-- Medar's operational API still uses the configured upstream Cloudflare Worker unless its backend is separately migrated.
+Host-dependent behavior cannot be truthfully marked tested until the host exists. Medar's operational API still uses the configured upstream Cloudflare Worker unless its backend is separately migrated.
