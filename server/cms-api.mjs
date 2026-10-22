@@ -619,3 +619,12 @@ export async function onRequest(context) {
     return fail(status === 413 ? "درخواست بیش از حد بزرگ است." : "خطای داخلی رخ داد. دوباره تلاش کنید.", status, status === 413 ? "request_too_large" : "internal_error");
   }
 }
+
+export async function closeMysqlPool() {
+  if (cachedPool) {
+    const pool = cachedPool;
+    cachedPool = null;
+    cachedPoolUrl = null;
+    await pool.end();
+  }
+}
