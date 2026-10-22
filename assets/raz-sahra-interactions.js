@@ -28,6 +28,60 @@
     ['pointerup','pointercancel','pointerleave'].forEach(function(evt){el.addEventListener(evt,function(){el.style.removeProperty('transform');});});
   });
 
+  // Resilient, accessible hero carousel: works on touch, pauses off-screen and respects reduced motion.
+  document.querySelectorAll('[data-hero-slider]').forEach(function(slider){
+    var slides=Array.prototype.slice.call(slider.querySelectorAll('[data-hero-slide]'));
+    var dots=Array.prototype.slice.call(slider.querySelectorAll('[data-hero-dot]'));
+    var previous=slider.querySelector('[data-hero-prev]');
+    var next=slider.querySelector('[data-hero-next]');
+    if(slides.length<2)return;
+    var current=Math.max(0,slides.findIndex(function(slide){return slide.classList.contains('is-active');}));
+    var timer=0,visible=true,hovered=false,focused=false;
+    var delay=7000;
+    function show(index){
+      current=(index+slides.length)%slides.length;
+      slides.forEach(function(slide,i){
+        var active=i===current;
+        slide.classList.toggle('is-active',active);
+        slide.setAttribute('aria-hidden',active?'false':'true');
+        slide.inert=!active;
+      });
+      dots.forEach(function(dot,i){
+        var active=i===current;
+        dot.classList.toggle('is-active',active);
+        dot.setAttribute('aria-pressed',active?'true':'false');
+      });
+    }
+    function stop(){if(timer){window.clearInterval(timer);timer=0;}}
+    function start(){
+      stop();
+      if(reduce||document.hidden||!visible||hovered||focused)return;
+      timer=window.setInterval(function(){show(current+1);},delay);
+    }
+    if(!slides.some(function(slide){return slide.classList.contains('is-active');}))show(0);
+    else show(current);
+    if(previous)previous.addEventListener('click',function(){show(current-1);start();});
+    if(next)next.addEventListener('click',function(){show(current+1);start();});
+    dots.forEach(function(dot){dot.addEventListener('click',function(){var index=Number(dot.getAttribute('data-hero-dot'));if(Number.isFinite(index))show(index);start();});});
+    slider.addEventListener('mouseenter',function(){hovered=true;stop();});
+    slider.addEventListener('mouseleave',function(){hovered=false;start();});
+    slider.addEventListener('focusin',function(){focused=true;stop();});
+    slider.addEventListener('focusout',function(){window.setTimeout(function(){focused=slider.contains(document.activeElement);start();},0);});
+    slider.addEventListener('keydown',function(event){
+      if(event.key==='ArrowLeft'){event.preventDefault();show(current+1);start();}
+      else if(event.key==='ArrowRight'){event.preventDefault();show(current-1);start();}
+    });
+    if('IntersectionObserver' in window){
+      var visibilityObserver=new IntersectionObserver(function(entries){
+        visible=entries[0]&&entries[0].isIntersecting;
+        if(visible)start();else stop();
+      },{threshold:0.08});
+      visibilityObserver.observe(slider);
+    }
+    document.addEventListener('visibilitychange',function(){if(document.hidden)stop();else start();});
+    start();
+  });
+
   // Interactive chain explorer: visitors can step through the value chain without fake metrics.
   document.querySelectorAll('.flow-item').forEach(function(item){
     item.setAttribute('tabindex','0');
