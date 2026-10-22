@@ -1435,3 +1435,7 @@ html.lang-en .route-card,html.lang-en .status-chip,html.lang-en .slide-vertical-
     filter: none !important;
   }
 }
+
+
+/* Prevent transformed carousel tracks from expanding the page viewport; carousels retain their own horizontal scrolling. */
+html { overflow-x: clip; }
