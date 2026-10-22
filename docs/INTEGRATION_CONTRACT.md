@@ -59,6 +59,9 @@ If unified sign-in is later approved, it requires an explicit identity/session d
 
 ## 5. Release contract
 
+**Current PR-only integration candidate:** `22d38f15b3779382d6abde7e6f0fcf54c3989caf` is pinned in the feature-branch manifest so the parent PR can validate the current Medar UI/runtime work. This is not a production release. The previously deployed production bundle remains pinned to `70329106d6cd921e1c036714157986b72e0ea201` until the candidate passes Medar CI and the parent integration workflow is approved for release.
+
+
 ### Current reviewed Medar source
 
 The exact integrated frontend revision is kept in the canonical manifest at `integration/medar-source.json`. Its `repository` must remain `Ehsanamn1/simorgh`, and `commit` must be a full 40-character lowercase Git SHA. The Pages workflow reads and validates the manifest, checks out that immutable commit, runs the Medar typecheck/lint/unit tests, and builds the bundle under `/madar/`.
