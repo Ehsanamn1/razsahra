@@ -59,20 +59,20 @@ If unified sign-in is later approved, it requires an explicit identity/session d
 
 ## 5. Release contract
 
-**Current PR-only integration candidate:** `f53c6470f9a1129d6c859c9281d49bdfa5e18e75` is pinned in the feature-branch manifest so the parent PR can validate the current Medar UI/runtime work. This is not a production release. The previously deployed production bundle remains pinned to `70329106d6cd921e1c036714157986b72e0ea201` until the candidate passes Medar CI and the parent integration workflow is approved for release.
+**Current PR-only integration candidate:** `7226ad7fd6e754aa91f5da6c73ec7ed5bb00fb25` is pinned in the feature-branch manifest. Its domestic MySQL CI, application CI, Worker CI, Android build, and iOS simulator build passed. This is not yet a production release. The previously deployed production bundle remains pinned to `70329106d6cd921e1c036714157986b72e0ea201` until the new parent integration build and post-deploy smoke checks pass and the release is explicitly approved.
 
 
 ### Current reviewed Medar source
 
 The exact integrated frontend revision is kept in the canonical manifest at `integration/medar-source.json`. Its `repository` must remain `Ehsanamn1/simorgh`, and `commit` must be a full 40-character lowercase Git SHA. The Pages workflow reads and validates the manifest, checks out that immutable commit, runs the Medar typecheck/lint/unit tests, and builds the bundle under `/madar/`.
 
-The current integrated app-source pin is:
+The current PR-only integrated app-source pin is:
 
-`70329106d6cd921e1c036714157986b72e0ea201`
+`7226ad7fd6e754aa91f5da6c73ec7ed5bb00fb25`
 
-This pin is recorded in `integration/medar-source.json`. Parent Pages release [run 39659265140](https://github.com/Ehsanamn1/razsahra/actions/runs/39659265140) built exactly that revision and verified the combined source marker `49b773d10bb142bd4c9df0cd82127d250a971236-70329106d6cd921e1c036714157986b72e0ea201`. The same release confirmed HTTP 200 for the homepage, `/madar/`, and `/madar/app/home` at both the canonical site and its unique deployment URL; CMS and upstream Medar health checks passed, and unauthenticated CMS administration returned HTTP 401.
+This exact revision is recorded in `integration/medar-source.json`. Its domestic MySQL migration/API integration CI, responsive browser acceptance, application CI, Worker CI, Android debug build, and iOS simulator build passed. The parent Pages build and combined-source smoke checks are now running against this pin; the candidate must not be described as production until those checks finish and the release is approved.
 
-Medar main is now `1c00cb216d73137ff5c254648d96f5be5ee38acf`; its latest main CI [run 39667115382](https://github.com/Ehsanamn1/simorgh/actions/runs/39667115382) passed. The latest completed operational Worker deployment is [run 39662243920](https://github.com/Ehsanamn1/simorgh/actions/runs/39662243920) at `e079388eb4e682d1d94d6d70f72d8ed9c25d97af`. Comparing the pin to those later commits shows that the intervening changes are workflow and documentation updates; the application source included by the parent remains unchanged. The embedded web bundle and standalone Worker are separate artifacts and their release evidence must remain separate.
+The previously deployed production bundle remains `70329106d6cd921e1c036714157986b72e0ea201`. Historical production evidence remains [run 39655896308](https://github.com/Ehsanamn1/razsahra/actions/runs/39655896308), which verified the older pinned bundle and post-deploy routes/health checks. The older production pin is retained here as historical evidence, not as the current PR candidate. The embedded web bundle and standalone Worker are separate artifacts and their release evidence must remain separate.
 
 To upgrade the integrated bundle, first identify a specific Medar commit merged into `main`, verify its required Medar CI and Worker deployment results, then update `integration/medar-source.json` in a reviewed parent-site change. Do not change the source back to a moving branch, and do not duplicate the pin in the workflow. The workflow embeds both the parent-site SHA and Medar SHA in the app version marker so deployed assets can be attributed to the exact pair.
 
