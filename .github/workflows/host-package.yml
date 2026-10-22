@@ -1,0 +1,45 @@
+name: Validate domestic Node/MySQL package
+on:
+  pull_request:
+    branches: ["main"]
+    paths:
+      - "host-package/**"
+      - ".github/workflows/host-package.yml"
+  push:
+    branches: ["feat/domestic-host-package-v1"]
+    paths:
+      - "host-package/**"
+      - ".github/workflows/host-package.yml"
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: host-package
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: host-package/package.json
+      - name: Check source syntax
+        run: |
+          node --check server.js
+          node --check install.js
+      - name: Install runtime dependencies
+        run: npm install --no-audit --no-fund
+      - name: Verify package scripts
+        run: npm run check
+      - name: Verify schema is present and non-destructive
+        run: |
+          test -s schema.sql
+          ! grep -Eiq 'DROP[[:space:]]+(DATABASE|TABLE)|TRUNCATE[[:space:]]+TABLE' schema.sql
+          grep -q 'CREATE TABLE IF NOT EXISTS users' schema.sql
+          grep -q 'CREATE TABLE IF NOT EXISTS sessions' schema.sql
+          grep -q 'CREATE TABLE IF NOT EXISTS inquiries' schema.sql
+      - name: Report scope
+        run: |
+          echo "Node/MySQL CMS baseline validated. This is not a deployable final bundle until the Medar API port and end-to-end acceptance are complete." >> "$GITHUB_STEP_SUMMARY"

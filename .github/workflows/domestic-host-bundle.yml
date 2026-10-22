@@ -1,0 +1,234 @@
+name: Build domestic host bundle (staging)
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: ["main"]
+    paths:
+      - "host-package/**"
+      - "assets/**"
+      - "index.html"
+      - "404.html"
+      - "manifest.webmanifest"
+      - "robots.txt"
+      - "sitemap.xml"
+      - "scripts/**"
+      - "functions/**"
+      - "integration/medar-source.json"
+      - ".github/workflows/domestic-host-bundle.yml"
+  push:
+    branches: ["feat/domestic-host-release-bundle"]
+    paths:
+      - "host-package/**"
+      - "assets/**"
+      - "index.html"
+      - "404.html"
+      - "manifest.webmanifest"
+      - "robots.txt"
+      - "sitemap.xml"
+      - "scripts/**"
+      - "functions/**"
+      - ".github/workflows/domestic-host-bundle.yml"
+permissions:
+  contents: read
+jobs:
+  bundle:
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.4
+        env:
+          MYSQL_ROOT_PASSWORD: root-ci-password
+          MYSQL_DATABASE: razsahra_ci
+          MYSQL_USER: razsahra_ci
+          MYSQL_PASSWORD: ci-db-password
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -uroot -proot-ci-password"
+          --health-interval=10s --health-timeout=5s --health-retries=12
+    steps:
+      - name: Checkout Raz Sahara
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install website build dependencies
+        run: npm install --no-audit --no-fund
+      - name: Validate website source
+        run: npm run check
+      - name: Build website
+        env:
+          SITE_URL: https://example.invalid/
+          SITE_BUILD_VERSION: ${{ github.sha }}
+        run: npm run build
+      - name: Assemble package static files
+        run: |
+          rm -rf host-package/dist
+          mkdir -p host-package/dist
+          cp -a dist/. host-package/dist/
+      - name: Resolve immutable Medar source pin
+        id: medar-source
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import { readFile } from 'node:fs/promises';
+          const manifest = JSON.parse(await readFile('integration/medar-source.json', 'utf8'));
+          if (manifest.repository !== 'Ehsanamn1/simorgh') throw new Error('Unexpected Medar repository in integration manifest.');
+          if (!/^[0-9a-f]{40}$/.test(manifest.commit || '')) throw new Error('Medar source must be pinned to a full immutable commit SHA.');
+          if (manifest.mountPath !== '/madar/' || manifest.apiBasePath !== '/api/medar') throw new Error('Medar integration paths do not match the host bundle contract.');
+          console.log('repository=' + manifest.repository);
+          console.log('commit=' + manifest.commit);
+          NODE
+          node --input-type=module <<'NODE' >> "$GITHUB_OUTPUT"
+          import { readFile } from 'node:fs/promises';
+          const manifest = JSON.parse(await readFile('integration/medar-source.json', 'utf8'));
+          console.log('repository=' + manifest.repository);
+          console.log('ref=' + manifest.commit);
+          NODE
+      - name: Checkout pinned Medar frontend
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ steps.medar-source.outputs.repository }}
+          ref: ${{ steps.medar-source.outputs.ref }}
+          path: simorgh-src
+      - name: Validate pinned Medar source
+        working-directory: simorgh-src
+        run: |
+          npm install --no-audit --no-fund
+          npm run typecheck
+          npm run lint
+          npm test
+      - name: Build Medar for /madar/ with same-origin API proxy
+        working-directory: simorgh-src
+        env:
+          VITE_API_BASE_URL: /api/medar
+          VITE_ENABLE_AUTH_UI: "true"
+          VITE_DISABLE_API_UI: "false"
+          VITE_APP_VERSION: ${{ github.sha }}-${{ steps.medar-source.outputs.ref }}
+        run: |
+          npm run build -- --base=/madar/
+          test -s dist/index.html
+          test -s dist/manifest.webmanifest
+          test -s dist/sw.js
+      - name: Mount and verify the combined Raz Sahara + Medar web bundle
+        env:
+          PARENT_SOURCE_SHA: ${{ github.sha }}
+          MEDAR_SOURCE_SHA: ${{ steps.medar-source.outputs.ref }}
+        run: |
+          set -euo pipefail
+          test -s simorgh-src/dist/index.html
+          mkdir -p host-package/dist/madar
+          cp -a simorgh-src/dist/. host-package/dist/madar/
+          test -s host-package/dist/index.html
+          test -s host-package/dist/madar/index.html
+          test -s host-package/dist/madar/manifest.webmanifest
+          test -s host-package/dist/madar/sw.js
+          test -d host-package/dist/madar/assets
+          grep -R -q '/api/medar' host-package/dist/madar/assets
+          grep -R -F -q "${PARENT_SOURCE_SHA}-${MEDAR_SOURCE_SHA}" host-package/dist/madar/assets
+          node --input-type=module -e 'import fs from "node:fs";const m=JSON.parse(fs.readFileSync("host-package/dist/madar/manifest.webmanifest","utf8"));if(m.start_url!=="./app/home"||m.scope!=="./")throw new Error("Madar PWA manifest start_url/scope mismatch");'
+      - name: Install backend runtime dependencies and validate
+        working-directory: host-package
+        run: |
+          npm install --no-audit --no-fund
+          npm run check
+          test -s schema.sql
+          test -s dist/index.html
+          ! grep -Eiq 'DROP[[:space:]]+(DATABASE|TABLE)|TRUNCATE[[:space:]]+TABLE' schema.sql
+      - name: Run database-backed CMS and proxy smoke tests
+        working-directory: host-package
+        env:
+          DB_HOST: 127.0.0.1
+          DB_PORT: 3306
+          DB_NAME: razsahra_ci
+          DB_USER: razsahra_ci
+          DB_PASSWORD: ci-db-password
+          ADMIN_BOOTSTRAP_SECRET: ci-bootstrap-secret-long-enough-for-tests-12345
+          MEDAR_API_ORIGIN: http://127.0.0.1:4321
+          PORT: 3210
+        run: |
+          npm run install:db
+          node --input-type=module -e 'import http from "node:http"; http.createServer((req,res)=>{res.setHeader("content-type","application/json");res.end(JSON.stringify({ok:true,path:req.url}));}).listen(4321,"127.0.0.1");' &
+          MOCK_PID=$!
+          npm start > /tmp/raz-sahra-api.log 2>&1 &
+          APP_PID=$!
+          trap 'kill "$APP_PID" "$MOCK_PID" 2>/dev/null || true' EXIT
+          for i in $(seq 1 40); do
+            if curl -fsS http://127.0.0.1:3210/api/health >/tmp/rs-health.json; then break; fi
+            sleep 2
+          done
+          node --input-type=module -e 'import fs from "node:fs"; const x=JSON.parse(fs.readFileSync("/tmp/rs-health.json","utf8")); if(!x.ok||x.database!=="connected") process.exit(1);'
+          curl -fsS -c /tmp/rs-cookies -H 'content-type: application/json' -H 'x-admin-bootstrap-secret: ci-bootstrap-secret-long-enough-for-tests-12345' -d '{"username":"ciadmin","email":"ci@example.test","password":"TestAdminPassword123!","display_name":"CI Admin"}' http://127.0.0.1:3210/api/auth/bootstrap-admin >/tmp/rs-bootstrap.json
+          node --input-type=module -e 'import fs from "node:fs"; const x=JSON.parse(fs.readFileSync("/tmp/rs-bootstrap.json","utf8")); if(!x.ok||x.user?.role!=="admin") process.exit(1);'
+          curl -fsS -b /tmp/rs-cookies http://127.0.0.1:3210/api/auth/me | node --input-type=module -e 'let s="";for await(const c of process.stdin)s+=c;const x=JSON.parse(s);if(!x.ok||x.user?.role!=="admin")process.exit(1);'
+          curl -fsS -b /tmp/rs-cookies http://127.0.0.1:3210/api/admin/overview | node --input-type=module -e 'let s="";for await(const c of process.stdin)s+=c;const x=JSON.parse(s);if(!x.ok||!x.stats)process.exit(1);'
+          curl -fsS -c /tmp/rs-user-cookies -H 'content-type: application/json' -d '{"username":"ciuser","email":"ciuser@example.test","password":"TestUserPassword123!","display_name":"CI User"}' http://127.0.0.1:3210/api/auth/register >/tmp/rs-register.json
+          node --input-type=module -e 'import fs from "node:fs";const x=JSON.parse(fs.readFileSync("/tmp/rs-register.json","utf8"));if(!x.ok||x.user?.role!=="user")process.exit(1);'
+          curl -fsS -b /tmp/rs-user-cookies http://127.0.0.1:3210/api/auth/me | node --input-type=module -e 'let s="";for await(const c of process.stdin)s+=c;const x=JSON.parse(s);if(!x.ok||x.user?.role!=="user")process.exit(1);'
+          USER_ADMIN_STATUS=$(curl -sS -o /tmp/rs-user-admin.json -w '%{http_code}' -b /tmp/rs-user-cookies http://127.0.0.1:3210/api/admin/overview)
+          test "$USER_ADMIN_STATUS" = "403"
+          curl -fsS -b /tmp/rs-user-cookies -c /tmp/rs-user-cookies -X POST http://127.0.0.1:3210/api/auth/logout >/tmp/rs-logout.json
+          curl -fsS -b /tmp/rs-user-cookies http://127.0.0.1:3210/api/auth/me | node --input-type=module -e 'let s="";for await(const c of process.stdin)s+=c;const x=JSON.parse(s);if(!x.ok||x.user!==null)process.exit(1);'
+          BOOTSTRAP_AGAIN_STATUS=$(curl -sS -o /tmp/rs-bootstrap-again.json -w '%{http_code}' -H 'content-type: application/json' -H 'x-admin-bootstrap-secret: ci-bootstrap-secret-long-enough-for-tests-12345' -d '{"username":"secondadmin","email":"secondadmin@example.test","password":"AnotherPassword123!","display_name":"Second Admin"}' http://127.0.0.1:3210/api/auth/bootstrap-admin)
+          test "$BOOTSTRAP_AGAIN_STATUS" = "409"
+          curl -fsS -H 'content-type: application/json' -d '{"name":"CI Test","email":"ci@example.test","message":"Automated acceptance test inquiry"}' http://127.0.0.1:3210/api/inquiries | node --input-type=module -e 'let s="";for await(const c of process.stdin)s+=c;const x=JSON.parse(s);if(!x.ok||!x.inquiry?.id)process.exit(1);'
+          curl -fsS -b /tmp/rs-cookies http://127.0.0.1:3210/api/admin/inquiries | node --input-type=module -e 'let s="";for await(const c of process.stdin)s+=c;const x=JSON.parse(s);if(!x.ok||!Array.isArray(x.inquiries)||x.inquiries.length<1)process.exit(1);'
+          curl -fsS http://127.0.0.1:3210/madar/app/home | grep -q 'id="root"'
+          curl -fsS http://127.0.0.1:3210/api/medar/api/health | node --input-type=module -e 'let s="";for await(const c of process.stdin)s+=c;const x=JSON.parse(s);if(!x.ok||x.path!=="/api/health")process.exit(1);'
+          echo "Admin bootstrap, session lifecycle, role authorization, inquiry persistence, Medar SPA deep link, and same-origin API proxy passed."
+      - name: Check live Medar operational API
+        run: |
+          curl --fail --silent --show-error --max-time 20 https://medar-ops.dengxiao445.workers.dev/api/health > /tmp/medar-live-health.json
+          node --input-type=module -e 'import fs from "node:fs"; const x=JSON.parse(fs.readFileSync("/tmp/medar-live-health.json","utf8")); if(x.ok!==true) { console.error("Operational Medar API health check did not return ok:true"); process.exit(1); } console.log("Operational Medar API is reachable and reports healthy.");'
+      - name: Run deployment preflight against MySQL and live Medar API
+        working-directory: host-package
+        env:
+          DB_HOST: 127.0.0.1
+          DB_PORT: 3306
+          DB_NAME: razsahra_ci
+          DB_USER: razsahra_ci
+          DB_PASSWORD: ci-db-password
+          MEDAR_API_ORIGIN: https://medar-ops.dengxiao445.workers.dev
+        run: npm run preflight
+      - name: Add release manifest and host checklist
+        run: |
+          node --input-type=module <<'NODE'
+          import { writeFile } from 'node:fs/promises';
+          const manifest = {
+            name: 'Raz Sahara domestic host bundle',
+            version: process.env.GITHUB_SHA,
+            createdAt: new Date().toISOString(),
+            runtime: 'Node.js 20+ / MySQL 8',
+            hostCompatibility: 'HostMizbanFa support states shared hosting can run Node.js 20+; account-level setup and real-domain acceptance remain to be verified.',
+            website: 'Included',
+            cmsApi: 'Included baseline; acceptance tests still required',
+            medar: 'Medar frontend mounted at /madar/; /api/medar proxies to the configured external operational Medar API. Backend is not yet ported to Node/MySQL.',
+            deploymentStatus: 'STAGING ONLY — do not treat as production-ready'
+          };
+          await writeFile('host-package/RELEASE-MANIFEST.json', JSON.stringify(manifest, null, 2) + '\n');
+          NODE
+          cat > host-package/HOST-CHECKLIST.txt <<'EOF'
+          STATUS: STAGING PACKAGE — NOT CLEARED FOR PRODUCTION UNTIL TARGET-HOST ACCEPTANCE PASSES.
+          Included: Raz Sahara static web build, Medar frontend mounted at /madar/, Node.js CMS/auth API, MySQL schema and installer.
+          CI acceptance: MySQL-backed bootstrap/login/session/role checks, inquiry persistence, Medar deep-link/proxy checks, live Medar API health and preflight are run in GitHub Actions.
+          HostMizbanFa support states shared hosting can run Node.js 20+; remaining external gate is account-level Node app setup and running acceptance paths on the real HTTPS domain. This cannot be proven from CI.
+          Medar API still runs on the existing operational Worker/PostgreSQL service; it has not been ported to standalone Node/MySQL.
+          Before deployment: configure DB credentials and a random ADMIN_BOOTSTRAP_SECRET in host environment; configure MEDAR_API_ORIGIN to the operational Medar Worker origin (for example https://medar-ops.dengxiao445.workers.dev); run npm run preflight; bootstrap admin once then remove the bootstrap secret; test /api/health, login/logout, admin CMS, inquiry flow, /madar/ and /madar/app/home deep links, Medar login, and role permissions.
+          Never put secrets in this package or source control.
+          EOF
+      - name: Create ZIP
+        run: |
+          cd host-package
+          zip -qr ../raz-sahra-host-package-staging.zip . -x "node_modules/*" ".env"
+      - name: Upload package artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: raz-sahra-host-package-staging
+          path: raz-sahra-host-package-staging.zip
+          if-no-files-found: error
+          retention-days: 14
+      - name: State release limitation
+        run: |
+          echo "A staging ZIP with both Raz Sahara and the Medar web app was built. Medar API still proxies to the external operational Worker; do not treat as an independent Node/MySQL release. Host acceptance tests remain required." >> "$GITHUB_STEP_SUMMARY"
