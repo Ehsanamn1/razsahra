@@ -1346,3 +1346,41 @@ html.lang-en .route-card,html.lang-en .status-chip,html.lang-en .slide-vertical-
 @media (prefers-reduced-motion: reduce) {
   .hero-slider .hero-slide, .hero-slider .hero-slide-bg { transition: none !important; }
 }
+
+
+/* Mobile rendering budget: retain the cinematic look without continuous heavy compositing. */
+@media (max-width: 850px) and (hover: none) {
+  .site-header {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+    background: rgba(244,240,232,.98) !important;
+  }
+  .hero-slide,
+  .hero-slide-bg,
+  .hero-slide-copy {
+    transition-duration: .38s !important;
+  }
+  .hero-slide-bg,
+  .hero-slide.is-active .hero-slide-bg {
+    transform: scale(1.035);
+  }
+  .hero-slide.is-active .hero-slide-bg {
+    filter: saturate(.9) brightness(.76);
+  }
+  .hero-slider:before {
+    box-shadow: inset 0 0 30px rgba(5,13,21,.18);
+  }
+  .hero-slide.is-active .hero-slide-title,
+  .hero-slide.is-active .hero-description,
+  .hero-slide.is-active .hero-actions {
+    animation-duration: .35s !important;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-slide-bg,
+  .hero-slide,
+  .hero-slide-copy {
+    transition: none !important;
+    animation: none !important;
+  }
+}
