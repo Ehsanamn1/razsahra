@@ -130,6 +130,16 @@ jobs:
         run: |
           curl --fail --silent --show-error --max-time 20 https://medar-ops.dengxiao445.workers.dev/api/health > /tmp/medar-live-health.json
           node --input-type=module -e 'import fs from "node:fs"; const x=JSON.parse(fs.readFileSync("/tmp/medar-live-health.json","utf8")); if(x.ok!==true) { console.error("Operational Medar API health check did not return ok:true"); process.exit(1); } console.log("Operational Medar API is reachable and reports healthy.");'
+      - name: Run deployment preflight against MySQL and live Medar API
+        working-directory: host-package
+        env:
+          DB_HOST: 127.0.0.1
+          DB_PORT: 3306
+          DB_NAME: razsahra_ci
+          DB_USER: razsahra_ci
+          DB_PASSWORD: ci-db-password
+          MEDAR_API_ORIGIN: https://medar-ops.dengxiao445.workers.dev
+        run: npm run preflight
       - name: Add release manifest and host checklist
         run: |
           node --input-type=module <<'NODE'
