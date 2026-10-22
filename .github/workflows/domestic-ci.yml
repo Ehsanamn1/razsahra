@@ -80,10 +80,30 @@ jobs:
           test -s dist/assets/raz-sahra-cms-runtime.js
           test -s dist/_headers
           test -s dist/manifest.webmanifest
-      - name: Upload build artifact for review (not a production deployment)
+      - name: Assemble versioned domestic host package
+        env:
+          SOURCE_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          mkdir -p release/raz-sahra
+          cp -a dist server functions db scripts assets package.json release/raz-sahra/
+          cp README.md release/raz-sahra/README.md
+          cat > release/raz-sahra/RELEASE-METADATA.txt <<EOF
+          project=raz-sahra-medar
+          source_sha=${SOURCE_SHA}
+          built_at_utc=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+          runtime=nodejs-22
+          database=mysql-8.0+
+          deployment=manual-host-upload-required
+          EOF
+          (cd release && tar -czf "raz-sahra-domestic-${SOURCE_SHA:0:12}.tar.gz" raz-sahra)
+          sha256sum "release/raz-sahra-domestic-${SOURCE_SHA:0:12}.tar.gz" > "release/raz-sahra-domestic-${SOURCE_SHA:0:12}.tar.gz.sha256"
+      - name: Upload versioned host package (not a production deployment)
         uses: actions/upload-artifact@v4
         with:
-          name: razsahra-static-ci-${{ github.sha }}
-          path: dist/
+          name: raz-sahra-domestic-host-${{ github.sha }}
+          path: |
+            release/*.tar.gz
+            release/*.sha256
           if-no-files-found: error
-          retention-days: 7
+          retention-days: 14
