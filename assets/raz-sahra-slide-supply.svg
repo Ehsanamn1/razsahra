@@ -1,27 +1,67 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" fill="none">
 <defs>
- <linearGradient id="sky" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#142B3A"/><stop offset=".58" stop-color="#53616A"/><stop offset="1" stop-color="#C28B60"/></linearGradient>
- <linearGradient id="field" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#7D876D"/><stop offset="1" stop-color="#263D3A"/></linearGradient>
- <linearGradient id="barn" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#D0B28A"/><stop offset="1" stop-color="#7E6C59"/></linearGradient>
- <radialGradient id="sun"><stop stop-color="#E6C39A" stop-opacity=".9"/><stop offset="1" stop-color="#E6C39A" stop-opacity="0"/></radialGradient>
- <pattern id="rows" width="64" height="64" patternUnits="userSpaceOnUse" patternTransform="skewX(-24)"><path d="M0 0V64" stroke="#D2B28B" stroke-opacity=".2" stroke-width="2"/></pattern>
+ <linearGradient id="sky" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#101f2c"/><stop offset=".58" stop-color="#2b414b"/><stop offset="1" stop-color="#9a6949"/></linearGradient>
+ <linearGradient id="ground" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#52645a"/><stop offset="1" stop-color="#172c2d"/></linearGradient>
+ <linearGradient id="roof" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#e1c6a2"/><stop offset="1" stop-color="#9d795d"/></linearGradient>
+ <linearGradient id="truck" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#d6b08a"/><stop offset="1" stop-color="#986949"/></linearGradient>
+ <radialGradient id="glow"><stop stop-color="#dfb18a" stop-opacity=".62"/><stop offset="1" stop-color="#dfb18a" stop-opacity="0"/></radialGradient>
+ <pattern id="fieldLines" width="54" height="54" patternUnits="userSpaceOnUse" patternTransform="skewX(-25)"><path d="M0 0V54" stroke="#d8b18a" stroke-opacity=".13" stroke-width="2"/></pattern>
+ <filter id="softGlow" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="12"/></filter>
 </defs>
 <rect width="1600" height="900" fill="url(#sky)"/>
-<circle cx="1210" cy="180" r="260" fill="url(#sun)"/>
-<circle cx="1210" cy="180" r="70" fill="#E8C49B" fill-opacity=".65"/>
-<path d="M0 460 180 335 320 415 515 275 690 430 900 300 1080 430 1280 315 1450 420 1600 350V900H0Z" fill="#314650" fill-opacity=".8"/>
-<path d="M0 545 190 455 370 510 560 420 760 535 980 420 1170 520 1370 430 1600 500V900H0Z" fill="#354C49"/>
-<path d="M0 600Q360 500 720 620T1600 580V900H0Z" fill="url(#field)"/>
-<path d="M0 650Q360 540 720 670T1600 630V900H0Z" fill="url(#rows)"/>
-<path d="M0 730Q390 640 760 740T1600 700V900H0Z" fill="#203632" fill-opacity=".75"/>
-<g opacity=".92">
- <path d="M160 555V420L270 350 380 420V555Z" fill="url(#barn)"/><path d="M138 422 270 333 402 422" stroke="#E2C8A7" stroke-width="15" stroke-linejoin="round"/>
- <rect x="190" y="445" width="160" height="110" rx="3" fill="#3A4C4B"/><path d="M270 445V555M190 500H350" stroke="#B8A68F" stroke-opacity=".6" stroke-width="5"/>
- <path d="M450 555V395L530 350 610 395V555Z" fill="#7C8A83"/><path d="M430 400 530 338 630 400" stroke="#D7C2A4" stroke-width="12" stroke-linejoin="round"/>
- <rect x="480" y="435" width="100" height="120" fill="#263C42"/><path d="M530 435V555" stroke="#C7B293" stroke-opacity=".6" stroke-width="4"/>
- <g transform="translate(680 365)"><path d="M0 190V45Q0 0 45 0H95Q140 0 140 45V190Z" fill="#B9B8A9"/><ellipse cx="70" cy="45" rx="70" ry="19" fill="#D4D2C5"/><path d="M12 95H128M12 145H128" stroke="#788982" stroke-width="6" stroke-opacity=".6"/><path d="M22 190V208M118 190V208" stroke="#263B3E" stroke-width="8"/></g>
- <g transform="translate(850 405)"><path d="M0 150V30Q0 0 30 0H70Q100 0 100 30V150Z" fill="#8F9A91"/><ellipse cx="50" cy="30" rx="50" ry="12" fill="#D6D1C3"/><path d="M15 75H85M15 115H85" stroke="#D0C1A5" stroke-width="4" stroke-opacity=".6"/></g>
+<circle cx="1240" cy="176" r="290" fill="url(#glow)"/><circle cx="1240" cy="176" r="64" fill="#e6c39d" fill-opacity=".62"/>
+<path d="M0 475 170 370 335 438 520 320 690 438 875 340 1050 455 1220 340 1420 432 1600 360V900H0Z" fill="#263d47" fill-opacity=".86"/>
+<path d="M0 570 220 472 405 528 600 440 790 550 990 440 1180 535 1390 445 1600 515V900H0Z" fill="#344d4a"/>
+<path d="M0 635Q350 555 700 650T1600 615V900H0Z" fill="url(#ground)"/>
+<path d="M0 690Q350 600 700 705T1600 670V900H0Z" fill="url(#fieldLines)"/>
+<path d="M0 785Q380 695 800 790T1600 755V900H0Z" fill="#10282a" fill-opacity=".7"/>
+<!-- Iranian-style farm shed -->
+<g>
+ <path d="M120 620V454L295 344 470 454V620Z" fill="#9b8a76"/>
+ <path d="M92 456 295 320 498 456" stroke="url(#roof)" stroke-width="18" stroke-linejoin="round"/>
+ <path d="M150 476H440V620H150Z" fill="#243b43"/>
+ <path d="M178 498H410V620H178Z" fill="#334b50"/>
+ <path d="M178 498H410M255 498V620M333 498V620" stroke="#d5b18c" stroke-opacity=".6" stroke-width="5"/>
+ <path d="M125 620H468" stroke="#e4c49c" stroke-opacity=".55" stroke-width="8"/>
+ <path d="M195 547H235M275 547H315M355 547H395" stroke="#e4c49c" stroke-opacity=".3" stroke-width="5"/>
 </g>
-<g stroke="#E6C49A" stroke-opacity=".42" stroke-width="2"><path d="M1020 570 1120 500 1240 540 1350 470 1480 520"/><circle cx="1020" cy="570" r="7" fill="#E6C49A"/><circle cx="1120" cy="500" r="7" fill="#E6C49A"/><circle cx="1240" cy="540" r="7" fill="#E6C49A"/><circle cx="1350" cy="470" r="7" fill="#E6C49A"/><circle cx="1480" cy="520" r="7" fill="#E6C49A"/></g>
-<rect width="1600" height="900" fill="#0D1D28" fill-opacity=".18"/>
+<!-- Feed and storage silos -->
+<g>
+ <path d="M535 605V424Q535 392 570 392H624Q659 392 659 424V605Z" fill="#9eaaa3"/>
+ <ellipse cx="597" cy="424" rx="62" ry="17" fill="#d8d8c9"/>
+ <path d="M548 475H646M548 525H646M548 575H646" stroke="#5f7775" stroke-width="6" stroke-opacity=".75"/>
+ <path d="M552 605V626M642 605V626" stroke="#172d33" stroke-width="10"/>
+ <path d="M680 605V465Q680 440 706 440H742Q768 440 768 465V605Z" fill="#778e89"/>
+ <ellipse cx="724" cy="465" rx="44" ry="12" fill="#c8cbbd"/>
+ <path d="M692 510H756M692 552H756M692 590H756" stroke="#d4b28d" stroke-opacity=".6" stroke-width="4"/>
+</g>
+<!-- Distribution truck -->
+<g transform="translate(830 505)">
+ <path d="M0 18Q0 0 18 0H220Q238 0 238 18V106H0Z" fill="url(#truck)"/>
+ <path d="M238 45H291L330 84V124H238Z" fill="#d4b28d"/>
+ <path d="M253 57H282L307 84H253Z" fill="#283f48"/>
+ <path d="M14 18H222V94H14Z" fill="#e1c7a4" fill-opacity=".3"/>
+ <path d="M36 25V87M66 25V87M96 25V87M126 25V87M156 25V87M186 25V87" stroke="#f2d9b8" stroke-opacity=".5" stroke-width="3"/>
+ <path d="M0 106H330V128H0Z" fill="#1a3035"/>
+ <circle cx="58" cy="128" r="25" fill="#17252a"/><circle cx="58" cy="128" r="11" fill="#b5b6a9"/>
+ <circle cx="275" cy="128" r="25" fill="#17252a"/><circle cx="275" cy="128" r="11" fill="#b5b6a9"/>
+ <path d="M18 18H216" stroke="#f0d6b4" stroke-width="4" stroke-opacity=".65"/>
+</g>
+<!-- Egg crates as product/value cue -->
+<g transform="translate(1190 505)">
+ <path d="M0 64 74 25 152 64 78 105Z" fill="#d8bc96"/>
+ <path d="M0 64V125L78 166V105Z" fill="#9d7b5d"/>
+ <path d="M78 105 152 64V125L78 166Z" fill="#bd9872"/>
+ <path d="M18 67 74 39 134 67 78 96Z" fill="#f0dfc5"/>
+ <g fill="#f7e8d1" stroke="#b79b7b" stroke-width="2">
+  <ellipse cx="47" cy="62" rx="10" ry="14"/><ellipse cx="72" cy="50" rx="10" ry="14"/><ellipse cx="96" cy="62" rx="10" ry="14"/>
+  <ellipse cx="66" cy="74" rx="10" ry="14"/><ellipse cx="91" cy="75" rx="10" ry="14"/><ellipse cx="115" cy="69" rx="10" ry="14"/>
+ </g>
+</g>
+<!-- Connected supply-to-value path -->
+<g stroke="#e6bd93" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-opacity=".84">
+ <path d="M420 350C510 260 660 290 740 350S900 405 1000 350 1190 300 1300 360 1410 405 1480 365" stroke-dasharray="4 12"/>
+ <circle cx="420" cy="350" r="8" fill="#e6bd93"/><circle cx="740" cy="350" r="8" fill="#e6bd93"/><circle cx="1000" cy="350" r="8" fill="#e6bd93"/><circle cx="1300" cy="360" r="8" fill="#e6bd93"/><circle cx="1480" cy="365" r="8" fill="#e6bd93"/>
+</g>
+<path d="M0 0H1600V900H0Z" fill="#07151f" fill-opacity=".12"/>
 </svg>
