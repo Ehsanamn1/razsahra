@@ -32,6 +32,19 @@ permissions:
 jobs:
   bundle:
     runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.4
+        env:
+          MYSQL_ROOT_PASSWORD: root-ci-password
+          MYSQL_DATABASE: razsahra_ci
+          MYSQL_USER: razsahra_ci
+          MYSQL_PASSWORD: ci-db-password
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -uroot -proot-ci-password"
+          --health-interval=10s --health-timeout=5s --health-retries=12
     steps:
       - name: Checkout Raz Sahara
         uses: actions/checkout@v4
@@ -81,6 +94,38 @@ jobs:
           test -s schema.sql
           test -s dist/index.html
           ! grep -Eiq 'DROP[[:space:]]+(DATABASE|TABLE)|TRUNCATE[[:space:]]+TABLE' schema.sql
+      - name: Run database-backed CMS and proxy smoke tests
+        working-directory: host-package
+        env:
+          DB_HOST: 127.0.0.1
+          DB_PORT: 3306
+          DB_NAME: razsahra_ci
+          DB_USER: razsahra_ci
+          DB_PASSWORD: ci-db-password
+          ADMIN_BOOTSTRAP_SECRET: ci-bootstrap-secret-long-enough-for-tests-12345
+          MEDAR_API_ORIGIN: http://127.0.0.1:4321
+          PORT: 3210
+        run: |
+          npm run install:db
+          node --input-type=module -e 'import http from "node:http"; http.createServer((req,res)=>{res.setHeader("content-type","application/json");res.end(JSON.stringify({ok:true,path:req.url}));}).listen(4321,"127.0.0.1");' &
+          MOCK_PID=$!
+          npm start > /tmp/raz-sahra-api.log 2>&1 &
+          APP_PID=$!
+          trap 'kill "$APP_PID" "$MOCK_PID" 2>/dev/null || true' EXIT
+          for i in $(seq 1 40); do
+            if curl -fsS http://127.0.0.1:3210/api/health >/tmp/rs-health.json; then break; fi
+            sleep 2
+          done
+          node --input-type=module -e 'import fs from "node:fs"; const x=JSON.parse(fs.readFileSync("/tmp/rs-health.json","utf8")); if(!x.ok||x.database!=="connected") process.exit(1);'
+          curl -fsS -c /tmp/rs-cookies -H 'content-type: application/json' -H 'x-admin-bootstrap-secret: ci-bootstrap-secret-long-enough-for-tests-12345' -d '{"username":"ciadmin","email":"ci@example.test","password":"TestAdminPassword123!","display_name":"CI Admin"}' http://127.0.0.1:3210/api/auth/bootstrap-admin >/tmp/rs-bootstrap.json
+          node --input-type=module -e 'import fs from "node:fs"; const x=JSON.parse(fs.readFileSync("/tmp/rs-bootstrap.json","utf8")); if(!x.ok||x.user?.role!=="admin") process.exit(1);'
+          curl -fsS -b /tmp/rs-cookies http://127.0.0.1:3210/api/auth/me | node --input-type=module -e 'let s="";for await(const c of process.stdin)s+=c;const x=JSON.parse(s);if(!x.ok||x.user?.role!=="admin")process.exit(1);'
+          curl -fsS -b /tmp/rs-cookies http://127.0.0.1:3210/api/admin/overview | node --input-type=module -e 'let s="";for await(const c of process.stdin)s+=c;const x=JSON.parse(s);if(!x.ok||!x.stats)process.exit(1);'
+          curl -fsS -H 'content-type: application/json' -d '{"name":"CI Test","email":"ci@example.test","message":"Automated acceptance test inquiry"}' http://127.0.0.1:3210/api/inquiries | node --input-type=module -e 'let s="";for await(const c of process.stdin)s+=c;const x=JSON.parse(s);if(!x.ok||!x.inquiry?.id)process.exit(1);'
+          curl -fsS -b /tmp/rs-cookies http://127.0.0.1:3210/api/admin/inquiries | node --input-type=module -e 'let s="";for await(const c of process.stdin)s+=c;const x=JSON.parse(s);if(!x.ok||!Array.isArray(x.inquiries)||x.inquiries.length<1)process.exit(1);'
+          curl -fsS http://127.0.0.1:3210/madar/app/home | grep -q 'id="root"'
+          curl -fsS http://127.0.0.1:3210/api/medar/api/health | node --input-type=module -e 'let s="";for await(const c of process.stdin)s+=c;const x=JSON.parse(s);if(!x.ok||x.path!=="/api/health")process.exit(1);'
+          echo "CMS auth, admin API, inquiry persistence, Medar SPA deep link, and same-origin API proxy passed."
       - name: Add release manifest and host checklist
         run: |
           node --input-type=module <<'NODE'
