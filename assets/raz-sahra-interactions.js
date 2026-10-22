@@ -332,7 +332,7 @@
     show(0);start();
     return {next:function(){show(current+1);start();},previous:function(){show(current-1);start();},show:show};
   }
-  setupCarousel({root:'[data-hero-slider]',slide:'[data-hero-slide]',dot:'[data-hero-dot]',prev:'[data-hero-prev]',next:'[data-hero-next]',interval:4800});
+  // Hero carousel is initialized once by the accessible touch-aware controller above.
   setupCarousel({root:'[data-cta-slider]',slide:'[data-cta-slide]',dot:'[data-cta-dot]',prev:'[data-cta-prev]',next:'[data-cta-next]',count:'[data-cta-count]',progress:'[data-cta-progress]',interval:5400});
 
   var magazine=document.querySelector('[data-magazine-carousel]'),magTrack=document.querySelector('[data-magazine-track]'),magTimer=null,magPaused=false,magInView=!('IntersectionObserver' in window);
