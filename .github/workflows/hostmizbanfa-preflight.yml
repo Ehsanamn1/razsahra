@@ -1,0 +1,70 @@
+name: HostMizbanFa connection preflight
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: hostmizbanfa-preflight
+  cancel-in-progress: true
+
+jobs:
+  preflight:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      HOST_SSH_HOST: ${{ secrets.HOST_SSH_HOST }}
+      HOST_SSH_PORT: ${{ secrets.HOST_SSH_PORT }}
+      HOST_SSH_USER: ${{ secrets.HOST_SSH_USER }}
+      HOST_APP_DIR: ${{ vars.HOST_APP_DIR }}
+    steps:
+      - name: Validate required settings
+        shell: bash
+        run: |
+          set -euo pipefail
+          for name in HOST_SSH_HOST HOST_SSH_PORT HOST_SSH_USER HOST_APP_DIR; do
+            if [[ -z "${!name:-}" ]]; then
+              echo "::error::Missing GitHub secret/variable: $name"
+              exit 1
+            fi
+          done
+          [[ "$HOST_SSH_PORT" =~ ^[0-9]+$ ]] || { echo "::error::HOST_SSH_PORT must be numeric"; exit 1; }
+          [[ "$HOST_APP_DIR" == /* ]] || { echo "::error::HOST_APP_DIR must be an absolute path"; exit 1; }
+
+      - name: Validate SSH identity and host key
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.HOST_SSH_PRIVATE_KEY }}
+          SSH_KNOWN_HOSTS: ${{ secrets.HOST_SSH_KNOWN_HOSTS }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ -n "$SSH_PRIVATE_KEY" ]] || { echo "::error::Missing secret HOST_SSH_PRIVATE_KEY"; exit 1; }
+          [[ -n "$SSH_KNOWN_HOSTS" ]] || { echo "::error::Missing secret HOST_SSH_KNOWN_HOSTS"; exit 1; }
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          printf '%s\n' "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/known_hosts
+
+      - name: Check host capabilities without changing production
+        shell: bash
+        run: |
+          set -euo pipefail
+          ssh -i ~/.ssh/id_ed25519 -p "$HOST_SSH_PORT" -o BatchMode=yes -o ConnectTimeout=10 \
+            "$HOST_SSH_USER@$HOST_SSH_HOST" \
+            "APP_DIR='$HOST_APP_DIR' bash -s" <<'REMOTE'
+          set -euo pipefail
+          command -v node
+          command -v npm
+          command -v unzip
+          command -v rsync
+          command -v curl
+          node -e 'if(Number(process.versions.node.split(".")[0])<20){console.error("Node.js 20+ required");process.exit(2)};console.log("Node.js",process.version)'
+          test -d "$APP_DIR"
+          test -w "$APP_DIR"
+          mkdir -p "$APP_DIR/tmp"
+          echo "HOST_PREFLIGHT_OK"
+          REMOTE
+          echo "SSH and host capability checks passed. No application files or database were changed." >> "$GITHUB_STEP_SUMMARY"
