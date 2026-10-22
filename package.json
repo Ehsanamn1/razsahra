@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "build": "node scripts/build.mjs",
-    "check": "node --check 'functions/api/[[path]].js' && node --check assets/raz-sahra-cms-runtime.js && node scripts/check.mjs && node scripts/check-mysql-schema.mjs && node --check scripts/check-mysql-connection.mjs && node --check scripts/test-mysql-schema.mjs && node --check scripts/check-mysql-import-contract.mjs && node scripts/check-mysql-import-contract.mjs && node scripts/check-site-images.mjs",
+    "check": "node --check 'functions/api/[[path]].js' && node --check assets/raz-sahra-cms-runtime.js && node scripts/check.mjs && node scripts/check-mysql-schema.mjs && node --check scripts/check-mysql-connection.mjs && node --check scripts/test-mysql-schema.mjs && node --check scripts/check-mysql-import-contract.mjs && node scripts/check-mysql-import-contract.mjs && node scripts/check-site-images.mjs && node --check server/cms-api.mjs && node --check server/index.mjs",
     "dev": "wrangler pages dev dist",
     "migrate:cms:dry-run": "node scripts/migrate-cms-data.mjs",
     "migrate:cms:apply": "node scripts/migrate-cms-data.mjs --apply",
@@ -13,7 +13,8 @@
     "check:mysql-connection": "node scripts/check-mysql-connection.mjs",
     "test:mysql-schema": "node scripts/test-mysql-schema.mjs",
     "check:mysql-import-contract": "node scripts/check-mysql-import-contract.mjs",
-    "check:images": "node scripts/check-site-images.mjs"
+    "check:images": "node scripts/check-site-images.mjs",
+    "start:domestic": "node server/index.mjs"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.2.0",
