@@ -324,7 +324,11 @@
       .hero-slider .slide-index{font-size:10px}
       .hero-slider .hero-slide-aside{gap:13px}
       .hero-slider-controls{gap:7px}
-      .hero-slider-controls>button{width:30px;height:30px}
+      .hero-slider-controls>button{width:40px;height:40px;flex:0 0 40px}
+      .hero-slider-dots button{width:32px;height:40px;display:grid;place-items:center;position:relative;background:transparent}
+      .hero-slider-dots button:before{content:"";display:block;width:7px;height:7px;border-radius:99px;background:rgba(255,255,255,.48);transition:width .2s ease,background .2s ease}
+      .hero-slider-dots button.is-active{width:32px;background:transparent}
+      .hero-slider-dots button.is-active:before{width:22px;height:7px;background:var(--copper-light)}
     }
     @media(prefers-reduced-motion:reduce){.hero-slider .hero-slide,.hero-slider-dots button{transition:none!important}}
 
