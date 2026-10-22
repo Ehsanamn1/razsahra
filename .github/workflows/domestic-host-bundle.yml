@@ -66,18 +66,44 @@ jobs:
           rm -rf host-package/dist
           mkdir -p host-package/dist
           cp -a dist/. host-package/dist/
-      - name: Checkout Medar frontend
+      - name: Resolve immutable Medar source pin
+        id: medar-source
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import { readFile } from 'node:fs/promises';
+          const manifest = JSON.parse(await readFile('integration/medar-source.json', 'utf8'));
+          if (manifest.repository !== 'Ehsanamn1/simorgh') throw new Error('Unexpected Medar repository in integration manifest.');
+          if (!/^[0-9a-f]{40}$/.test(manifest.commit || '')) throw new Error('Medar source must be pinned to a full immutable commit SHA.');
+          if (manifest.mountPath !== '/madar/' || manifest.apiBasePath !== '/api/medar') throw new Error('Medar integration paths do not match the host bundle contract.');
+          console.log('repository=' + manifest.repository);
+          console.log('commit=' + manifest.commit);
+          NODE
+          node --input-type=module <<'NODE' >> "$GITHUB_OUTPUT"
+          import { readFile } from 'node:fs/promises';
+          const manifest = JSON.parse(await readFile('integration/medar-source.json', 'utf8'));
+          console.log('repository=' + manifest.repository);
+          console.log('ref=' + manifest.commit);
+          NODE
+      - name: Checkout pinned Medar frontend
         uses: actions/checkout@v4
         with:
-          repository: Ehsanamn1/simorgh
-          ref: feat/razsahra-hosted-madar-subpath
+          repository: ${{ steps.medar-source.outputs.repository }}
+          ref: ${{ steps.medar-source.outputs.ref }}
           path: simorgh-src
+      - name: Validate pinned Medar source
+        working-directory: simorgh-src
+        run: |
+          npm install --no-audit --no-fund
+          npm run typecheck
+          npm run lint
+          npm test
       - name: Build Medar for /madar/ with same-origin API proxy
         working-directory: simorgh-src
         env:
-          VITE_APP_VERSION: ${{ github.sha }}
+          VITE_APP_VERSION: ${{ github.sha }}-${{ steps.medar-source.outputs.ref }}
         run: |
-          npm install --no-audit --no-fund
           node scripts/build-hosted-madar.mjs
       - name: Mount Medar web bundle into Raz Sahara package
         run: |
