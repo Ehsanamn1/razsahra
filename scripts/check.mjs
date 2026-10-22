@@ -101,9 +101,9 @@ assert.ok(css.includes("Mobile performance and editor-reader fix"), "Responsive 
 assert.ok(interactive.includes("window.matchMedia('(max-width: 850px)').matches"), "Mobile particle budget missing");
 assert.ok(css.includes(".hero-slide-bg{position:absolute;inset:0;z-index:0;"), "Hero artwork must paint above the slide background");
 assert.ok(css.includes(".hero-slide-overlay{position:absolute;inset:0;z-index:1;"), "Hero overlay must sit above artwork without hiding it");
-const referencedAssets = [...html.matchAll(/<(?:img|script|link)\\b[^>]*(?:src|href)=["']([^"']+)["'][^>]*>/gi)]
+const referencedAssets = [...html.matchAll(/<(?:img|script|link)\b[^>]*(?:src|href)=["']([^"']+)["'][^>]*>/gi)]
   .map((match) => match[1].split(/[?#]/)[0])
-  .filter((path) => path && !/^(?:https?:|\\/\\/|#|mailto:|tel:|data:|javascript:)/i.test(path) && /\\.(?:svg|webp|png|jpe?g|avif|js|css|woff2?|ttf)$/i.test(path));
+  .filter((path) => path && !/^(?:https?:|\/\/|#|mailto:|tel:|data:|javascript:)/i.test(path) && /\.(?:svg|webp|png|jpe?g|avif|js|css|woff2?|ttf)$/i.test(path));
 for (const asset of new Set(referencedAssets)) await access(asset);
 await access("db/schema.sql");
 await access("assets/raz-sahra-cms-runtime.js");
