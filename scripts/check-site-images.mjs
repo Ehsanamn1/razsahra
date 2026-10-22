@@ -5,6 +5,16 @@ const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
 const articleFa = await readFile(new URL('../assets/raz-sahra-articles.html', import.meta.url), 'utf8');
 const articleEn = await readFile(new URL('../assets/raz-sahra-articles-en.html', import.meta.url), 'utf8');
 const allMarkup = [html, articleFa, articleEn].join('\n');
+for (const [label, markup] of [['Persian article library', articleFa], ['English article library', articleEn]]) {
+  const covers = [...markup.matchAll(/<img class="article-cover"[^>]*>/g)].map(match => match[0]);
+  if (covers.length !== 8) throw new Error(label + ' must provide eight article covers; found ' + covers.length);
+  if (covers.some(tag => !/src="assets\/raz-sahra-article-[a-z-]+\.svg"/.test(tag))) {
+    throw new Error(label + ' contains a non-local or unapproved article cover.');
+  }
+  if (covers.some(tag => !tag.includes('width="1200"') || !tag.includes('height="800"') || !tag.includes('loading="lazy"') || !tag.includes('decoding="async"'))) {
+    throw new Error(label + ' covers need intrinsic dimensions and lazy asynchronous decoding.');
+  }
+}
 const interactions = await readFile(new URL('../assets/raz-sahra-interactions.js', import.meta.url), 'utf8');
 if (!interactions.includes("document.querySelectorAll('[data-hero-slider]')") ||
     !interactions.includes('data-hero-next') ||
