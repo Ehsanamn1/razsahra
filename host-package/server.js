@@ -8,6 +8,8 @@ import { fileURLToPath } from "node:url";
 const here = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
 app.disable("x-powered-by");
+// The app is expected to sit behind the hosting provider reverse proxy.
+app.set("trust proxy", 1);
 app.use(express.json({ limit: "64kb", strict: true }));
 const pool = mysql.createPool({
   host: process.env.DB_HOST, port: Number(process.env.DB_PORT || 3306),
@@ -26,7 +28,7 @@ function send(res, data, status=200) { res.set("Cache-Control","no-store").set("
 function fail(res, message, status=400, code="bad_request") { return send(res,{ok:false,error:{code,message}},status); }
 function cookieToken(req) { const raw=req.headers.cookie||""; const m=raw.match(/(?:^|;\s*)rs_session=([^;]*)/); return m ? decodeURIComponent(m[1]) : ""; }
 function setSession(res, token, req, clear=false) { const secure = req.secure || req.headers["x-forwarded-proto"]==="https" ? "; Secure" : ""; res.setHeader("Set-Cookie", clear ? "rs_session=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0"+secure : "rs_session="+encodeURIComponent(token)+"; Path=/; HttpOnly; SameSite=Lax; Max-Age="+(SESSION_DAYS*86400)+secure); }
-function originOkay(req) { const origin=req.get("origin"); return !origin || origin===req.protocol+"://"+req.get("host"); }
+function originOkay(req) { const origin=req.get("origin"); const proto=String(req.get("x-forwarded-proto")||req.protocol).split(",")[0].trim().toLowerCase(); return !origin || origin===proto+"://"+req.get("host"); }
 function hashPassword(password,salt=randomToken(16)) { const digest=crypto.pbkdf2Sync(password,Buffer.from(salt,"base64url"),310000,32,"sha256").toString("base64url"); return "pbkdf2$310000$"+salt+"$"+digest; }
 function verifyPassword(password,encoded) { try { const [alg,rounds,salt,expected]=String(encoded||"").split("$"); if(alg!=="pbkdf2"||Number(rounds)<100000||Number(rounds)>1000000)return false; const actual=crypto.pbkdf2Sync(password,Buffer.from(salt,"base64url"),Number(rounds),Buffer.from(expected,"base64url").length,"sha256"); return crypto.timingSafeEqual(actual,Buffer.from(expected,"base64url")); } catch { return false; } }
 async function audit(req, actor, action, type="", id="", metadata={}) { await pool.execute("INSERT INTO audit_logs(actor_id,action,target_type,target_id,metadata,ip_hash) VALUES(?,?,?,?,?,?)",[actor?.id||null,action,type,String(id),jsonValue(metadata),req.ip?sha(req.ip):null]); }
