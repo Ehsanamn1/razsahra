@@ -121,11 +121,20 @@ jobs:
           node --input-type=module -e 'import fs from "node:fs"; const x=JSON.parse(fs.readFileSync("/tmp/rs-bootstrap.json","utf8")); if(!x.ok||x.user?.role!=="admin") process.exit(1);'
           curl -fsS -b /tmp/rs-cookies http://127.0.0.1:3210/api/auth/me | node --input-type=module -e 'let s="";for await(const c of process.stdin)s+=c;const x=JSON.parse(s);if(!x.ok||x.user?.role!=="admin")process.exit(1);'
           curl -fsS -b /tmp/rs-cookies http://127.0.0.1:3210/api/admin/overview | node --input-type=module -e 'let s="";for await(const c of process.stdin)s+=c;const x=JSON.parse(s);if(!x.ok||!x.stats)process.exit(1);'
+          curl -fsS -c /tmp/rs-user-cookies -H 'content-type: application/json' -d '{"username":"ciuser","email":"ciuser@example.test","password":"TestUserPassword123!","display_name":"CI User"}' http://127.0.0.1:3210/api/auth/register >/tmp/rs-register.json
+          node --input-type=module -e 'import fs from "node:fs";const x=JSON.parse(fs.readFileSync("/tmp/rs-register.json","utf8"));if(!x.ok||x.user?.role!=="user")process.exit(1);'
+          curl -fsS -b /tmp/rs-user-cookies http://127.0.0.1:3210/api/auth/me | node --input-type=module -e 'let s="";for await(const c of process.stdin)s+=c;const x=JSON.parse(s);if(!x.ok||x.user?.role!=="user")process.exit(1);'
+          USER_ADMIN_STATUS=$(curl -sS -o /tmp/rs-user-admin.json -w '%{http_code}' -b /tmp/rs-user-cookies http://127.0.0.1:3210/api/admin/overview)
+          test "$USER_ADMIN_STATUS" = "403"
+          curl -fsS -b /tmp/rs-user-cookies -c /tmp/rs-user-cookies -X POST http://127.0.0.1:3210/api/auth/logout >/tmp/rs-logout.json
+          curl -fsS -b /tmp/rs-user-cookies http://127.0.0.1:3210/api/auth/me | node --input-type=module -e 'let s="";for await(const c of process.stdin)s+=c;const x=JSON.parse(s);if(!x.ok||x.user!==null)process.exit(1);'
+          BOOTSTRAP_AGAIN_STATUS=$(curl -sS -o /tmp/rs-bootstrap-again.json -w '%{http_code}' -H 'content-type: application/json' -H 'x-admin-bootstrap-secret: ci-bootstrap-secret-long-enough-for-tests-12345' -d '{"username":"secondadmin","email":"secondadmin@example.test","password":"AnotherPassword123!","display_name":"Second Admin"}' http://127.0.0.1:3210/api/auth/bootstrap-admin)
+          test "$BOOTSTRAP_AGAIN_STATUS" = "409"
           curl -fsS -H 'content-type: application/json' -d '{"name":"CI Test","email":"ci@example.test","message":"Automated acceptance test inquiry"}' http://127.0.0.1:3210/api/inquiries | node --input-type=module -e 'let s="";for await(const c of process.stdin)s+=c;const x=JSON.parse(s);if(!x.ok||!x.inquiry?.id)process.exit(1);'
           curl -fsS -b /tmp/rs-cookies http://127.0.0.1:3210/api/admin/inquiries | node --input-type=module -e 'let s="";for await(const c of process.stdin)s+=c;const x=JSON.parse(s);if(!x.ok||!Array.isArray(x.inquiries)||x.inquiries.length<1)process.exit(1);'
           curl -fsS http://127.0.0.1:3210/madar/app/home | grep -q 'id="root"'
           curl -fsS http://127.0.0.1:3210/api/medar/api/health | node --input-type=module -e 'let s="";for await(const c of process.stdin)s+=c;const x=JSON.parse(s);if(!x.ok||x.path!=="/api/health")process.exit(1);'
-          echo "CMS auth, admin API, inquiry persistence, Medar SPA deep link, and same-origin API proxy passed."
+          echo "Admin bootstrap, session lifecycle, role authorization, inquiry persistence, Medar SPA deep link, and same-origin API proxy passed."
       - name: Check live Medar operational API
         run: |
           curl --fail --silent --show-error --max-time 20 https://medar-ops.dengxiao445.workers.dev/api/health > /tmp/medar-live-health.json
