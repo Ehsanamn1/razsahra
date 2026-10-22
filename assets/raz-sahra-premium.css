@@ -1384,3 +1384,54 @@ html.lang-en .route-card,html.lang-en .status-chip,html.lang-en .slide-vertical-
     animation: none !important;
   }
 }
+
+
+/* Robust local-asset fallback and low-end mobile rendering budget. */
+.rs-image-fallback {
+  background-color: #20343c;
+  background-image: linear-gradient(135deg, #122431 0%, #294347 58%, #5a604c 100%);
+}
+.hero-slide.rs-image-fallback {
+  background-image: linear-gradient(135deg, #10212e 0%, #243e45 58%, #59604b 100%);
+}
+@media (max-width: 850px) and (hover: none) {
+  .hero-slider {
+    content-visibility: visible;
+    contain: layout paint;
+    perspective: none;
+    transform: none;
+    box-shadow: 0 12px 28px rgba(12,26,39,.16);
+  }
+  .hero-slide,
+  .hero-slide-bg,
+  .hero-slide-copy {
+    animation: none !important;
+    transition-duration: .28s !important;
+    will-change: auto !important;
+  }
+  .hero-slide-bg,
+  .hero-slide.is-active .hero-slide-bg {
+    filter: none !important;
+    transform: none !important;
+  }
+  .hero-slide.is-active .hero-slide-title,
+  .hero-slide.is-active .hero-description,
+  .hero-slide.is-active .hero-actions {
+    animation: none !important;
+  }
+  .site-header {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-slider,
+  .hero-slide,
+  .hero-slide-bg,
+  .hero-slide-copy {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+    filter: none !important;
+  }
+}
