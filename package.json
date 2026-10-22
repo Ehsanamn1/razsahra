@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "build": "node scripts/build.mjs",
-    "check": "node --check 'functions/api/[[path]].js' && node --check assets/raz-sahra-cms-runtime.js && node scripts/check.mjs && node scripts/check-mysql-schema.mjs && node --check scripts/check-mysql-connection.mjs && node --check scripts/test-mysql-schema.mjs && node --check scripts/check-mysql-import-contract.mjs && node scripts/check-mysql-import-contract.mjs && node scripts/check-site-images.mjs && node --check server/cms-api.mjs && node --check server/index.mjs && node --check scripts/test-mysql-cms-api.mjs",
+    "check": "node --check 'functions/api/[[path]].js' && node --check assets/raz-sahra-cms-runtime.js && node scripts/check.mjs && node scripts/check-mysql-schema.mjs && node --check scripts/check-mysql-connection.mjs && node --check scripts/test-mysql-schema.mjs && node --check scripts/check-mysql-import-contract.mjs && node scripts/check-mysql-import-contract.mjs && node scripts/check-site-images.mjs && node --check server/cms-api.mjs && node --check server/index.mjs && node --check scripts/test-mysql-cms-api.mjs && node --check scripts/test-domestic-node-server.mjs",
     "dev": "wrangler pages dev dist",
     "migrate:cms:dry-run": "node scripts/migrate-cms-data.mjs",
     "migrate:cms:apply": "node scripts/migrate-cms-data.mjs --apply",
