@@ -11,8 +11,14 @@ function mysqlPool(url) {
   if (!cachedPool || cachedPoolUrl !== url) {
     if (cachedPool) void cachedPool.end().catch(() => undefined);
     cachedPoolUrl = url;
+    cachedPool = const parsed = new URL(url);
     cachedPool = mysql.createPool({
-      uri: url,
+      host: parsed.hostname,
+      port: Number(parsed.port || 3306),
+      user: decodeURIComponent(parsed.username),
+      password: decodeURIComponent(parsed.password),
+      database: parsed.pathname.replace(/^\\//, ""),
+      ssl: parsed.searchParams.get("ssl") === "true" ? { rejectUnauthorized: true } : undefined,
       waitForConnections: true,
       connectionLimit: Number(process.env.MYSQL_POOL_SIZE || 8),
       queueLimit: 0,
@@ -26,42 +32,42 @@ function mysqlPool(url) {
 }
 function normalizeMysqlSql(input) {
   let sql = String(input)
-    .replace(/::jsonb\\b/gi, "")
-    .replace(/::int\\b/gi, "")
-    .replace(/jsonb_build_object\\s*\\(/gi, "JSON_OBJECT(")
-    .replace(/now\\(\\)\\s*\\+\\s*\\(\\$(\\d+)\\s*\\*\\s*interval\\s*'1 day'\\)/gi, "DATE_ADD(CURRENT_TIMESTAMP(3), INTERVAL $$1 DAY)")
-    .replace(/now\\(\\)\\s*-\\s*interval\\s*'(\\d+)\\s+minutes?'/gi, "DATE_SUB(CURRENT_TIMESTAMP(3), INTERVAL $1 MINUTE)")
-    .replace(/now\\(\\)\\s*-\\s*interval\\s*'(\\d+)\\s+hours?'/gi, "DATE_SUB(CURRENT_TIMESTAMP(3), INTERVAL $1 HOUR)")
-    .replace(/now\\(\\)\\s*-\\s*interval\\s*'(\\d+)\\s+days?'/gi, "DATE_SUB(CURRENT_TIMESTAMP(3), INTERVAL $1 DAY)")
-    .replace(/now\\(\\)/gi, "CURRENT_TIMESTAMP(3)")
-    .replace(/published_at\\s+DESC\\s+NULLS\\s+LAST/gi, "(published_at IS NULL), published_at DESC")
-    .replace(/site_settings\\s*\\(\\s*key\\s*,/gi, "site_settings (`key`,")
-    .replace(/\\bWHERE\\s+key\\s*=/gi, "WHERE `key` =")
-    .replace(/\\bAND\\s+key\\s*=/gi, "AND `key` =")
-    .replace(/\\bSELECT\\s+key\\s*,/gi, "SELECT `key`,")
-    .replace(/\\bORDER BY\\s+key\\b/gi, "ORDER BY `key`");
-  if (/ON CONFLICT\\s*\\([^)]*\\)\\s*DO NOTHING/i.test(sql)) {
-    sql = sql.replace(/ON CONFLICT\\s*\\([^)]*\\)\\s*DO NOTHING/ig, "");
-    sql = sql.replace(/^\\s*INSERT\\s+INTO\\b/i, "INSERT IGNORE INTO");
+    .replace(/::jsonb\b/gi, "")
+    .replace(/::int\b/gi, "")
+    .replace(/jsonb_build_object\s*\(/gi, "JSON_OBJECT(")
+    .replace(/now\(\)\s*\+\s*\(\$(\d+)\s*\*\s*interval\s*'1 day'\)/gi, "DATE_ADD(CURRENT_TIMESTAMP(3), INTERVAL $$1 DAY)")
+    .replace(/now\(\)\s*-\s*interval\s*'(\d+)\s+minutes?'/gi, "DATE_SUB(CURRENT_TIMESTAMP(3), INTERVAL $1 MINUTE)")
+    .replace(/now\(\)\s*-\s*interval\s*'(\d+)\s+hours?'/gi, "DATE_SUB(CURRENT_TIMESTAMP(3), INTERVAL $1 HOUR)")
+    .replace(/now\(\)\s*-\s*interval\s*'(\d+)\s+days?'/gi, "DATE_SUB(CURRENT_TIMESTAMP(3), INTERVAL $1 DAY)")
+    .replace(/now\(\)/gi, "CURRENT_TIMESTAMP(3)")
+    .replace(/published_at\s+DESC\s+NULLS\s+LAST/gi, "(published_at IS NULL), published_at DESC")
+    .replace(/site_settings\s*\(\s*key\s*,/gi, "site_settings (`key`,")
+    .replace(/\bWHERE\s+key\s*=/gi, "WHERE `key` =")
+    .replace(/\bAND\s+key\s*=/gi, "AND `key` =")
+    .replace(/\bSELECT\s+key\s*,/gi, "SELECT `key`,")
+    .replace(/\bORDER BY\s+key\b/gi, "ORDER BY `key`");
+  if (/ON CONFLICT\s*\([^)]*\)\s*DO NOTHING/i.test(sql)) {
+    sql = sql.replace(/ON CONFLICT\s*\([^)]*\)\s*DO NOTHING/ig, "");
+    sql = sql.replace(/^\s*INSERT\s+INTO\b/i, "INSERT IGNORE INTO");
   } else {
-    sql = sql.replace(/ON CONFLICT\\s*\\([^)]*\\)\\s*DO UPDATE SET/ig, "ON DUPLICATE KEY UPDATE");
-    sql = sql.replace(/EXCLUDED\\.([a-z_][a-z0-9_]*)/ig, "VALUES($1)");
+    sql = sql.replace(/ON CONFLICT\s*\([^)]*\)\s*DO UPDATE SET/ig, "ON DUPLICATE KEY UPDATE");
+    sql = sql.replace(/EXCLUDED\.([a-z_][a-z0-9_]*)/ig, "VALUES($1)");
   }
   return sql;
 }
 async function q(sql, text, params = []) {
-  const returningMatch = String(text).match(/\\s+RETURNING\\s+([\\s\\S]+)$/i);
+  const returningMatch = String(text).match(/\s+RETURNING\s+([\s\S]+)$/i);
   const returning = returningMatch?.[1]?.trim() || "";
   let statement = normalizeMysqlSql(returningMatch ? String(text).slice(0, returningMatch.index) : text);
   const values = [];
-  statement = statement.replace(/\\$(\\d+)/g, (_match, position) => {
+  statement = statement.replace(/\$(\d+)/g, (_match, position) => {
     values.push(params[Number(position) - 1]);
     return "?";
   });
-  const tableMatch = statement.match(/^\\s*(INSERT\\s+(?:IGNORE\\s+)?INTO|UPDATE|DELETE\\s+FROM)\\s+`?([a-z_][a-z0-9_]*)`?/i);
+  const tableMatch = statement.match(/^\s*(INSERT\s+(?:IGNORE\s+)?INTO|UPDATE|DELETE\s+FROM)\s+`?([a-z_][a-z0-9_]*)`?/i);
   const table = tableMatch?.[2]?.toLowerCase() || "";
   let priorRows = null;
-  if (returning && /^\\s*DELETE\\s+FROM\\s+sessions\\b/i.test(statement)) {
+  if (returning && /^\s*DELETE\s+FROM\s+sessions\b/i.test(statement)) {
     const hash = params[0];
     const [found] = await sql.execute("SELECT " + returning + " FROM sessions WHERE token_hash = ? LIMIT 1", [hash]);
     priorRows = found;
@@ -69,11 +75,11 @@ async function q(sql, text, params = []) {
   try {
     const [result] = await sql.execute(statement, values);
     if (!returning) return Array.isArray(result) ? result : result;
-    if (/^\\s*DELETE\\s+FROM\\s+sessions\\b/i.test(statement)) return priorRows || [];
+    if (/^\s*DELETE\s+FROM\s+sessions\b/i.test(statement)) return priorRows || [];
     let where = "";
     let lookup = [];
     if (table === "users") {
-      if (/^\\s*INSERT/i.test(statement) || /WHERE\\s+username\\s*=\\s*'ehsan-admin'/i.test(statement)) {
+      if (/^\s*INSERT/i.test(statement) || /WHERE\s+username\s*=\s*'ehsan-admin'/i.test(statement)) {
         where = "username = ?"; lookup = [params[0]];
       } else {
         where = "id = ?"; lookup = [params[2]];
@@ -83,7 +89,7 @@ async function q(sql, text, params = []) {
     } else if (table === "articles") {
       where = "slug = ? AND language = ?"; lookup = [params[0], params[1]];
     } else if (table === "inquiries") {
-      where = "id = ?"; lookup = /^\\s*INSERT/i.test(statement) ? [params[7]] : [params[1]];
+      where = "id = ?"; lookup = /^\s*INSERT/i.test(statement) ? [params[7]] : [params[1]];
     } else if (table === "app_catalog") {
       where = "slug = ?"; lookup = [params[0]];
     } else if (table === "site_settings") {
