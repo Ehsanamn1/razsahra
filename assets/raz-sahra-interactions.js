@@ -37,7 +37,7 @@
     if(slides.length<2)return;
     var current=Math.max(0,slides.findIndex(function(slide){return slide.classList.contains('is-active');}));
     var timer=0,visible=true,hovered=false,focused=false;
-    var delay=7000;
+    var delay=5200;
     function show(index){
       current=(index+slides.length)%slides.length;
       slides.forEach(function(slide,i){
