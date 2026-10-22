@@ -1,0 +1,87 @@
+name: Build domestic host bundle (staging)
+on:
+  workflow_dispatch:
+  push:
+    branches: ["feat/domestic-host-release-bundle"]
+    paths:
+      - "host-package/**"
+      - "assets/**"
+      - "index.html"
+      - "404.html"
+      - "manifest.webmanifest"
+      - "robots.txt"
+      - "sitemap.xml"
+      - "scripts/**"
+      - "functions/**"
+      - ".github/workflows/domestic-host-bundle.yml"
+permissions:
+  contents: read
+jobs:
+  bundle:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Raz Sahara
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install website build dependencies
+        run: npm install --no-audit --no-fund
+      - name: Validate website source
+        run: npm run check
+      - name: Build website
+        env:
+          SITE_URL: https://example.invalid/
+          SITE_BUILD_VERSION: ${{ github.sha }}
+        run: npm run build
+      - name: Assemble package static files
+        run: |
+          rm -rf host-package/dist
+          mkdir -p host-package/dist
+          cp -a dist/. host-package/dist/
+      - name: Install backend runtime dependencies and validate
+        working-directory: host-package
+        run: |
+          npm install --no-audit --no-fund
+          npm run check
+          test -s schema.sql
+          test -s dist/index.html
+          ! grep -Eiq 'DROP[[:space:]]+(DATABASE|TABLE)|TRUNCATE[[:space:]]+TABLE' schema.sql
+      - name: Add release manifest and host checklist
+        run: |
+          node --input-type=module <<'NODE'
+          import { writeFile } from 'node:fs/promises';
+          const manifest = {
+            name: 'Raz Sahara domestic host bundle',
+            version: process.env.GITHUB_SHA,
+            createdAt: new Date().toISOString(),
+            runtime: 'Node.js 20+ / MySQL 8',
+            website: 'Included',
+            cmsApi: 'Included baseline; acceptance tests still required',
+            medar: 'Uses the configured external operational Medar API; NOT an independent Medar backend',
+            deploymentStatus: 'STAGING ONLY — do not treat as production-ready'
+          };
+          await writeFile('host-package/RELEASE-MANIFEST.json', JSON.stringify(manifest, null, 2) + '\n');
+          NODE
+          cat > host-package/HOST-CHECKLIST.txt <<'EOF'
+          STATUS: STAGING PACKAGE — NOT CLEARED FOR PRODUCTION.
+          Included: Raz Sahara static web build, Node.js CMS/auth baseline, MySQL schema and installer.
+          Not included: independent Medar API port, production acceptance tests, HostMizbanFa compatibility proof.
+          Before deployment: configure DB credentials and a random ADMIN_BOOTSTRAP_SECRET in host environment; configure MEDAR_API_ORIGIN to a reachable authenticated Medar API; verify same-origin/CORS and cookie behavior over HTTPS; bootstrap admin once then remove the bootstrap secret; test /api/health, login/logout, admin CMS, inquiry flow, /madar/ deep link and role permissions.
+          Never put secrets in this package or source control.
+          EOF
+      - name: Create ZIP
+        run: |
+          cd host-package
+          zip -qr ../raz-sahra-host-package-staging.zip . -x "node_modules/*" ".env"
+      - name: Upload package artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: raz-sahra-host-package-staging
+          path: raz-sahra-host-package-staging.zip
+          if-no-files-found: error
+          retention-days: 14
+      - name: State release limitation
+        run: |
+          echo "A staging ZIP was built. It is NOT a standalone Medar release because the Medar API has not been ported to Node/MySQL. Do not deploy as a production-ready independent system." >> "$GITHUB_STEP_SUMMARY"
