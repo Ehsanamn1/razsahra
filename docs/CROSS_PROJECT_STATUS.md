@@ -1,6 +1,6 @@
 # Raz Sahra × Medar — Cross-Project Status
 
-**Last reconciled:** 2026-10-21  
+**Last reconciled:** 2026-10-22  
 **Canonical architecture contract:** [docs/INTEGRATION_CONTRACT.md](./INTEGRATION_CONTRACT.md)  
 **Status vocabulary:** planned, in_progress, blocked, implemented, tested, deployed, verified. A status must not be promoted without its evidence.
 
@@ -21,6 +21,15 @@
 | Complete Medar source archive | [Run 39667115205](https://github.com/Ehsanamn1/simorgh/actions/runs/39667115205), conclusion: success |
 | Canonical contract reference in Medar | [PR #117](https://github.com/Ehsanamn1/simorgh/pull/117), merged at `3856a65a553e365114269cb0be35242e62220472` |
 
+## Domestic hosting workstream — 2026-10-22
+
+- **Raz Sahra branch:** `feat/mysql-domestic-hosting`, current validated commit `b646d1d9072d18f62a250610f3adcc968d8b600d`. Domestic CI run [39775602761](https://github.com/Ehsanamn1/razsahra/actions/runs/39775602761) passed. It checks local image integrity, MySQL 8.4 schema, CMS API integration, Node HTTP static/deep-link behavior and the static build. The paired Pages workflow [39775602907](https://github.com/Ehsanamn1/razsahra/actions/runs/39775602907) passed build/validation, but actual Cloudflare deployment and live smoke tests were **skipped** because this was a feature branch and deployment gates were not satisfied.
+- **Raz Sahra visuals/performance:** the hero now uses four local SVG illustrations for supply, chain, capacity and partnership; collaboration/insight cards use local illustrations rather than remote image hosts. Remote Google Fonts and external image dependencies were removed from the page shell. Carousel timers pause outside the viewport. The image-integrity check rejects the previously used external image hosts.
+- **Raz Sahra domestic CMS:** a separate Node/MySQL CMS handler and static server are present under `server/`. MySQL 8.4 CI integration tests cover one-time bootstrap and replay rejection, sessions/logout, admin overview, page/article/app/settings writes, inquiry status, registration and public listing. The Cloudflare Pages Function remains the existing Neon/PostgreSQL runtime; no production switch has occurred.
+- **Madar branch:** `feat/mysql-domestic-hosting`. The first MySQL identity/tenant foundation migration and guarded idempotent staging runner have passed CI in prior runs. The latest foundation test has been strengthened to verify one-owner-per-company while allowing one user to own multiple companies, plus one pending access request per company/user. The newest CI run is still queued/in progress at the time of this reconciliation.
+- **Madar mobile/performance:** the quick-access cards are compact and two-column on phones, the persistent compositor-layer hint was removed to avoid excess memory use, Google Fonts dependencies were removed, and fleet polling now pauses while the page is hidden and runs less often on narrow screens without overlapping slow requests.
+- **Release blockers:** the complete 31-migration Madar operational schema/API is **not** ported to MySQL; only the initial identity/tenant foundation exists. No production data import, HostMizbanFa deployment, backup restore drill or traffic cutover has happened. Hosting credentials, exact MySQL connection details, Node process manager and HTTPS/domain routing are not available in this repository context. Keep both existing production services intact.
+
 ## Task register
 
 | ID | Task | Owner | Status | Evidence / next action |
@@ -34,6 +43,12 @@
 | PR-002 | Reconcile the older flagship-branding pull request | Raz Sahra | verified | [PR #2](https://github.com/Ehsanamn1/razsahra/pull/2) was closed without merging because it was divergent and duplicated the current product section. |
 | PR-097 | Reconcile stale member-provisioning/help UI implementation | Medar | verified | [PR #97](https://github.com/Ehsanamn1/simorgh/pull/97) was closed without merging because its branch was 111 commits ahead and 31 behind current main; the intended help/member behavior already existed on current main. |
 | DOC-001 | Keep Medar's deployment guide linked to the canonical integration contract | Medar | verified | [PR #117](https://github.com/Ehsanamn1/simorgh/pull/117) merged; Medar's deployment guide links to this canonical contract. |
+| DOM-001 | Build a separate Node/MySQL CMS runtime for Raz Sahra | Raz Sahra | tested (staging CI) | Node HTTP + CMS API integration passed on disposable MySQL 8.4; production cutover remains blocked on full Madar port and host verification. |
+| DOM-002 | Port Madar operational API and all 31 PostgreSQL migrations to MySQL | Madar | in_progress | Only `worker/migrations/mysql/0001_foundation.sql` exists; do not treat the foundation as a complete operational database. |
+| UX-001 | Replace broken Raz Sahra slide imagery and remove remote image/font dependencies | Raz Sahra | tested (build/CI) | Four local SVG hero illustrations, local collaboration/insight artwork, image integrity check and static build passed in run 39775602761. |
+| UX-002 | Compact Madar mobile quick-access cards and reduce hidden-page fleet polling | Madar | in_progress | Changes are on `feat/mysql-domestic-hosting`; newest domestic CI is queued and must pass before marking tested. |
+| HOST-001 | Deploy combined Raz Sahra + Madar to HostMizbanFa with verified rollback | Shared | blocked | No verified host access/process-manager details or deployment secrets; Madar's MySQL operational port is incomplete. |
+
 
 ## Confirmed limitations and safeguards
 
