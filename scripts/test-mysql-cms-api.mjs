@@ -49,6 +49,37 @@ try {
   const overview = await request('/api/admin/overview', { cookie });
   assert.equal(overview.response.status, 200, 'authenticated admin overview must work: ' + JSON.stringify(overview.payload));
 
+  const pages = await request('/api/admin/pages', { cookie });
+  assert.equal(pages.response.status, 200);
+  assert.ok(pages.payload.pages.some(page => page.slug === 'home' && page.language === 'fa'));
+  const pageUpdate = await request('/api/admin/pages', {
+    method: 'PUT', cookie,
+    body: { slug: 'home', language: 'fa', title: 'صفحه اصلی آزمایش', description: 'CMS API integration', content_json: { test: true }, status: 'published' },
+  });
+  assert.equal(pageUpdate.response.status, 200, 'page update with MySQL RETURNING adapter must work: ' + JSON.stringify(pageUpdate.payload));
+
+  const article = await request('/api/admin/articles', {
+    method: 'PUT', cookie,
+    body: { slug: 'ci-integration-article', language: 'fa', title: 'مقاله آزمایشی', excerpt: 'CMS API test', content: '<p>integration</p>', cover_image: '/assets/raz-sahra-hero-banner.webp', status: 'published' },
+  });
+  assert.equal(article.response.status, 200, 'article upsert must work on MySQL: ' + JSON.stringify(article.payload));
+  assert.equal(article.payload.article.slug, 'ci-integration-article');
+
+  const appUpdate = await request('/api/admin/apps', {
+    method: 'PUT', cookie,
+    body: { slug: 'ci-app', name: 'CI App', description: 'test catalog write', app_url: '/madar/', download_url: '', icon_url: '', active: true, sort_order: 90, metadata: { ci: true } },
+  });
+  assert.equal(appUpdate.response.status, 200, 'app catalog upsert must work on MySQL: ' + JSON.stringify(appUpdate.payload));
+
+  const settingUpdate = await request('/api/admin/settings', {
+    method: 'PUT', cookie,
+    body: { key: 'public.ci-test', value_json: { enabled: true, origin: 'integration-test' } },
+  });
+  assert.equal(settingUpdate.response.status, 200, 'site settings upsert and reserved key column handling must work: ' + JSON.stringify(settingUpdate.payload));
+  const settings = await request('/api/admin/settings', { cookie });
+  assert.equal(settings.response.status, 200);
+  assert.ok(settings.payload.settings.some(setting => setting.key === 'public.ci-test'));
+
   const logout = await request('/api/auth/logout', { method: 'POST', cookie, body: {} });
   assert.equal(logout.response.status, 200);
   const meAfterLogout = await request('/api/auth/me', { cookie });
@@ -72,7 +103,7 @@ try {
   const apps = await request('/api/public/apps');
   assert.equal(apps.response.status, 200);
   assert.ok(Array.isArray(apps.payload.apps));
-  console.log('Raz Sahra Node/MySQL CMS API integration passed: health, bootstrap, sessions, admin overview, registration, inquiry, public apps.');
+  console.log('Raz Sahra Node/MySQL CMS API integration passed: health, bootstrap, sessions, admin overview, page update, article upsert, app upsert, settings upsert, registration, inquiry, public apps.');
 } finally {
   await closeMysqlPool();
 }
