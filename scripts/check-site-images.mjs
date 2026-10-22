@@ -27,7 +27,7 @@ if (!interactions.includes("document.querySelectorAll('[data-hero-slider]')") ||
 if (!html.includes('زنجیره‌ای منسجم؛') || !html.includes('ارزش‌آفرینی پایدار')) {
   throw new Error('Opening hero copy has not been refreshed to the current value-chain message.');
 }
-const remoteImageReferences = allMarkup.match(/(?:src|srcset|url\()\s*=?\s*["']?https:\/\/(?:images\.pexels\.com|upload\.wikimedia\.org|images\.unsplash\.com|commons\.wikimedia\.org)[^\s"'<>)]*/gi) ?? [];
+const remoteImageReferences = allMarkup.match(/(?:src|srcset|url\()\s*=?\s*["']?https:\/\/[^\s"'<>)]*/gi) ?? [];
 if (remoteImageReferences.length) {
   throw new Error('Remote image dependencies remain in index.html: ' + remoteImageReferences.slice(0, 5).join(' | '));
 }
