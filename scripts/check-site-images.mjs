@@ -38,8 +38,8 @@ const heroImages = [...html.matchAll(/<img class="hero-slide-bg[^"]*" src="([^"]
 if (heroImages.length !== 4 || new Set(heroImages).size !== 4 || heroImages.some(path => !path.endsWith('.svg'))) {
   throw new Error('Hero slider must use four distinct local SVG illustrations; found: ' + heroImages.join(', '));
 }
-const localAssets = [...allMarkup.matchAll(/(?:src|href|url\()\s*=?\s*["']?(assets\/[a-zA-Z0-9_./-]+\.(?:webp|png|jpe?g|avif|svg))["')\s>]?/g)]
-  .map(match => match[1]);
+const localAssets = [...allMarkup.matchAll(/(?:src|href|url\()\s*=?\s*["']?(assets\/[a-zA-Z0-9_./-]+\.(?:webp|png|jpe?g|avif|svg)(?:\?[^"')\s>]*)?)["')\s>]?/g)]
+  .map(match => match[1].split("?")[0]);
 const uniqueAssets = [...new Set(localAssets)];
 for (const asset of uniqueAssets) {
   const assetPath = resolve(process.cwd(), asset);
