@@ -20,7 +20,7 @@ function writeResponse(res, status, headers, body) {
   res.end(body);
 }
 
-async function serveStatic(url, res) {
+async function serveStatic(url, res, method = "GET") {
   let pathname;
   try { pathname = decodeURIComponent(url.pathname); } catch { return writeResponse(res, 400, {}, 'Bad Request'); }
   let relative = pathname === '/' ? 'index.html' : pathname.replace(/^\/+/, '');
@@ -36,7 +36,7 @@ async function serveStatic(url, res) {
   } catch {
     // Query-driven pages use index.html; never mask a missing static asset with HTML.
     if (extname(pathname)) return writeResponse(res, 404, { 'cache-control': 'no-store' }, 'Not Found');
-    file = resolve(root, 'index.html');
+    file = pathname.startsWith('/madar/') ? resolve(root, 'madar/index.html') : resolve(root, 'index.html');
   }
   try {
     const body = await readFile(file);
@@ -46,7 +46,7 @@ async function serveStatic(url, res) {
       'cache-control': isHtml ? 'no-cache, no-store, must-revalidate' : 'public, max-age=86400',
       'content-length': String(body.byteLength),
     };
-    return writeResponse(res, 200, headers, body);
+    return writeResponse(res, 200, headers, method === 'HEAD' ? Buffer.alloc(0) : body);
   } catch {
     return writeResponse(res, 404, { 'cache-control': 'no-store' }, 'Not Found');
   }
@@ -93,7 +93,7 @@ const server = createServer(async (incoming, outgoing) => {
     if ((incoming.method || 'GET').toUpperCase() !== 'GET' && (incoming.method || 'GET').toUpperCase() !== 'HEAD') {
       return writeResponse(outgoing, 405, { allow: 'GET, HEAD' }, 'Method Not Allowed');
     }
-    return await serveStatic(url, outgoing);
+    return await serveStatic(url, outgoing, (incoming.method || 'GET').toUpperCase());
   } catch (error) {
     console.error('Raz Sahra domestic runtime request failed:', error?.message || 'unknown');
     return writeResponse(outgoing, 500, { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' }, JSON.stringify({ ok: false, error: { code: 'internal_error', message: 'خطای داخلی رخ داد. دوباره تلاش کنید.' } }));
