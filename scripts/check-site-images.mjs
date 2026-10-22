@@ -24,8 +24,13 @@ if (!interactions.includes("document.querySelectorAll('[data-hero-slider]')") ||
     !interactions.includes('swipeStart')) {
   throw new Error('Hero carousel runtime must initialize controls, support touch swipe, pause in background tabs and respect reduced motion.');
 }
-if (!html.includes('از تولید تا بازار؛') || !html.includes('یک مسیر قابل اتکا') || !html.includes('GOLESTAN · FARM TO MARKET')) {
-  throw new Error('Opening hero copy has not been refreshed to the current farm-to-market message.');
+if (!html.includes('از تأمین تا') || !html.includes('ارزش‌آفرینی') || !html.includes('GOLESTAN · FARM TO MARKET')) {
+  throw new Error('Opening hero copy must present the supply-to-value message.');
+}
+const firstHeroImage = html.match(/<img class="hero-slide-bg hero-slide-bg-rooster" src="([^"]+)"/)?.[1];
+const preloadedHeroImage = html.match(/<link rel="preload" as="image" href="([^"]+)" fetchpriority="high">/)?.[1];
+if (!firstHeroImage || firstHeroImage !== preloadedHeroImage) {
+  throw new Error('The first hero image preload must use the exact same URL as the rendered image to avoid duplicate downloads.');
 }
 if (!interactions.includes('function recoverImage') || !interactions.includes('rs-image-fallback')) {
   throw new Error('Local image failure recovery must be present to prevent broken hero/card visuals.');
