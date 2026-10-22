@@ -97,7 +97,8 @@ async function q(sql, text, params = []) {
       where = "`key` = ?"; lookup = [params[0]];
     }
     if (!where) throw new Error("mysql_returning_adapter_missing_for_" + table);
-    const [rows] = await sql.execute("SELECT " + returning + " FROM `" + table + "` WHERE " + where + " LIMIT 1", lookup);
+    const selectStatement = normalizeMysqlSql("SELECT " + returning + " FROM `" + table + "` WHERE " + where + " LIMIT 1");
+    const [rows] = await sql.execute(selectStatement, lookup);
     return rows;
   } catch (error) {
     if (error && error.code === "ER_DUP_ENTRY") error.code = "23505";
