@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" fill="none">
+<defs>
+ <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#172E3B"/><stop offset=".6" stop-color="#40565A"/><stop offset="1" stop-color="#B77B51"/></linearGradient>
+ <radialGradient id="glow"><stop stop-color="#E8C49B" stop-opacity=".45"/><stop offset="1" stop-color="#E8C49B" stop-opacity="0"/></radialGradient>
+ <pattern id="grid" width="70" height="70" patternUnits="userSpaceOnUse"><path d="M70 0H0V70" stroke="#D6C3A8" stroke-opacity=".12" stroke-width="1"/></pattern>
+</defs>
+<rect width="1600" height="900" fill="url(#bg)"/><circle cx="1100" cy="410" r="440" fill="url(#glow)"/><rect width="1600" height="900" fill="url(#grid)"/>
+<g stroke="#E5C49C" stroke-opacity=".7" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+ <path d="M265 430H475M570 430H780M875 430H1085M1180 430H1385"/>
+ <path d="m445 410 30 20-30 20M750 410l30 20-30 20M1055 410l30 20-30 20M1355 410l30 20-30 20"/>
+</g>
+<g>
+ <circle cx="265" cy="430" r="105" fill="#213A45" stroke="#D6B58C" stroke-width="3"/>
+ <path d="M205 468V404L265 362 325 404V468Z" fill="#BFA27F"/><path d="M190 405 265 350 340 405" stroke="#E0C8A8" stroke-width="9"/><rect x="231" y="420" width="68" height="48" fill="#314A4F"/><path d="M265 420V468" stroke="#BFA27F" stroke-width="3"/>
+ <circle cx="570" cy="430" r="105" fill="#213A45" stroke="#D6B58C" stroke-width="3"/>
+ <rect x="520" y="380" width="100" height="100" rx="5" fill="#9EACAA"/><path d="M520 407H620M520 433H620M520 459H620" stroke="#42595B" stroke-width="5"/><path d="M535 380V480M605 380V480" stroke="#42595B" stroke-width="5"/>
+ <circle cx="875" cy="430" r="105" fill="#213A45" stroke="#D6B58C" stroke-width="3"/>
+ <g transform="translate(808 390)"><path d="M0 18H70L95 43V80H0Z" fill="#C4A27D"/><path d="M70 18V43H95" stroke="#3D5055" stroke-width="5"/><rect x="12" y="30" width="30" height="22" rx="3" fill="#45616A"/><circle cx="22" cy="83" r="12" fill="#182D37"/><circle cx="76" cy="83" r="12" fill="#182D37"/></g>
+ <circle cx="1180" cy="430" r="105" fill="#213A45" stroke="#D6B58C" stroke-width="3"/>
+ <path d="M1120 405 1180 365 1240 405V485H1120Z" fill="#C5AD8D"/><path d="M1105 407 1180 355 1255 407" stroke="#E5C49C" stroke-width="9"/><rect x="1143" y="430" width="28" height="55" fill="#3B5458"/><rect x="1189" y="430" width="28" height="55" fill="#3B5458"/><path d="M1118 416H1242" stroke="#3B5458" stroke-width="5"/>
+</g>
+<g fill="#EAD6BB" font-family="sans-serif" font-size="20" letter-spacing="3"><text x="265" y="585" text-anchor="middle">PRODUCTION</text><text x="570" y="585" text-anchor="middle">PROCESSING</text><text x="875" y="585" text-anchor="middle">LOGISTICS</text><text x="1180" y="585" text-anchor="middle">MARKET</text></g>
+<g stroke="#E6C49A" stroke-opacity=".45" stroke-width="2"><path d="M150 665H1450"/><circle cx="150" cy="665" r="5" fill="#E6C49A"/><circle cx="1450" cy="665" r="5" fill="#E6C49A"/></g>
+<rect width="1600" height="900" fill="#0D1D28" fill-opacity=".24"/>
+</svg>
