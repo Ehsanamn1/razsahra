@@ -46,12 +46,20 @@ try {
   assert.equal(await slider.locator('[data-hero-slide]').count(), 4, 'homepage must contain four curated slides');
   await assert.doesNotReject(() => page.locator('[data-hero-slide].is-active').waitFor({ state: 'visible' }));
   assert.equal(await slider.locator('[data-hero-slide].is-active').count(), 1, 'exactly one slide must be active');
+  async function assertActiveSlide(expected) {
+    await page.waitForFunction((label) => {
+      const active = document.querySelector('[data-hero-slide].is-active .slide-index');
+      return active?.textContent?.replace(/\\s+/g, ' ').trim() === label;
+    }, expected, { timeout: 3000 });
+    assert.equal(await slider.locator('[data-hero-slide].is-active .slide-index').textContent().then(text => text?.replace(/\\s+/g, ' ').trim()), expected);
+    assert.equal(await slider.locator('[data-hero-dot].is-active').getAttribute('data-hero-dot'), String(Number(expected.slice(0, 2)) - 1));
+  }
   await slider.locator('[data-hero-next]').click();
-  assert.equal(await slider.locator('[data-hero-slide].is-active .slide-index').innerText(), '02 / 04');
+  await assertActiveSlide('02 / 04');
   await slider.locator('[data-hero-dot="3"]').click();
-  assert.equal(await slider.locator('[data-hero-slide].is-active .slide-index').innerText(), '04 / 04');
+  await assertActiveSlide('04 / 04');
   await slider.locator('[data-hero-prev]').click();
-  assert.equal(await slider.locator('[data-hero-slide].is-active .slide-index').innerText(), '03 / 04');
+  await assertActiveSlide('03 / 04');
   const imageResults = await slider.locator('.hero-slide-bg').evaluateAll(images =>
     images.map(image => ({ src: image.getAttribute('src'), loaded: image.complete && image.naturalWidth > 0 }))
   );
