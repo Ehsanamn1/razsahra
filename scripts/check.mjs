@@ -95,7 +95,8 @@ assert.ok(html.includes('class="brand footer-brand-lockup"'), "Footer must reuse
 assert.ok(!html.includes('class="footer-lockup-image"'), "Obsolete square footer lockup must not return");
 assert.ok(css.includes("@keyframes rs-fireball-breathe") && css.includes(".hero-slide::before") && css.includes("opacity:.2"), "Subtle responsive hero fireball treatment missing");
 assert.ok(css.includes("height:clamp(430px,39vw,540px)") && css.includes("height:470px;min-height:470px"), "Compact responsive hero carousel sizing missing");
-assert.ok(interactive.includes("interval:4800"), "Hero carousel rotation interval missing");
+assert.ok(interactive.includes("var delay=7000") && interactive.includes("setInterval(function(){show(current+1);},delay)"), "Accessible hero carousel rotation interval missing");
+assert.ok(!interactive.includes("setupCarousel({root:'[data-hero-slider]"), "Duplicate hero carousel initializer must not return");
 assert.ok(css.includes("Mobile performance and editor-reader fix"), "Responsive fix missing");
 assert.ok(interactive.includes("window.matchMedia('(max-width: 850px)').matches"), "Mobile particle budget missing");
 await access("db/schema.sql");
