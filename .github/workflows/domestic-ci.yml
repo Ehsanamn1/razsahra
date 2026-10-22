@@ -121,7 +121,8 @@ jobs:
           grep -R -F -q "${PARENT_SOURCE_SHA}-${MEDAR_SOURCE_SHA}" dist/madar/assets
       - name: Install Chromium for combined-site browser acceptance
         working-directory: medar-src
-        run: npx playwright install --with-deps chromium
+        timeout-minutes: 5
+        run: npx playwright install chromium
       - name: Test Raz Sahra slides/navigation and Madar mobile shell in Chromium
         run: node scripts/test-site-browser.mjs
       - name: Assemble versioned domestic host package
