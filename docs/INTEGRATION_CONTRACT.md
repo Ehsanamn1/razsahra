@@ -59,7 +59,7 @@ If unified sign-in is later approved, it requires an explicit identity/session d
 
 ## 5. Release contract
 
-**Current PR-only integration candidate:** `018ffaeacc61ea6bb1f0754b1d1ac0f0d04910fa` is pinned in the feature-branch manifest so the parent PR can validate the current Medar UI/runtime work. This is not a production release. The previously deployed production bundle remains pinned to `70329106d6cd921e1c036714157986b72e0ea201` until the candidate passes Medar CI and the parent integration workflow is approved for release.
+**Current PR-only integration candidate:** `cf7d9a21f3014ee9458ce3ebe542a8c6e5ebb5bc` is pinned in the feature-branch manifest so the parent PR can validate the current Medar UI/runtime work. This is not a production release. The previously deployed production bundle remains pinned to `70329106d6cd921e1c036714157986b72e0ea201` until the candidate passes Medar CI and the parent integration workflow is approved for release.
 
 
 ### Current reviewed Medar source
