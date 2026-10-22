@@ -103,9 +103,15 @@ jobs:
       - name: Build Medar for /madar/ with same-origin API proxy
         working-directory: simorgh-src
         env:
+          VITE_API_BASE_URL: /api/medar
+          VITE_ENABLE_AUTH_UI: "true"
+          VITE_DISABLE_API_UI: "false"
           VITE_APP_VERSION: ${{ github.sha }}-${{ steps.medar-source.outputs.ref }}
         run: |
-          node scripts/build-hosted-madar.mjs
+          npm run build -- --base=/madar/
+          test -s dist/index.html
+          test -s dist/manifest.webmanifest
+          test -s dist/sw.js
       - name: Mount Medar web bundle into Raz Sahara package
         run: |
           test -s simorgh-src/dist/index.html
