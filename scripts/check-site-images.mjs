@@ -6,6 +6,13 @@ const remoteImageReferences = html.match(/(?:src|srcset|url\()\s*=?\s*["']?https
 if (remoteImageReferences.length) {
   throw new Error('Remote image dependencies remain in index.html: ' + remoteImageReferences.slice(0, 5).join(' | '));
 }
+if (/https:\/\/(?:fonts\.googleapis\.com|fonts\.gstatic\.com)/i.test(html)) {
+  throw new Error('Remote Google Fonts dependency remains in index.html.');
+}
+const heroImages = [...html.matchAll(/<img class="hero-slide-bg[^"]*" src="([^"]+)"/g)].map(match => match[1]);
+if (heroImages.length !== 4 || new Set(heroImages).size !== 4 || heroImages.some(path => !path.endsWith('.svg'))) {
+  throw new Error('Hero slider must use four distinct local SVG illustrations; found: ' + heroImages.join(', '));
+}
 const localAssets = [...html.matchAll(/(?:src|href|url\()\s*=?\s*["']?(assets\/[a-zA-Z0-9_./-]+\.(?:webp|png|jpe?g|avif|svg))["')\s>]?/g)]
   .map(match => match[1]);
 const uniqueAssets = [...new Set(localAssets)];
