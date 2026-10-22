@@ -25,7 +25,7 @@ for (const asset of uniqueAssets) {
     if (!/<svg\b[^>]*xmlns="http:\/\/www\.w3\.org\/2000\/svg"/i.test(svg) || !/<\/svg>\s*$/i.test(svg)) {
       throw new Error('Malformed local SVG visual asset: ' + asset);
     }
-    if (/https?:\/\//i.test(svg) || /<script\b/i.test(svg)) {
+    if (/(?:href|src)\s*=\s*["']https?:\/\//i.test(svg) || /url\(\s*["']?https?:\/\//i.test(svg) || /<script\b/i.test(svg)) {
       throw new Error('Local SVG must not depend on external resources or scripts: ' + asset);
     }
   }
