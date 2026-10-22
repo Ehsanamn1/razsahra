@@ -10,16 +10,15 @@ This branch prepares a safe migration from Cloudflare Pages/Functions + Neon Pos
 - Current API: `functions/api/[[path]].js`, built for a Cloudflare Pages Function runtime.
 - Current database client: `@neondatabase/serverless`.
 - Current SQL uses PostgreSQL placeholders, JSONB, intervals, casts and data-modifying CTEs. A MySQL schema file alone does not make the API compatible.
-- The `db/schema.mysql.sql` draft is now exercised against disposable MySQL 8.4 in CI; `db/seed.mysql.sql` is separated so the guarded importer can use a truly empty target. This validates schema syntax only, not the runtime API. The existing schema is still not a completed backend migration. The live API still uses PostgreSQL and must not be pointed at MySQL.
+- `db/schema.mysql.sql` and `db/seed.mysql.sql` are exercised against disposable MySQL 8.4 in CI. `server/cms-api.mjs` now provides a separate Node/MySQL implementation of the CMS routes, and `server/index.mjs` serves static files plus `/api/*` for a domestic Node process. The integration test exercises health, one-time admin bootstrap, sessions, admin overview, page updates, article/app/settings upserts, registration, inquiries and public app listing against MySQL 8.4. This implementation is staged only; the live Cloudflare Pages Function remains Neon/PostgreSQL.
 
 ## Required migration work before a host deployment
-1. Implement a Node.js HTTP API adapter for the existing routes without weakening origin checks, password hashing, session cookies, one-time admin bootstrap, rate limits, authorization or audit logging.
-2. Replace PostgreSQL SQL with parameterized MySQL queries and validate all schema/column/constraint semantics.
-3. Add automated tests for registration/login/logout/session expiry, bootstrap single-use, roles, CMS CRUD, inquiry submission, audit logs, rate limits, malformed inputs and database failures.
-4. Add migration/import scripts with dry-run mode, repeatable execution, row-count and relationship checks, and a tested rollback path.
-5. Add health/readiness endpoints that check the actual MySQL connection and required schema version without exposing secrets or private user data.
-6. Verify host-supported Node version, process manager, SSH/SFTP/FTP or webhook, environment variables, cron, file permissions, HTTPS and domain routing.
-7. Only after those pass, add a production deployment workflow using host credentials stored as GitHub Actions secrets. Deployment must publish to a staging directory first, health-check it, then atomically switch the release where the host supports that model.
+1. Harden the Node/MySQL adapter with broader negative/security tests, error mapping and query coverage; the current MySQL 8.4 integration tests cover the main CMS write paths but are not a full production soak test.
+2. Finish route-by-route equivalence checks for every CMS endpoint and test malformed inputs, rate limits, database failures, session expiry and bootstrap replay attempts.
+3. Exercise the guarded Neon-to-MySQL importer with a real staging export, compare every table count and relationships, and rehearse a restore/rollback.
+4. Complete the Madar API/database port before claiming the combined Raz Sahra + Madar platform is domestic/offline-capable. The current Node proxy can be configured via `MEDAR_API_URL`, but the Madar upstream is still not fully migrated.
+5. Verify HostMizbanFa Node version, process manager, SSH/SFTP/FTP or webhook, environment variables, cron, file permissions, HTTPS and domain routing.
+6. Only after those pass, add and run a production deployment workflow using host credentials stored as GitHub Actions secrets. Deployment must publish to a staging directory first, health-check it, then atomically switch the release where the host supports that model.
 
 ## GitHub Actions secret names reserved for a later deploy workflow
 Do not create these as plaintext files or commit them:
