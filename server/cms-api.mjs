@@ -262,8 +262,12 @@ async function newSession(sql, user, request) {
   const hash = await digest(token);
   const ip = request.headers.get("CF-Connecting-IP");
   const ipHash = ip ? await digest(ip) : null;
-  await q(sql, "INSERT INTO sessions(token_hash,user_id,expires_at,ip_hash,user_agent) VALUES ($1,$2,now()+($3 * interval '1 day'),$4,$5)", [hash, user.id, SESSION_DAYS, ipHash, text(request.headers.get("user-agent"), 512)]);
-  await q(sql, "DELETE FROM sessions WHERE expires_at<now()");
+  const expiresAt = new Date(Date.now() + SESSION_DAYS * 24 * 60 * 60 * 1000);
+  await sql.execute(
+    "INSERT INTO sessions(token_hash,user_id,expires_at,ip_hash,user_agent) VALUES (?,?,?,?,?)",
+    [hash, user.id, expiresAt, ipHash, text(request.headers.get("user-agent"), 512)]
+  );
+  await sql.execute("DELETE FROM sessions WHERE expires_at < CURRENT_TIMESTAMP(3)");
   return token;
 }
 async function rateOkay(sql, request, identifier) {
