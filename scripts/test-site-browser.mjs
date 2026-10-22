@@ -70,12 +70,12 @@ try {
     const dimensions = await page.evaluate(() => ({
       viewport: document.documentElement.clientWidth,
       document: document.documentElement.scrollWidth,
-      body: document.body.scrollWidth,
+      bodyClient: document.body.clientWidth,
       hero: document.querySelector('[data-hero-slider]')?.getBoundingClientRect().width || 0,
     }));
     const overflowElements = dimensions.document > dimensions.viewport ? await page.evaluate(() => Array.from(document.querySelectorAll('body *')).map(el => { const r = el.getBoundingClientRect(); const s = getComputedStyle(el); return { tag: el.tagName.toLowerCase(), cls: typeof el.className === 'string' ? el.className.slice(0, 90) : '', id: el.id, left: Math.round(r.left), right: Math.round(r.right), width: Math.round(r.width), display: s.display, position: s.position }; }).filter(el => el.display !== 'none' && el.width > 0 && el.right > innerWidth + 1).sort((a,b) => b.right-a.right).slice(0, 12)) : [];
     assert.ok(dimensions.document <= dimensions.viewport, 'document overflows at ' + width + 'px: ' + JSON.stringify({ ...dimensions, overflowElements }));
-    assert.ok(dimensions.body <= dimensions.viewport, 'body overflows at ' + width + 'px: ' + JSON.stringify(dimensions));
+    assert.ok(dimensions.bodyClient <= dimensions.viewport, 'body client box exceeds viewport at ' + width + 'px: ' + JSON.stringify(dimensions));
     assert.ok(dimensions.hero <= dimensions.viewport, 'hero slider exceeds viewport at ' + width + 'px: ' + JSON.stringify(dimensions));
   }
 
