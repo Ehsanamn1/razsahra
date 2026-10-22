@@ -71,6 +71,18 @@
       if(event.key==='ArrowLeft'){event.preventDefault();show(current+1);start();}
       else if(event.key==='ArrowRight'){event.preventDefault();show(current-1);start();}
     });
+    var swipeStart=null;
+    slider.addEventListener('pointerdown',function(event){
+      if(event.pointerType!=='touch'||event.target.closest('a,button'))return;
+      swipeStart={x:event.clientX,y:event.clientY};
+    },{passive:true});
+    slider.addEventListener('pointerup',function(event){
+      if(!swipeStart||event.target.closest('a,button')){swipeStart=null;return;}
+      var dx=event.clientX-swipeStart.x,dy=event.clientY-swipeStart.y;
+      swipeStart=null;
+      if(Math.abs(dx)>48&&Math.abs(dx)>Math.abs(dy)*1.25){show(current+(dx<0?1:-1));start();}
+    },{passive:true});
+    slider.addEventListener('pointercancel',function(){swipeStart=null;},{passive:true});
     if('IntersectionObserver' in window){
       var visibilityObserver=new IntersectionObserver(function(entries){
         visible=entries[0]&&entries[0].isIntersecting;
