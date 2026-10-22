@@ -2,6 +2,17 @@ import { readFile, access } from 'node:fs/promises';
 import { resolve } from 'node:path';
 
 const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
+const interactions = await readFile(new URL('../assets/raz-sahra-interactions.js', import.meta.url), 'utf8');
+if (!interactions.includes("document.querySelectorAll('[data-hero-slider]')") ||
+    !interactions.includes('data-hero-next') ||
+    !interactions.includes('data-hero-prev') ||
+    !interactions.includes('visibilitychange') ||
+    !interactions.includes('prefers-reduced-motion')) {
+  throw new Error('Hero carousel runtime must initialize controls, pause in background tabs and respect reduced motion.');
+}
+if (!html.includes('زنجیره‌ای منسجم؛') || !html.includes('ارزش‌آفرینی پایدار')) {
+  throw new Error('Opening hero copy has not been refreshed to the current value-chain message.');
+}
 const remoteImageReferences = html.match(/(?:src|srcset|url\()\s*=?\s*["']?https:\/\/(?:images\.pexels\.com|upload\.wikimedia\.org|commons\.wikimedia\.org)[^\s"'<>)]*/gi) ?? [];
 if (remoteImageReferences.length) {
   throw new Error('Remote image dependencies remain in index.html: ' + remoteImageReferences.slice(0, 5).join(' | '));
