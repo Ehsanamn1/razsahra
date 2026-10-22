@@ -14,7 +14,7 @@
 
 ## نصب
 1. فایل ZIP را در پوشهٔ برنامه استخراج کن؛ محتوای `dist/` باید همراه `dist/madar/` باقی بماند.
-2. متغیرهای `.env.example` را در بخش Environment Variables پنل هاست تنظیم کن. فایل واقعی `.env` را در Git یا ZIP عمومی قرار نده.
+2. یا متغیرهای `.env.example` را در بخش Environment Variables پنل هاست تنظیم کن، یا فایل را به `.env` تغییر نام بده و مقدارها را در آن وارد کن. سرور این فایل را می‌خواند؛ فایل واقعی `.env` را در Git یا ZIP عمومی قرار نده.
 3. `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASSWORD` را با دیتابیس ایجادشده در پنل میزبان پر کن.
 4. `MEDAR_API_ORIGIN` را روی مبدأ HTTPS سرویس عملیاتی مدار تنظیم کن؛ فقط scheme و host، بدون مسیر یا credential.
 5. در پوشهٔ برنامه `npm install --omit=dev` و سپس `npm run install:db` را اجرا کن.
