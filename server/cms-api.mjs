@@ -35,7 +35,7 @@ function normalizeMysqlSql(input) {
     .replace(/::jsonb\b/gi, "")
     .replace(/::int\b/gi, "")
     .replace(/jsonb_build_object\s*\(/gi, "JSON_OBJECT(")
-    .replace(/now\(\)\s*\+\s*\(\$(\d+)\s*\*\s*interval\s*'1 day'\)/gi, "DATE_ADD(CURRENT_TIMESTAMP(3), INTERVAL $$1 DAY)")
+    .replace(/now\(\)\s*\+\s*\(\$(\d+)\s*\*\s*interval\s*'1 day'\)/gi, "DATE_ADD(CURRENT_TIMESTAMP(3), INTERVAL $$$1 DAY)")
     .replace(/now\(\)\s*-\s*interval\s*'(\d+)\s+minutes?'/gi, "DATE_SUB(CURRENT_TIMESTAMP(3), INTERVAL $1 MINUTE)")
     .replace(/now\(\)\s*-\s*interval\s*'(\d+)\s+hours?'/gi, "DATE_SUB(CURRENT_TIMESTAMP(3), INTERVAL $1 HOUR)")
     .replace(/now\(\)\s*-\s*interval\s*'(\d+)\s+days?'/gi, "DATE_SUB(CURRENT_TIMESTAMP(3), INTERVAL $1 DAY)")
