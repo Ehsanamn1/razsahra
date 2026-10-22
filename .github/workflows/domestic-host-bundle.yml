@@ -126,6 +126,10 @@ jobs:
           curl -fsS http://127.0.0.1:3210/madar/app/home | grep -q 'id="root"'
           curl -fsS http://127.0.0.1:3210/api/medar/api/health | node --input-type=module -e 'let s="";for await(const c of process.stdin)s+=c;const x=JSON.parse(s);if(!x.ok||x.path!=="/api/health")process.exit(1);'
           echo "CMS auth, admin API, inquiry persistence, Medar SPA deep link, and same-origin API proxy passed."
+      - name: Check live Medar operational API
+        run: |
+          curl --fail --silent --show-error --max-time 20 https://medar-ops.dengxiao445.workers.dev/api/health > /tmp/medar-live-health.json
+          node --input-type=module -e 'import fs from "node:fs"; const x=JSON.parse(fs.readFileSync("/tmp/medar-live-health.json","utf8")); if(x.ok!==true) { console.error("Operational Medar API health check did not return ok:true"); process.exit(1); } console.log("Operational Medar API is reachable and reports healthy.");'
       - name: Add release manifest and host checklist
         run: |
           node --input-type=module <<'NODE'
