@@ -158,6 +158,7 @@ jobs:
             version: process.env.GITHUB_SHA,
             createdAt: new Date().toISOString(),
             runtime: 'Node.js 20+ / MySQL 8',
+            hostCompatibility: 'Requires the target HostMizbanFa plan to provide a Node.js 20+ application runner; not verified from GitHub Actions.',
             website: 'Included',
             cmsApi: 'Included baseline; acceptance tests still required',
             medar: 'Medar frontend mounted at /madar/; /api/medar proxies to the configured external operational Medar API. Backend is not yet ported to Node/MySQL.',
@@ -166,10 +167,12 @@ jobs:
           await writeFile('host-package/RELEASE-MANIFEST.json', JSON.stringify(manifest, null, 2) + '\n');
           NODE
           cat > host-package/HOST-CHECKLIST.txt <<'EOF'
-          STATUS: STAGING PACKAGE — NOT CLEARED FOR PRODUCTION.
-          Included: Raz Sahara static web build, Medar frontend mounted at /madar/, Node.js CMS/auth baseline, MySQL schema and installer.
-          Not included: independent Medar API port; production acceptance tests and HostMizbanFa compatibility proof are still required.
-          Before deployment: configure DB credentials and a random ADMIN_BOOTSTRAP_SECRET in host environment; configure MEDAR_API_ORIGIN to the operational Medar Worker origin (for example https://medar-ops.dengxiao445.workers.dev); verify proxy auth/cookie behavior over HTTPS; bootstrap admin once then remove the bootstrap secret; test /api/health, login/logout, admin CMS, inquiry flow, /madar/ and /madar/app/home deep links, Medar login, and role permissions.
+          STATUS: STAGING PACKAGE — NOT CLEARED FOR PRODUCTION UNTIL TARGET-HOST ACCEPTANCE PASSES.
+          Included: Raz Sahara static web build, Medar frontend mounted at /madar/, Node.js CMS/auth API, MySQL schema and installer.
+          CI acceptance: MySQL-backed bootstrap/login/session/role checks, inquiry persistence, Medar deep-link/proxy checks, live Medar API health and preflight are run in GitHub Actions.
+          Remaining external gate: confirm the actual HostMizbanFa plan provides Node.js 20+ application hosting and run the same acceptance paths on the real HTTPS domain. This cannot be proven from CI.
+          Medar API still runs on the existing operational Worker/PostgreSQL service; it has not been ported to standalone Node/MySQL.
+          Before deployment: configure DB credentials and a random ADMIN_BOOTSTRAP_SECRET in host environment; configure MEDAR_API_ORIGIN to the operational Medar Worker origin (for example https://medar-ops.dengxiao445.workers.dev); run npm run preflight; bootstrap admin once then remove the bootstrap secret; test /api/health, login/logout, admin CMS, inquiry flow, /madar/ and /madar/app/home deep links, Medar login, and role permissions.
           Never put secrets in this package or source control.
           EOF
       - name: Create ZIP
