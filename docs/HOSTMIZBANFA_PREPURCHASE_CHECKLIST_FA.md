@@ -36,12 +36,13 @@
 
 ## اتوماسیون GitHub
 
-اتوماسیون deploy فقط وقتی قابل تکمیل و تست واقعی است که میزبان روش رسمی SSH یا روش استقرار غیرتعاملی قابل پشتیبانی را تأیید کند. در صورت تأیید SSH، مقادیر اتصال باید به‌عنوان GitHub Actions Secrets تنظیم شوند؛ برای مثال:
+اتوماسیون فعلی فقط **preflight غیرمخرب** است؛ workflow انتشار production عمداً فعال نشده است. اتوماسیون deploy فقط وقتی قابل تکمیل و تست واقعی است که میزبان روش رسمی SSH یا روش استقرار غیرتعاملی قابل پشتیبانی را تأیید کند. در صورت تأیید SSH، مقادیر اتصال باید به‌عنوان GitHub Actions Secrets تنظیم شوند؛ برای مثال:
 
 - `HOST_SSH_HOST`
 - `HOST_SSH_PORT`
 - `HOST_SSH_USER`
 - `HOST_SSH_PRIVATE_KEY`
+- `HOST_SSH_KNOWN_HOSTS` (host-key fingerprint verified from HostMizbanFa; do not blindly trust `ssh-keyscan` output)
 - `HOST_APP_DIR`
 - `HOST_HEALTH_URL`
 
