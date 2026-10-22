@@ -34,7 +34,7 @@ if (remoteImageReferences.length) {
 if (/https:\/\/(?:fonts\.googleapis\.com|fonts\.gstatic\.com)/i.test(html)) {
   throw new Error('Remote Google Fonts dependency remains in index.html.');
 }
-const heroImages = [...html.matchAll(/<img class="hero-slide-bg[^"]*" src="([^"]+)"/g)].map(match => match[1]);
+const heroImages = [...html.matchAll(/<img class="hero-slide-bg[^"]*" src="([^"]+)"/g)].map(match => match[1].split("?")[0]);
 if (heroImages.length !== 4 || new Set(heroImages).size !== 4 || heroImages.some(path => !path.endsWith('.svg'))) {
   throw new Error('Hero slider must use four distinct local SVG illustrations; found: ' + heroImages.join(', '));
 }
