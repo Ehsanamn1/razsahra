@@ -19,7 +19,7 @@
  <circle cx="1180" cy="430" r="105" fill="#213A45" stroke="#D6B58C" stroke-width="3"/>
  <path d="M1120 405 1180 365 1240 405V485H1120Z" fill="#C5AD8D"/><path d="M1105 407 1180 355 1255 407" stroke="#E5C49C" stroke-width="9"/><rect x="1143" y="430" width="28" height="55" fill="#3B5458"/><rect x="1189" y="430" width="28" height="55" fill="#3B5458"/><path d="M1118 416H1242" stroke="#3B5458" stroke-width="5"/>
 </g>
-<g fill="#EAD6BB" font-family="sans-serif" font-size="20" letter-spacing="3"><text x="265" y="585" text-anchor="middle">PRODUCTION</text><text x="570" y="585" text-anchor="middle">PROCESSING</text><text x="875" y="585" text-anchor="middle">LOGISTICS</text><text x="1180" y="585" text-anchor="middle">MARKET</text></g>
+<g fill="#EAD6BB" font-family="Tahoma, sans-serif" font-size="27" font-weight="600" direction="rtl" unicode-bidi="plaintext"><text x="265" y="585" text-anchor="middle">تولید</text><text x="570" y="585" text-anchor="middle">فرآوری</text><text x="875" y="585" text-anchor="middle">حمل‌ونقل</text><text x="1180" y="585" text-anchor="middle">بازار</text></g>
 <g stroke="#E6C49A" stroke-opacity=".45" stroke-width="2"><path d="M150 665H1450"/><circle cx="150" cy="665" r="5" fill="#E6C49A"/><circle cx="1450" cy="665" r="5" fill="#E6C49A"/></g>
 <rect width="1600" height="900" fill="#0D1D28" fill-opacity=".24"/>
 </svg>
