@@ -17,7 +17,7 @@ const server = createServer(async (req, res) => {
     const url = new URL(req.url || '/', 'http://127.0.0.1:4178');
     let pathname;
     try { pathname = decodeURIComponent(url.pathname); } catch { res.writeHead(400).end('Bad Request'); return; }
-    let file = resolve(root, pathname.replace(/^\\/+/, ''));
+    let file = resolve(root, pathname.replace(/^\/+/, ''));
     if (file !== root && !file.startsWith(root + sep)) { res.writeHead(403).end('Forbidden'); return; }
     try {
       const info = await stat(file);
