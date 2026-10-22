@@ -17,8 +17,18 @@ const localAssets = [...html.matchAll(/(?:src|href|url\()\s*=?\s*["']?(assets\/[
   .map(match => match[1]);
 const uniqueAssets = [...new Set(localAssets)];
 for (const asset of uniqueAssets) {
-  try { await access(resolve(process.cwd(), asset)); }
+  const assetPath = resolve(process.cwd(), asset);
+  try { await access(assetPath); }
   catch { throw new Error('Referenced local visual asset does not exist: ' + asset); }
+  if (asset.endsWith('.svg')) {
+    const svg = await readFile(assetPath, 'utf8');
+    if (!/<svg\\b[^>]*xmlns="http:\\/\\/www\\.w3\\.org\\/2000\\/svg"/i.test(svg) || !/<\\/svg>\\s*$/i.test(svg)) {
+      throw new Error('Malformed local SVG visual asset: ' + asset);
+    }
+    if (/https?:\\/\\//i.test(svg) || /<script\\b/i.test(svg)) {
+      throw new Error('Local SVG must not depend on external resources or scripts: ' + asset);
+    }
+  }
 }
 const slides = (html.match(/<article\b[^>]*class=\"[^\"]*\bhero-slide\b[^\"]*\"[^>]*data-hero-slide/g) ?? []).length;
 if (slides !== 4) throw new Error('Expected four hero slides; found ' + slides);
