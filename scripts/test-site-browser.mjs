@@ -42,6 +42,7 @@ try {
   page.on('pageerror', error => errors.push(error.message));
   await page.goto('http://127.0.0.1:4178/', { waitUntil: 'networkidle' });
   const slider = page.locator('[data-hero-slider]');
+  await slider.hover(); // Pause autoplay so control assertions are deterministic.
   assert.equal(await slider.locator('[data-hero-slide]').count(), 4, 'homepage must contain four curated slides');
   await assert.doesNotReject(() => page.locator('[data-hero-slide].is-active').waitFor({ state: 'visible' }));
   assert.equal(await slider.locator('[data-hero-slide].is-active').count(), 1, 'exactly one slide must be active');
