@@ -1,7 +1,7 @@
 import { createServer } from 'node:http';
 import { readFile, stat } from 'node:fs/promises';
 import { extname, resolve, sep } from 'node:path';
-import { onRequest } from './cms-api.mjs';
+import { onRequest, closeMysqlPool } from './cms-api.mjs';
 
 const port = Number(process.env.PORT || 3000);
 const root = resolve(process.env.STATIC_DIR || 'dist');
@@ -104,7 +104,10 @@ server.listen(port, '0.0.0.0', () => {
   console.log('Raz Sahra Node/MySQL runtime listening on port ' + port + ' with static root ' + root);
 });
 function shutdown() {
-  server.close(() => process.exit(0));
+  server.close(async () => {
+    try { await closeMysqlPool(); } catch { /* Process is exiting; preserve graceful HTTP shutdown. */ }
+    process.exit(0);
+  });
   setTimeout(() => process.exit(1), 10000).unref();
 }
 process.on('SIGTERM', shutdown);
