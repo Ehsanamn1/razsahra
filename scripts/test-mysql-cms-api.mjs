@@ -39,6 +39,12 @@ try {
   });
   assert.equal(boot.response.status, 201, 'first-admin bootstrap should work on a fresh disposable schema: ' + JSON.stringify(boot.payload));
   assert.equal(boot.payload.user.role, 'admin');
+  const replay = await request('/api/auth/bootstrap-admin', {
+    method: 'POST',
+    headers: { 'x-admin-bootstrap-secret': ADMIN_BOOTSTRAP_SECRET },
+    body: { username: 'ci-replay-' + Date.now().toString(36), email: 'replay-' + Date.now().toString(36) + '@example.invalid', display_name: 'Replay', password },
+  });
+  assert.equal(replay.response.status, 409, 'bootstrap must remain one-time after a successful claim.');
   const cookie = (boot.response.headers.get('set-cookie') || '').split(';')[0];
   assert.match(cookie, /^rs_session=/);
 
@@ -79,6 +85,19 @@ try {
   const settings = await request('/api/admin/settings', { cookie });
   assert.equal(settings.response.status, 200);
   assert.ok(settings.payload.settings.some(setting => setting.key === 'public.ci-test'));
+  const publicArticles = await request('/api/public/articles?lang=fa');
+  assert.equal(publicArticles.response.status, 200);
+  assert.ok(publicArticles.payload.articles.some(item => item.slug === 'ci-integration-article'));
+
+  const adminInquiry = await request('/api/inquiries', {
+    method: 'POST',
+    body: { kind: 'contact', name: 'CI Admin Test', email: 'ci-admin-inquiry@example.invalid', phone: '', company: 'CI', message: 'Exercise the admin inquiry status update route.' },
+  });
+  assert.equal(adminInquiry.response.status, 201);
+  const inquiryStatus = await request('/api/admin/inquiries/status', {
+    method: 'PATCH', cookie, body: { id: adminInquiry.payload.inquiry.id, status: 'reviewing' },
+  });
+  assert.equal(inquiryStatus.response.status, 200, 'inquiry status updates must work with MySQL: ' + JSON.stringify(inquiryStatus.payload));
 
   const logout = await request('/api/auth/logout', { method: 'POST', cookie, body: {} });
   assert.equal(logout.response.status, 200);
@@ -103,7 +122,7 @@ try {
   const apps = await request('/api/public/apps');
   assert.equal(apps.response.status, 200);
   assert.ok(Array.isArray(apps.payload.apps));
-  console.log('Raz Sahra Node/MySQL CMS API integration passed: health, bootstrap, sessions, admin overview, page update, article upsert, app upsert, settings upsert, registration, inquiry, public apps.');
+  console.log('Raz Sahra Node/MySQL CMS API integration passed: health, one-time bootstrap, sessions, admin overview, page update, article upsert, app upsert, settings upsert, inquiry status, registration, inquiry, public articles/apps.');
 } finally {
   await closeMysqlPool();
 }
