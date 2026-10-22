@@ -24,8 +24,11 @@ if (!interactions.includes("document.querySelectorAll('[data-hero-slider]')") ||
     !interactions.includes('swipeStart')) {
   throw new Error('Hero carousel runtime must initialize controls, support touch swipe, pause in background tabs and respect reduced motion.');
 }
-if (!html.includes('زنجیره‌ای منسجم؛') || !html.includes('ارزش‌آفرینی پایدار')) {
-  throw new Error('Opening hero copy has not been refreshed to the current value-chain message.');
+if (!html.includes('از تولید تا بازار؛') || !html.includes('یک مسیر قابل اتکا') || !html.includes('GOLESTAN · FARM TO MARKET')) {
+  throw new Error('Opening hero copy has not been refreshed to the current farm-to-market message.');
+}
+if (!interactions.includes('function recoverImage') || !interactions.includes('rs-image-fallback')) {
+  throw new Error('Local image failure recovery must be present to prevent broken hero/card visuals.');
 }
 const remoteImageReferences = allMarkup.match(/(?:src|srcset|url\()\s*=?\s*["']?https:\/\/[^\s"'<>)]*/gi) ?? [];
 if (remoteImageReferences.length) {
