@@ -55,6 +55,10 @@ jobs:
           TARGET_MYSQL_URL: mysql://root:ci-root-password@127.0.0.1:3306/razsahra_ci
           TEST_ADMIN_BOOTSTRAP_SECRET: ci-only-bootstrap-secret-with-at-least-32-characters
         run: node scripts/test-mysql-cms-api.mjs
+      - name: Smoke-test domestic Node HTTP server and Madar deep links
+        env:
+          TARGET_MYSQL_URL: mysql://root:ci-root-password@127.0.0.1:3306/razsahra_ci
+        run: node scripts/test-domestic-node-server.mjs
       - name: Build static site bundle
         env:
           SITE_URL: https://razsahra.pages.dev
