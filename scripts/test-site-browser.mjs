@@ -70,6 +70,14 @@ try {
   }
 
   await page.setViewportSize({ width: 390, height: 844 });
+  const sliderTapTargets = await slider.locator('.hero-slider-controls button').evaluateAll(buttons =>
+    buttons.map(button => {
+      const rect = button.getBoundingClientRect();
+      return { label: button.getAttribute('aria-label'), width: rect.width, height: rect.height };
+    })
+  );
+  assert.ok(sliderTapTargets.every(target => target.width >= 30 && target.height >= 40),
+    'mobile slider controls need reliable touch targets: ' + JSON.stringify(sliderTapTargets));
   const mobileToggle = page.locator('.mobile-toggle');
   assert.equal(await mobileToggle.isVisible(), true, 'mobile menu toggle must be visible at 390px');
   await mobileToggle.click();
