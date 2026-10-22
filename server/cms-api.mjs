@@ -289,7 +289,7 @@ async function proxyMedar(request, path, env = {}) {
   if (request.headers.has("origin")) headers.set("origin", upstream.origin);
   const method = request.method.toUpperCase();
   const init = { method, headers, redirect: "manual" };
-  if (method !== "GET" && method !== "HEAD") init.body = request.body;
+  if (method !== "GET" && method !== "HEAD") init.body = await request.arrayBuffer();
   const proxiedRequest = new Request(target.toString(), init);
   const upstreamResponse = await fetch(proxiedRequest);
   const responseHeaders = new Headers(upstreamResponse.headers);
