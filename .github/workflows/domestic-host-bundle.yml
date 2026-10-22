@@ -53,6 +53,26 @@ jobs:
           rm -rf host-package/dist
           mkdir -p host-package/dist
           cp -a dist/. host-package/dist/
+      - name: Checkout Medar frontend
+        uses: actions/checkout@v4
+        with:
+          repository: Ehsanamn1/simorgh
+          ref: feat/razsahra-hosted-madar-subpath
+          path: simorgh-src
+      - name: Build Medar for /madar/ with same-origin API proxy
+        working-directory: simorgh-src
+        env:
+          VITE_APP_VERSION: ${{ github.sha }}
+        run: |
+          npm ci --no-audit --no-fund
+          node scripts/build-hosted-madar.mjs
+      - name: Mount Medar web bundle into Raz Sahara package
+        run: |
+          test -s simorgh-src/dist/index.html
+          mkdir -p host-package/dist/madar
+          cp -a simorgh-src/dist/. host-package/dist/madar/
+          test -s host-package/dist/madar/index.html
+          test -s host-package/dist/madar/manifest.webmanifest
       - name: Install backend runtime dependencies and validate
         working-directory: host-package
         run: |
@@ -72,16 +92,16 @@ jobs:
             runtime: 'Node.js 20+ / MySQL 8',
             website: 'Included',
             cmsApi: 'Included baseline; acceptance tests still required',
-            medar: 'Uses the configured external operational Medar API; NOT an independent Medar backend',
+            medar: 'Medar frontend mounted at /madar/; /api/medar proxies to the configured external operational Medar API. Backend is not yet ported to Node/MySQL.',
             deploymentStatus: 'STAGING ONLY — do not treat as production-ready'
           };
           await writeFile('host-package/RELEASE-MANIFEST.json', JSON.stringify(manifest, null, 2) + '\n');
           NODE
           cat > host-package/HOST-CHECKLIST.txt <<'EOF'
           STATUS: STAGING PACKAGE — NOT CLEARED FOR PRODUCTION.
-          Included: Raz Sahara static web build, Node.js CMS/auth baseline, MySQL schema and installer.
-          Not included: independent Medar API port, production acceptance tests, HostMizbanFa compatibility proof.
-          Before deployment: configure DB credentials and a random ADMIN_BOOTSTRAP_SECRET in host environment; configure MEDAR_API_ORIGIN to a reachable authenticated Medar API; verify same-origin/CORS and cookie behavior over HTTPS; bootstrap admin once then remove the bootstrap secret; test /api/health, login/logout, admin CMS, inquiry flow, /madar/ deep link and role permissions.
+          Included: Raz Sahara static web build, Medar frontend mounted at /madar/, Node.js CMS/auth baseline, MySQL schema and installer.
+          Not included: independent Medar API port; production acceptance tests and HostMizbanFa compatibility proof are still required.
+          Before deployment: configure DB credentials and a random ADMIN_BOOTSTRAP_SECRET in host environment; configure MEDAR_API_ORIGIN to the operational Medar Worker origin (for example https://medar-ops.dengxiao445.workers.dev); verify proxy auth/cookie behavior over HTTPS; bootstrap admin once then remove the bootstrap secret; test /api/health, login/logout, admin CMS, inquiry flow, /madar/ and /madar/app/home deep links, Medar login, and role permissions.
           Never put secrets in this package or source control.
           EOF
       - name: Create ZIP
@@ -97,4 +117,4 @@ jobs:
           retention-days: 14
       - name: State release limitation
         run: |
-          echo "A staging ZIP was built. It is NOT a standalone Medar release because the Medar API has not been ported to Node/MySQL. Do not deploy as a production-ready independent system." >> "$GITHUB_STEP_SUMMARY"
+          echo "A staging ZIP with both Raz Sahara and the Medar web app was built. Medar API still proxies to the external operational Worker; do not treat as an independent Node/MySQL release. Host acceptance tests remain required." >> "$GITHUB_STEP_SUMMARY"
