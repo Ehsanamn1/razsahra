@@ -177,7 +177,39 @@ jobs:
           jq -r --arg d "$DOMAIN" '.result[]? | select(.name == $d) | "- " + .type + " " + .name + " -> " + (.content // "")' <<< "$final_records" || true
           summary "- **Final state:** DNS records and Pages domain association have been queried again. Review this job's final output for domain status and the resulting root records."
 
-          echo "Testing the live domain and nested app routes…"
+          domain_path="/accounts/$CLOUDFLARE_ACCOUNT_ID/pages/projects/$PROJECT/domains/$DOMAIN"
+          domain_detail="$(api_call GET "$domain_path")"
+          if jq -e '.success == true' >/dev/null <<< "$domain_detail"; then
+            echo "Domain validation details before retry:"
+            jq -r '.result | "domain_status=" + (.status // "unknown") + ", validation_status=" + (.validation_data.status // "unknown") + ", verification_status=" + (.verification_data.status // "unknown") + ", validation_error=" + (.validation_data.error_message // "none") + ", verification_error=" + (.verification_data.error_message // "none")' <<< "$domain_detail"
+            domain_state="$(jq -r '.result.status // "unknown"' <<< "$domain_detail")"
+            if [[ "$domain_state" != "active" ]]; then
+              echo "Retrying Cloudflare Pages custom-domain validation now that DNS is configured…"
+              retried="$(api_call PATCH "$domain_path")"
+              if jq -e '.success == true' >/dev/null <<< "$retried"; then
+                echo "Cloudflare accepted the validation retry request."
+                summary "- Requested a retry of the Pages custom-domain validation."
+              else
+                retry_error="$(jq -r '[.errors[]?.message] | join("; ")' <<< "$retried")"
+                echo "::warning::Cloudflare did not accept the retry request: $retry_error"
+              fi
+              for attempt in $(seq 1 5); do
+                sleep 8
+                domain_detail="$(api_call GET "$domain_path")"
+                domain_state="$(jq -r '.result.status // "unknown"' <<< "$domain_detail")"
+                validation_state="$(jq -r '.result.validation_data.status // "unknown"' <<< "$domain_detail")"
+                verification_state="$(jq -r '.result.verification_data.status // "unknown"' <<< "$domain_detail")"
+                echo "Domain validation attempt $attempt: domain=$domain_state validation=$validation_state verification=$verification_state"
+                if [[ "$domain_state" == "active" ]]; then break; fi
+              done
+            fi
+            jq -r '.result | "Final validation details: domain_status=" + (.status // "unknown") + ", validation_status=" + (.validation_data.status // "unknown") + ", verification_status=" + (.verification_data.status // "unknown") + ", validation_error=" + (.validation_data.error_message // "none") + ", verification_error=" + (.verification_data.error_message // "none")' <<< "$domain_detail"
+            summary "- Validation detail: $(jq -r '.result | "domain=" + (.status // "unknown") + ", validation=" + (.validation_data.status // "unknown") + ", verification=" + (.verification_data.status // "unknown") + ", error=" + (.validation_data.error_message // .verification_data.error_message // "none")' <<< "$domain_detail")"
+          else
+            echo "::warning::Could not read the individual Pages custom-domain validation details."
+          fi
+
+                    echo "Testing the live domain and nested app routes…"
           for route in / /madar/ /madar/app/home /api/medar/api/health; do
             body_file="$(mktemp)"
             status="$(curl --silent --show-error --location --max-time 18 --retry 2 --retry-all-errors --retry-delay 3 --output "$body_file" --write-out '%{http_code}' "https://$DOMAIN$route")" || status="curl-error"
