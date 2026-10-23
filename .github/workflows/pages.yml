@@ -94,6 +94,7 @@ jobs:
           test -f dist/madar/sw.js
           grep -R -q '/api/medar' dist/madar/assets
           grep -q '/madar/' _redirects
+          grep -Fxq '/madar/* /madar/index.html 200' _redirects
           # The app reports this build ID through its authenticated client-presence heartbeat.
           # Assert the exact parent+Medar revision pair exists in the built JavaScript bundle.
           grep -R -F -q "${PARENT_SOURCE_SHA}-${MEDAR_SOURCE_SHA}" dist/madar/assets
