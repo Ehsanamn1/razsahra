@@ -152,7 +152,8 @@ jobs:
       - name: Smoke-test deployed site, Madar route and backend
         if: ${{ github.ref == 'refs/heads/main' && env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != '' }}
         env:
-          SITE_URL: ${{ vars.SITE_URL || 'https://razsahra.pages.dev' }}
+          # Keep Cloudflare's smoke target separate from razsahra.ir, which will point to the domestic host after cutover.
+          SITE_URL: ${{ vars.CLOUDFLARE_SMOKE_TEST_URL || 'https://razsahra.pages.dev' }}
           DEPLOYMENT_URL: ${{ steps.deploy.outputs.deployment_url }}
         shell: bash
         run: |
