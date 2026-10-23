@@ -1,0 +1,178 @@
+name: Diagnose and repair razsahra.ir Cloudflare routing
+
+on:
+  push:
+    branches:
+      - fix/razsahra-domain-routing
+    paths:
+      - .github/workflows/razsahra-domain-routing.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  domain-routing:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID || secrets.CLOUDFLARE_ACCOUNT_ID }}
+    steps:
+      - name: Inspect and safely repair Cloudflare Pages domain
+        shell: bash
+        run: |
+          set -euo pipefail
+          DOMAIN="razsahra.ir"
+          PROJECT="razsahra"
+          TARGET="razsahra.pages.dev"
+          API="https://api.cloudflare.com/client/v4"
+
+          summary() { printf '%s\n' "$*" >> "$GITHUB_STEP_SUMMARY"; }
+          if [[ -z "${CLOUDFLARE_API_TOKEN:-}" || -z "${CLOUDFLARE_ACCOUNT_ID:-}" ]]; then
+            echo "::error::Missing Cloudflare API token or account ID. No DNS changes were made."
+            summary "## razsahra.ir domain repair\nCloudflare API token or account ID is missing. No changes were made."
+            exit 1
+          fi
+
+          api_call() {
+            local method="$1" path="$2" data="${3:-}" file status body
+            file="$(mktemp)"
+            if [[ -n "$data" ]]; then
+              status="$(curl --silent --show-error --output "$file" --write-out '%{http_code}' --request "$method" --header "Authorization: Bearer $CLOUDFLARE_API_TOKEN" --header 'Content-Type: application/json' --data "$data" "$API$path")"
+            else
+              status="$(curl --silent --show-error --output "$file" --write-out '%{http_code}' --request "$method" --header "Authorization: Bearer $CLOUDFLARE_API_TOKEN" --header 'Content-Type: application/json' "$API$path")"
+            fi
+            body="$(cat "$file")"
+            rm -f "$file"
+            if [[ ! "$status" =~ ^2[0-9][0-9]$ ]]; then
+              printf '{"success":false,"http_status":%s,"errors":[{"message":"Cloudflare API HTTP request failed"}]}' "$status"
+            else
+              printf '%s' "$body"
+            fi
+          }
+
+          summary "## razsahra.ir Cloudflare domain repair"
+          echo "Checking whether Cloudflare is authoritative for $DOMAIN…"
+          zones="$(api_call GET "/zones?name=$DOMAIN")"
+          if ! jq -e '.success == true' >/dev/null <<< "$zones"; then
+            err="$(jq -r '[.errors[]?.message] | join("; ")' <<< "$zones")"
+            echo "::error::Could not read the Cloudflare zone. $err"
+            summary "- **Zone check:** Cloudflare API could not read the zone. No DNS changes were made. $err"
+            exit 1
+          fi
+          zone_id="$(jq -r '.result[0].id // empty' <<< "$zones")"
+          zone_status="$(jq -r '.result[0].status // "missing"' <<< "$zones")"
+          if [[ -z "$zone_id" ]]; then
+            echo "::error::razsahra.ir is not present as a zone in the Cloudflare account configured for GitHub Actions."
+            summary "- **Zone check:** `razsahra.ir` was not found in this Cloudflare account. No DNS changes were made. Add/activate the domain in the same Cloudflare account as Pages."
+            exit 1
+          fi
+          echo "Cloudflare zone status: $zone_status"
+          summary "- **Cloudflare zone status:** `$zone_status`"
+
+          if [[ "$zone_status" != "active" ]]; then
+            echo "::error::The Cloudflare zone is not active (status=$zone_status). Registrar nameservers must be pointed to the exact nameservers assigned by Cloudflare before public DNS can resolve."
+            summary "- **Registrar action required:** Zone status is `$zone_status`, not `active`. Cloudflare cannot change the domain registrar's nameserver delegation through this API. No DNS records were edited."
+            exit 1
+          fi
+
+          echo "Checking Pages custom-domain association…"
+          domains="$(api_call GET "/accounts/$CLOUDFLARE_ACCOUNT_ID/pages/projects/$PROJECT/domains")"
+          if ! jq -e '.success == true' >/dev/null <<< "$domains"; then
+            err="$(jq -r '[.errors[]?.message] | join("; ")' <<< "$domains")"
+            echo "::error::Cannot read Pages custom domains. $err"
+            summary "- **Pages custom-domain check:** Cloudflare API could not read the project domains. No DNS changes were made. $err"
+            exit 1
+          fi
+
+          attached="$(jq -r --arg d "$DOMAIN" '[.result[]?.name | ascii_downcase] | index($d) != null' <<< "$domains")"
+          if [[ "$attached" != "true" ]]; then
+            echo "The domain is not attached to Pages. Attempting to attach it…"
+            attach="$(api_call POST "/accounts/$CLOUDFLARE_ACCOUNT_ID/pages/projects/$PROJECT/domains" "{\"name\":\"$DOMAIN\"}")"
+            if ! jq -e '.success == true' >/dev/null <<< "$attach"; then
+              err="$(jq -r '[.errors[]?.message] | join("; ")' <<< "$attach")"
+              echo "::error::Cloudflare could not attach the custom domain. $err"
+              summary "- **Pages custom domain:** Could not attach `$DOMAIN`. $err"
+              exit 1
+            fi
+            summary "- **Pages custom domain:** Attached `$DOMAIN` to project `$PROJECT` through the Cloudflare API."
+          else
+            echo "The domain is already attached to Pages."
+            summary "- **Pages custom domain:** Already attached to project `$PROJECT`."
+          fi
+
+          echo "Checking DNS records at the apex. MX/TXT/CAA records will be preserved."
+          records="$(api_call GET "/zones/$zone_id/dns_records?name=$DOMAIN&per_page=100")"
+          if ! jq -e '.success == true' >/dev/null <<< "$records"; then
+            err="$(jq -r '[.errors[]?.message] | join("; ")' <<< "$records")"
+            echo "::error::Cannot read DNS records. $err"
+            summary "- **DNS records:** Cloudflare API could not read DNS records; no DNS edits were made. $err"
+            exit 1
+          fi
+
+          # A/AAAA records at the apex conflict with the Pages CNAME. Because the user
+          # explicitly requested this apex domain to serve the Pages site, replace only
+          # those web-address records. Mail and verification records are not touched.
+          while IFS= read -r record_id; do
+            [[ -n "$record_id" ]] || continue
+            echo "Removing conflicting apex A/AAAA record $record_id…"
+            deleted="$(api_call DELETE "/zones/$zone_id/dns_records/$record_id")"
+            if ! jq -e '.success == true' >/dev/null <<< "$deleted"; then
+              err="$(jq -r '[.errors[]?.message] | join("; ")' <<< "$deleted")"
+              echo "::error::Could not replace conflicting A/AAAA record $record_id. $err"
+              summary "- **DNS repair:** Could not delete conflicting A/AAAA record `$record_id`. $err"
+              exit 1
+            fi
+          done < <(jq -r --arg d "$DOMAIN" '.result[]? | select(.name == $d and (.type == "A" or .type == "AAAA")) | .id' <<< "$records")
+
+          records="$(api_call GET "/zones/$zone_id/dns_records?name=$DOMAIN&per_page=100")"
+          cname_id="$(jq -r --arg d "$DOMAIN" '[.result[]? | select(.name == $d and .type == "CNAME")][0].id // empty' <<< "$records")"
+          current_target="$(jq -r --arg d "$DOMAIN" '[.result[]? | select(.name == $d and .type == "CNAME")][0].content // empty | ascii_downcase | sub("\\.$";"")' <<< "$records")"
+
+          if [[ -n "$cname_id" ]]; then
+            if [[ "$current_target" != "$TARGET" ]]; then
+              echo "Correcting the apex CNAME target to $TARGET…"
+              changed="$(api_call PATCH "/zones/$zone_id/dns_records/$cname_id" "{\"type\":\"CNAME\",\"name\":\"$DOMAIN\",\"content\":\"$TARGET\",\"proxied\":true,\"ttl\":1}")"
+              if ! jq -e '.success == true' >/dev/null <<< "$changed"; then
+                err="$(jq -r '[.errors[]?.message] | join("; ")' <<< "$changed")"
+                echo "::error::Could not correct the Pages CNAME. $err"
+                summary "- **DNS CNAME:** Could not update the existing root CNAME. $err"
+                exit 1
+              fi
+            else
+              echo "The apex CNAME already targets $TARGET."
+            fi
+          else
+            echo "Creating the apex CNAME for $TARGET…"
+            created="$(api_call POST "/zones/$zone_id/dns_records" "{\"type\":\"CNAME\",\"name\":\"$DOMAIN\",\"content\":\"$TARGET\",\"proxied\":true,\"ttl\":1}")"
+            if ! jq -e '.success == true' >/dev/null <<< "$created"; then
+              err="$(jq -r '[.errors[]?.message] | join("; ")' <<< "$created")"
+              echo "::error::Could not create the Pages CNAME. $err"
+              summary "- **DNS CNAME:** Could not create the root CNAME. $err"
+              exit 1
+            fi
+          fi
+          summary "- **DNS CNAME:** Ensured `$DOMAIN` points to `$TARGET` (proxied). Apex A/AAAA web records, if present, were replaced; MX/TXT/CAA and other records were preserved."
+
+          echo "Checking public DNS briefly for propagation…"
+          resolved="false"
+          for attempt in $(seq 1 8); do
+            if getent ahosts "$DOMAIN" >/dev/null 2>&1; then resolved="true"; break; fi
+            sleep 5
+          done
+          if [[ "$resolved" == "true" ]]; then
+            echo "Public DNS resolver can now resolve $DOMAIN."
+            summary "- **Public DNS lookup:** Resolved during this run."
+          else
+            echo "::warning::Cloudflare records were configured, but the runner still cannot resolve the domain. Registrar delegation/propagation may not yet be complete."
+            summary "- **Public DNS lookup:** Still unresolved after 40 seconds. If the Cloudflare zone is active and CNAME is correct, confirm registrar nameservers and allow DNS propagation."
+          fi
+
+          final_domains="$(api_call GET "/accounts/$CLOUDFLARE_ACCOUNT_ID/pages/projects/$PROJECT/domains")"
+          final_records="$(api_call GET "/zones/$zone_id/dns_records?name=$DOMAIN&per_page=100")"
+          echo "Final Pages domain state:"
+          jq -r --arg d "$DOMAIN" '.result[]? | select((.name | ascii_downcase) == $d) | "- " + .name + ": " + (.status // "attached; status unavailable")' <<< "$final_domains" || true
+          echo "Final apex DNS records (no credentials shown):"
+          jq -r --arg d "$DOMAIN" '.result[]? | select(.name == $d) | "- " + .type + " " + .name + " -> " + (.content // "")' <<< "$final_records" || true
+          summary "- **Final state:** DNS records and Pages domain association have been queried again. Review this job's final output for domain status and the resulting root records."
