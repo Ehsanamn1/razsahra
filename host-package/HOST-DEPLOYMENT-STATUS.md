@@ -11,7 +11,7 @@
 2. دیتابیس MySQL، کاربر دیتابیس و متغیرهای محیطی برنامه را در پنل تنظیم کن؛ `ADMIN_BOOTSTRAP_SECRET` را فقط برای ایجاد مدیر اولیه نگه دار و بعد حذف کن.
 3. دامنه و HTTPS را فعال کن؛ آدرس سلامت `HOST_HEALTHCHECK_URL` باید مبدأ نهایی HTTPS باشد.
 4. SSH host/port/user/private key و `known_hosts` تأییدشده را در GitHub Secrets بگذار و این متغیرها را در GitHub Variables تنظیم کن: `HOST_APP_DIR`, `HOST_HEALTHCHECK_URL`.
-5. workflow **HostMizbanFa connection preflight** را اجرا کن. تا زمانی که این بررسی موفق نشده، `HOST_DEPLOY_ENABLED` را روی `true` نگذار.
+5. workflow **HostMizbanFa connection preflight** را اجرا کن. این بررسی وجود Node.js 20+، npm، rsync، tar، unzip، curl و دسترسی پوشه را نیز کنترل می‌کند. تا زمانی که این بررسی موفق نشده، `HOST_DEPLOY_ENABLED` را روی `true` نگذار.
 6. پس از موفقیت preflight، `HOST_DEPLOY_ENABLED=true` را فعال کن و یک deployment از `main` را اجرا/منتظر بمان.
 
 ## خودکارسازی پس از فعال‌سازی
