@@ -65,15 +65,15 @@ jobs:
           zone_status="$(jq -r '.result[0].status // "missing"' <<< "$zones")"
           if [[ -z "$zone_id" ]]; then
             echo "::error::razsahra.ir is not present as a zone in the Cloudflare account configured for GitHub Actions."
-            summary "- **Zone check:** `razsahra.ir` was not found in this Cloudflare account. No DNS changes were made. Add/activate the domain in the same Cloudflare account as Pages."
+            summary "- **Zone check:** 'razsahra.ir' was not found in this Cloudflare account. No DNS changes were made. Add/activate the domain in the same Cloudflare account as Pages."
             exit 1
           fi
           echo "Cloudflare zone status: $zone_status"
-          summary "- **Cloudflare zone status:** `$zone_status`"
+          summary "- **Cloudflare zone status:** '$zone_status'"
 
           if [[ "$zone_status" != "active" ]]; then
             echo "::error::The Cloudflare zone is not active (status=$zone_status). Registrar nameservers must be pointed to the exact nameservers assigned by Cloudflare before public DNS can resolve."
-            summary "- **Registrar action required:** Zone status is `$zone_status`, not `active`. Cloudflare cannot change the domain registrar's nameserver delegation through this API. No DNS records were edited."
+            summary "- **Registrar action required:** Zone status is '$zone_status', not 'active'. Cloudflare cannot change the domain registrar's nameserver delegation through this API. No DNS records were edited."
             exit 1
           fi
 
@@ -93,13 +93,13 @@ jobs:
             if ! jq -e '.success == true' >/dev/null <<< "$attach"; then
               err="$(jq -r '[.errors[]?.message] | join("; ")' <<< "$attach")"
               echo "::error::Cloudflare could not attach the custom domain. $err"
-              summary "- **Pages custom domain:** Could not attach `$DOMAIN`. $err"
+              summary "- **Pages custom domain:** Could not attach '$DOMAIN'. $err"
               exit 1
             fi
-            summary "- **Pages custom domain:** Attached `$DOMAIN` to project `$PROJECT` through the Cloudflare API."
+            summary "- **Pages custom domain:** Attached '$DOMAIN' to project '$PROJECT' through the Cloudflare API."
           else
             echo "The domain is already attached to Pages."
-            summary "- **Pages custom domain:** Already attached to project `$PROJECT`."
+            summary "- **Pages custom domain:** Already attached to project '$PROJECT'."
           fi
 
           echo "Checking DNS records at the apex. MX/TXT/CAA records will be preserved."
@@ -121,7 +121,7 @@ jobs:
             if ! jq -e '.success == true' >/dev/null <<< "$deleted"; then
               err="$(jq -r '[.errors[]?.message] | join("; ")' <<< "$deleted")"
               echo "::error::Could not replace conflicting A/AAAA record $record_id. $err"
-              summary "- **DNS repair:** Could not delete conflicting A/AAAA record `$record_id`. $err"
+              summary "- **DNS repair:** Could not delete conflicting A/AAAA record '$record_id'. $err"
               exit 1
             fi
           done < <(jq -r --arg d "$DOMAIN" '.result[]? | select(.name == $d and (.type == "A" or .type == "AAAA")) | .id' <<< "$records")
@@ -153,7 +153,7 @@ jobs:
               exit 1
             fi
           fi
-          summary "- **DNS CNAME:** Ensured `$DOMAIN` points to `$TARGET` (proxied). Apex A/AAAA web records, if present, were replaced; MX/TXT/CAA and other records were preserved."
+          summary "- **DNS CNAME:** Ensured '$DOMAIN' points to '$TARGET' (proxied). Apex A/AAAA web records, if present, were replaced; MX/TXT/CAA and other records were preserved."
 
           echo "Checking public DNS briefly for propagation…"
           resolved="false"
@@ -176,3 +176,20 @@ jobs:
           echo "Final apex DNS records (no credentials shown):"
           jq -r --arg d "$DOMAIN" '.result[]? | select(.name == $d) | "- " + .type + " " + .name + " -> " + (.content // "")' <<< "$final_records" || true
           summary "- **Final state:** DNS records and Pages domain association have been queried again. Review this job's final output for domain status and the resulting root records."
+
+          echo "Testing the live domain and nested app routes…"
+          for route in / /madar/ /madar/app/home /api/medar/api/health; do
+            body_file="$(mktemp)"
+            status="$(curl --silent --show-error --location --max-time 18 --retry 2 --retry-all-errors --retry-delay 3 --output "$body_file" --write-out '%{http_code}' "https://$DOMAIN$route")" || status="curl-error"
+            if [[ "$status" == "200" ]]; then
+              echo "PASS HTTPS $DOMAIN$route (HTTP 200)"
+            else
+              echo "::warning::HTTPS check not ready for $DOMAIN$route (status=$status). The Pages custom domain may still be provisioning its certificate."
+              head -c 200 "$body_file" || true
+              echo
+            fi
+            rm -f "$body_file"
+          done
+          final_page_status="$(jq -r --arg d "$DOMAIN" '[.result[]? | select((.name | ascii_downcase) == $d)][0].status // "unknown"' <<< "$final_domains")"
+          echo "Cloudflare Pages custom-domain status at end: $final_page_status"
+          summary "- Final Pages status: $final_page_status"
