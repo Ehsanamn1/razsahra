@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" fill="none">
+<defs>
+ <linearGradient id="sky" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#0c1b28"/><stop offset=".52" stop-color="#1b3441"/><stop offset="1" stop-color="#4b594e"/></linearGradient>
+ <linearGradient id="sun" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f0d5a7" stop-opacity=".82"/><stop offset="1" stop-color="#c98753" stop-opacity=".05"/></linearGradient>
+ <linearGradient id="field" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#68765b"/><stop offset="1" stop-color="#1d3b39"/></linearGradient>
+ <linearGradient id="shed" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#d4c7ac"/><stop offset="1" stop-color="#7d918b"/></linearGradient>
+ <linearGradient id="truck" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#c9a777"/><stop offset="1" stop-color="#8c6446"/></linearGradient>
+ <pattern id="grain" width="80" height="80" patternUnits="userSpaceOnUse"><path d="M0 80 80 0" stroke="#f3dfbd" stroke-opacity=".035"/></pattern>
+ <filter id="soft"><feGaussianBlur stdDeviation="42"/></filter>
+</defs>
+<rect width="1600" height="900" fill="url(#sky)"/>
+<circle cx="1260" cy="180" r="180" fill="url(#sun)" filter="url(#soft)"/>
+<circle cx="1260" cy="180" r="66" fill="#e8c69a" fill-opacity=".65"/>
+<path d="M0 500 180 435 340 468 520 385 690 465 875 405 1040 452 1220 370 1400 435 1600 390V900H0Z" fill="#314b4b"/>
+<path d="M0 590Q240 510 450 585T900 570T1300 535T1600 560V900H0Z" fill="#496253"/>
+<path d="M0 665Q250 570 520 675T1040 650T1600 635V900H0Z" fill="url(#field)"/>
+<path d="M0 735Q300 650 600 744T1200 705T1600 720" stroke="#d6c49a" stroke-opacity=".2" stroke-width="3"/>
+<path d="M0 795Q300 710 600 804T1200 765T1600 780" stroke="#d6c49a" stroke-opacity=".16" stroke-width="3"/>
+<g opacity=".5" stroke="#d6c49a" stroke-width="2">
+ <path d="M120 900 410 680M270 900 520 690M420 900 635 700M570 900 760 710M720 900 890 710"/>
+ <path d="M980 900 1080 690M1130 900 1210 685M1280 900 1340 680M1430 900 1480 685"/>
+</g>
+<!-- Golestan-style lowland poultry farm -->
+<g transform="translate(190 420)">
+ <path d="M0 130 210 0 420 130" stroke="#e3d5b8" stroke-width="13" stroke-linejoin="round"/>
+ <path d="M22 128H398V305H22Z" fill="url(#shed)" fill-opacity=".9"/>
+ <path d="M48 158H372V278H48Z" fill="#18313a"/>
+ <g stroke="#c3b99f" stroke-opacity=".72" stroke-width="4"><path d="M105 158V278M162 158V278M219 158V278M276 158V278M333 158V278"/></g>
+ <path d="M15 303H405" stroke="#e5c89a" stroke-width="8" stroke-linecap="round"/>
+ <rect x="63" y="94" width="294" height="18" rx="9" fill="#d7b98b"/>
+</g>
+<!-- small quail silhouettes -->
+<g fill="#182a2d" stroke="#d5c4a0" stroke-opacity=".45" stroke-width="2">
+ <path d="M730 666c12-27 39-35 59-19 8 7 11 17 9 28l24 14-24 3c-8 18-32 24-48 12-10-7-15-21-12-38z"/>
+ <path d="M790 690l-3 18m15-18 4 18" stroke-width="4" stroke-linecap="round"/>
+ <path d="M820 637c10-21 32-27 48-15 8 6 11 15 9 24l18 12-20 2c-6 14-26 18-39 9-9-6-13-18-10-32z"/>
+ <path d="M858 658l-2 15m13-15 3 15" stroke-width="3" stroke-linecap="round"/>
+</g>
+<!-- local distribution truck and crates -->
+<g transform="translate(1020 565)">
+ <path d="M0 65H235V170H0Z" fill="url(#truck)" stroke="#e4cfaa" stroke-opacity=".7" stroke-width="3"/>
+ <path d="M235 98H292L332 137V170H235Z" fill="#b9b5a2" stroke="#e4cfaa" stroke-opacity=".7" stroke-width="3"/>
+ <path d="M252 108H284L309 137H252Z" fill="#263d44"/>
+ <rect x="18" y="82" width="60" height="38" rx="4" fill="#d7c7a8" fill-opacity=".78"/>
+ <rect x="88" y="82" width="60" height="38" rx="4" fill="#d7c7a8" fill-opacity=".6"/>
+ <rect x="158" y="82" width="60" height="38" rx="4" fill="#d7c7a8" fill-opacity=".78"/>
+ <path d="M18 101H78M88 101H148M158 101H218" stroke="#6c5a45" stroke-opacity=".65" stroke-width="3"/>
+ <circle cx="65" cy="172" r="24" fill="#172a31" stroke="#d4c3a0" stroke-width="6"/>
+ <circle cx="65" cy="172" r="8" fill="#d4c3a0"/>
+ <circle cx="270" cy="172" r="24" fill="#172a31" stroke="#d4c3a0" stroke-width="6"/>
+ <circle cx="270" cy="172" r="8" fill="#d4c3a0"/>
+ <path d="M5 58H226" stroke="#e8d7b8" stroke-width="5" stroke-linecap="round"/>
+</g>
+<!-- connecting route -->
+<path d="M620 760C760 735 875 795 1020 748" stroke="#e6c69b" stroke-opacity=".8" stroke-width="3" stroke-dasharray="8 13" stroke-linecap="round"/>
+<circle cx="620" cy="760" r="7" fill="#e6c69b"/><circle cx="1020" cy="748" r="7" fill="#e6c69b"/>
+<rect width="1600" height="900" fill="url(#grain)"/>
+<path d="M0 0H1600V900H0Z" stroke="#d8c6a3" stroke-opacity=".13" stroke-width="2"/>
+</svg>

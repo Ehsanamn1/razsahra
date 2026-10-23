@@ -5,11 +5,26 @@
   "type": "module",
   "scripts": {
     "build": "node scripts/build.mjs",
-    "check": "node --check 'functions/api/[[path]].js' && node --check assets/raz-sahra-cms-runtime.js && node scripts/check.mjs",
-    "dev": "wrangler pages dev dist"
+    "check": "node --check 'functions/api/[[path]].js' && node --check assets/raz-sahra-cms-runtime.js && node scripts/check.mjs && node scripts/check-mysql-schema.mjs && node --check scripts/check-mysql-connection.mjs && node --check scripts/test-mysql-schema.mjs && node --check scripts/check-mysql-import-contract.mjs && node scripts/check-mysql-import-contract.mjs && node scripts/check-site-images.mjs && node --check server/cms-api.mjs && node --check server/index.mjs && node --check server/medar-api.mjs && node --check server/start-domestic.mjs && node --check scripts/test-mysql-cms-api.mjs && node --check scripts/test-domestic-node-server.mjs && node --check scripts/apply-medar-mysql-foundation.mjs && node --check scripts/test-medar-mysql-foundation.mjs && node --check scripts/test-medar-domestic-api.mjs && node --check scripts/test-medar-domestic-unit.mjs",
+    "dev": "wrangler pages dev dist",
+    "migrate:cms:dry-run": "node scripts/migrate-cms-data.mjs",
+    "migrate:cms:apply": "node scripts/migrate-cms-data.mjs --apply",
+    "check:mysql-schema": "node scripts/check-mysql-schema.mjs",
+    "check:mysql-connection": "node scripts/check-mysql-connection.mjs",
+    "test:mysql-schema": "node scripts/test-mysql-schema.mjs",
+    "check:mysql-import-contract": "node scripts/check-mysql-import-contract.mjs",
+    "check:images": "node scripts/check-site-images.mjs",
+    "start:domestic": "node server/start-domestic.mjs",
+    "start:domestic:site": "node server/index.mjs",
+    "migrate:medar:mysql:dry-run": "node scripts/apply-medar-mysql-foundation.mjs",
+    "migrate:medar:mysql:apply": "node scripts/apply-medar-mysql-foundation.mjs --apply",
+    "test:medar:api": "node --test scripts/test-medar-domestic-unit.mjs scripts/test-medar-domestic-api.mjs"
   },
   "dependencies": {
-    "@neondatabase/serverless": "^1.2.0"
+    "@neondatabase/serverless": "^1.2.0",
+    "mysql2": "^3.15.3",
+    "hono": "^4.9.7",
+    "@hono/node-server": "^1.19.1"
   },
   "devDependencies": {
     "wrangler": "^4.151.3"

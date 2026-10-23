@@ -1,0 +1,154 @@
+name: Domestic migration CI — Raz Sahra
+
+on:
+  push:
+    branches: ["feat/mysql-domestic-hosting"]
+  pull_request:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: razsahra-domestic-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    services:
+      mysql:
+        image: mysql:8.4
+        env:
+          MYSQL_ROOT_PASSWORD: ci-root-password
+          MYSQL_DATABASE: razsahra_ci
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -pci-root-password"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+      - name: Static checks and repository contract checks
+        run: npm run check
+      - name: Validate MySQL integration test syntax
+        run: node --check scripts/test-mysql-schema.mjs
+      - name: Validate the guarded CMS data-transfer utility syntax
+        run: node --check scripts/migrate-cms-data.mjs
+      - name: Apply and verify schema against disposable MySQL 8.4
+        env:
+          TARGET_MYSQL_URL: mysql://root:ci-root-password@127.0.0.1:3306/razsahra_ci
+        run: node scripts/test-mysql-schema.mjs && node scripts/check-mysql-connection.mjs
+      - name: Apply the complete Medar MySQL schema to the same disposable database
+        env:
+          MEDAR_MYSQL_URL: mysql://root:ci-root-password@127.0.0.1:3306/razsahra_ci
+        run: npm run migrate:medar:mysql:apply
+      - name: Exercise Node/MySQL CMS API against disposable schema
+        env:
+          TARGET_MYSQL_URL: mysql://root:ci-root-password@127.0.0.1:3306/razsahra_ci
+          TEST_ADMIN_BOOTSTRAP_SECRET: ci-only-bootstrap-secret-with-at-least-32-characters
+        run: node scripts/test-mysql-cms-api.mjs
+      - name: Test the domestic Medar API and financial/task workflows against MySQL
+        env:
+          MYSQL_URL: mysql://root:ci-root-password@127.0.0.1:3306/razsahra_ci
+        run: npm run test:medar:api
+      - name: Smoke-test combined domestic Node HTTP server and same-origin Medar proxy
+        env:
+          TARGET_MYSQL_URL: mysql://root:ci-root-password@127.0.0.1:3306/razsahra_ci
+        run: node scripts/test-domestic-node-server.mjs
+      - name: Build static site bundle
+        env:
+          SITE_URL: https://razsahra.pages.dev
+          SITE_BUILD_VERSION: ${{ github.sha }}
+        run: npm run build
+      - name: Resolve pinned Medar source revision
+        id: medar-source
+        shell: bash
+        run: |
+          set -euo pipefail
+          ref="$(node --input-type=module -e 'import { readFileSync } from "node:fs"; const pin = JSON.parse(readFileSync("integration/medar-source.json", "utf8")); if (pin.repository !== "Ehsanamn1/simorgh" || !/^[0-9a-f]{40}$/.test(pin.commit)) process.exit(2); process.stdout.write(pin.commit)')"
+          echo "ref=$ref" >> "$GITHUB_OUTPUT"
+          echo "Using pinned Medar source revision: $ref"
+      - name: Check out pinned Medar source for domestic hosting
+        uses: actions/checkout@v4
+        with:
+          repository: Ehsanamn1/simorgh
+          ref: ${{ steps.medar-source.outputs.ref }}
+          path: medar-src
+      - name: Install pinned Medar dependencies
+        working-directory: medar-src
+        run: npm install --no-audit --no-fund
+      - name: Validate pinned Medar source
+        working-directory: medar-src
+        run: |
+          npm run typecheck
+          npm run lint
+          npm run test
+      - name: Build Medar under /madar with same-origin domestic API
+        working-directory: medar-src
+        env:
+          VITE_API_BASE_URL: /api/medar
+          VITE_ENABLE_AUTH_UI: "true"
+          VITE_DISABLE_API_UI: "false"
+          VITE_APP_VERSION: ${{ github.sha }}-${{ steps.medar-source.outputs.ref }}
+        run: npm run build -- --base=/madar/ --outDir ../dist/madar --emptyOutDir
+      - name: Verify combined domestic website and Medar artifact
+        env:
+          PARENT_SOURCE_SHA: ${{ github.sha }}
+          MEDAR_SOURCE_SHA: ${{ steps.medar-source.outputs.ref }}
+        run: |
+          set -euo pipefail
+          test -s dist/index.html
+          test -s dist/assets/raz-sahra-premium.css
+          test -s dist/assets/raz-sahra-cms-runtime.js
+          test -s dist/_headers
+          test -s dist/manifest.webmanifest
+          test -s dist/madar/index.html
+          test -s dist/madar/manifest.webmanifest
+          test -s dist/madar/sw.js
+          grep -R -q '/api/medar' dist/madar/assets
+          grep -R -F -q "${PARENT_SOURCE_SHA}-${MEDAR_SOURCE_SHA}" dist/madar/assets
+      - name: Install Chromium for combined-site browser acceptance
+        working-directory: medar-src
+        timeout-minutes: 5
+        run: npx playwright install chromium
+      - name: Test Raz Sahra slides/navigation and Madar mobile shell in Chromium
+        run: node scripts/test-site-browser.mjs
+      - name: Assemble versioned domestic host package
+        env:
+          SOURCE_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          mkdir -p release/raz-sahra
+          cp -a dist server functions db scripts assets package.json release/raz-sahra/
+          cp README.md release/raz-sahra/README.md
+          cat > release/raz-sahra/RELEASE-METADATA.txt <<EOF
+          project=raz-sahra-medar
+          source_sha=${SOURCE_SHA}
+          built_at_utc=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+          runtime=nodejs-22
+          database=mysql-8.0+
+          deployment=manual-host-upload-required
+          EOF
+          (cd release && tar -czf "raz-sahra-domestic-${SOURCE_SHA:0:12}.tar.gz" raz-sahra)
+          sha256sum "release/raz-sahra-domestic-${SOURCE_SHA:0:12}.tar.gz" > "release/raz-sahra-domestic-${SOURCE_SHA:0:12}.tar.gz.sha256"
+      - name: Upload versioned host package (not a production deployment)
+        uses: actions/upload-artifact@v4
+        with:
+          name: raz-sahra-domestic-host-${{ github.sha }}
+          path: |
+            release/*.tar.gz
+            release/*.sha256
+          if-no-files-found: error
+          retention-days: 14

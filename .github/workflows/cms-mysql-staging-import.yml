@@ -1,0 +1,71 @@
+name: Guarded Raz Sahra CMS import to domestic staging
+
+on:
+  workflow_dispatch:
+    inputs:
+      apply:
+        description: "Actually import rows (leave false for a read-only dry run)"
+        required: true
+        type: boolean
+        default: false
+      confirm_staging_only:
+        description: "Required only when apply=true: type IMPORT_TO_STAGING"
+        required: false
+        type: string
+        default: ""
+
+permissions:
+  contents: read
+
+concurrency:
+  group: razsahra-cms-staging-import
+  cancel-in-progress: false
+
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    environment: domestic-staging
+    steps:
+      - name: Checkout migration branch
+        uses: actions/checkout@v4
+        with:
+          ref: feat/mysql-domestic-hosting
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+      - name: Validate target and source connection settings
+        env:
+          SOURCE_DATABASE_URL: ${{ secrets.RAZ_SAHRA_SOURCE_DATABASE_URL }}
+          TARGET_MYSQL_URL: ${{ secrets.RAZ_SAHRA_TARGET_MYSQL_URL }}
+        run: |
+          set -euo pipefail
+          test -n "$SOURCE_DATABASE_URL" || { echo "Missing environment secret RAZ_SAHRA_SOURCE_DATABASE_URL"; exit 2; }
+          test -n "$TARGET_MYSQL_URL" || { echo "Missing environment secret RAZ_SAHRA_TARGET_MYSQL_URL"; exit 2; }
+          npm run check:mysql-schema
+          node scripts/check-mysql-connection.mjs
+      - name: Dry run — compare source and target table counts
+        if: ${{ inputs.apply != true }}
+        env:
+          SOURCE_DATABASE_URL: ${{ secrets.RAZ_SAHRA_SOURCE_DATABASE_URL }}
+          TARGET_MYSQL_URL: ${{ secrets.RAZ_SAHRA_TARGET_MYSQL_URL }}
+        run: npm run migrate:cms:dry-run
+      - name: Require explicit staging confirmation
+        if: ${{ inputs.apply == true }}
+        env:
+          CONFIRMATION: ${{ inputs.confirm_staging_only }}
+        run: |
+          set -euo pipefail
+          test "$CONFIRMATION" = "IMPORT_TO_STAGING" || {
+            echo "Import refused. Set confirm_staging_only to IMPORT_TO_STAGING after verifying TARGET_MYSQL_URL points to a dedicated staging database."
+            exit 2
+          }
+      - name: Import CMS data to the empty staging target
+        if: ${{ inputs.apply == true }}
+        env:
+          SOURCE_DATABASE_URL: ${{ secrets.RAZ_SAHRA_SOURCE_DATABASE_URL }}
+          TARGET_MYSQL_URL: ${{ secrets.RAZ_SAHRA_TARGET_MYSQL_URL }}
+        run: npm run migrate:cms:apply
