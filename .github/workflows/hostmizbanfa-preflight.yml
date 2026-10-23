@@ -66,7 +66,7 @@ jobs:
             "$HOST_SSH_USER@$HOST_SSH_HOST" \
             "APP_DIR=$APP_DIR_Q bash -s" <<'REMOTE'
           set -euo pipefail
-          for command_name in node npm tar unzip curl; do
+          for command_name in node npm tar unzip curl rsync; do
             command -v "$command_name" >/dev/null || { echo "Missing required command: $command_name" >&2; exit 2; }
           done
           node -e 'if(Number(process.versions.node.split(".")[0])<20){console.error("Node.js 20+ required");process.exit(2)};console.log("Node.js",process.version)'
