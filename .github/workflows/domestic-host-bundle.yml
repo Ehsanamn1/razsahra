@@ -274,7 +274,7 @@ jobs:
           SSH_OPTS=(-i "$HOME/.ssh/id_ed25519" -p "$HOST_SSH_PORT" -o BatchMode=yes -o ConnectTimeout=10 -o StrictHostKeyChecking=yes -o UserKnownHostsFile="$HOME/.ssh/known_hosts" -o IdentitiesOnly=yes)
           RSYNC_RSH="ssh -i $HOME/.ssh/id_ed25519 -p $HOST_SSH_PORT -o BatchMode=yes -o StrictHostKeyChecking=yes -o UserKnownHostsFile=$HOME/.ssh/known_hosts -o IdentitiesOnly=yes"
 
-          "\${SSH_OPTS[@]}" "$TARGET" "APP_DIR=$APP_DIR_Q bash -s" <<'REMOTE'
+          "${SSH_OPTS[@]}" "$TARGET" "APP_DIR=$APP_DIR_Q bash -s" <<'REMOTE'
           set -euo pipefail
           [[ "$APP_DIR" != "$HOME" ]] || { echo "HOST_APP_DIR cannot be the account home directory." >&2; exit 2; }
           case "$APP_DIR" in "$HOME"/*) ;; *) echo "HOST_APP_DIR must be inside the SSH account home directory." >&2; exit 2 ;; esac
@@ -287,7 +287,7 @@ jobs:
           REMOTE
 
           # Store a code-only backup outside the app directory before the first mutation.
-          "\${SSH_OPTS[@]}" "$TARGET" "APP_DIR=$APP_DIR_Q DEPLOY_SHA=$DEPLOY_SHA_Q bash -s" <<'REMOTE'
+          "${SSH_OPTS[@]}" "$TARGET" "APP_DIR=$APP_DIR_Q DEPLOY_SHA=$DEPLOY_SHA_Q bash -s" <<'REMOTE'
           set -euo pipefail
           BACKUP_DIR="$HOME/.razsahra-deploy-backups"
           mkdir -p "$BACKUP_DIR"
@@ -312,7 +312,7 @@ jobs:
             if [[ "$rc" -ne 0 && "$DEPLOY_STARTED" == "1" ]]; then
               echo "::warning::Deployment failed; attempting to restore the previous application files."
               set +e
-              "\${SSH_OPTS[@]}" "$TARGET" "APP_DIR=$APP_DIR_Q DEPLOY_SHA=$DEPLOY_SHA_Q bash -s" <<'ROLLBACK'
+              "${SSH_OPTS[@]}" "$TARGET" "APP_DIR=$APP_DIR_Q DEPLOY_SHA=$DEPLOY_SHA_Q bash -s" <<'ROLLBACK'
           set -euo pipefail
           BACKUP_FILE="$HOME/.razsahra-deploy-backups/razsahra-$DEPLOY_SHA.tar.gz"
           RESTORE_DIR="$HOME/.razsahra-deploy-backups/restore-$DEPLOY_SHA"
@@ -349,7 +349,7 @@ jobs:
             --exclude='.htaccess' --exclude='.well-known/' \
             host-package/ "$TARGET:$HOST_APP_DIR/"
 
-          "\${SSH_OPTS[@]}" "$TARGET" "APP_DIR=$APP_DIR_Q bash -s" <<'REMOTE'
+          "${SSH_OPTS[@]}" "$TARGET" "APP_DIR=$APP_DIR_Q bash -s" <<'REMOTE'
           set -euo pipefail
           cd "$APP_DIR"
           npm ci --omit=dev --no-audit --no-fund
@@ -399,7 +399,7 @@ jobs:
 
           DEPLOY_STARTED=0
           trap - EXIT
-          if ! "\${SSH_OPTS[@]}" "$TARGET" "bash -s" <<'REMOTE'
+          if ! "${SSH_OPTS[@]}" "$TARGET" "bash -s" <<'REMOTE'
           set -euo pipefail
           BACKUP_DIR="$HOME/.razsahra-deploy-backups"
           find "$BACKUP_DIR" -maxdepth 1 -type f -name 'razsahra-*.tar.gz' -printf '%T@ %f\n' | sort -nr | tail -n +6 | cut -d' ' -f2- | while IFS= read -r name; do rm -f -- "$BACKUP_DIR/$name"; done
