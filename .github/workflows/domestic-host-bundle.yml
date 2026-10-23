@@ -16,20 +16,14 @@ on:
       - "integration/medar-source.json"
       - ".github/workflows/domestic-host-bundle.yml"
   push:
-    branches: ["feat/domestic-host-release-bundle"]
-    paths:
-      - "host-package/**"
-      - "assets/**"
-      - "index.html"
-      - "404.html"
-      - "manifest.webmanifest"
-      - "robots.txt"
-      - "sitemap.xml"
-      - "scripts/**"
-      - "functions/**"
-      - ".github/workflows/domestic-host-bundle.yml"
+    branches: ["main", "feat/domestic-host-release-bundle"]
 permissions:
   contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   bundle:
     runs-on: ubuntu-latest
@@ -229,6 +223,192 @@ jobs:
           path: raz-sahra-host-package-staging.zip
           if-no-files-found: error
           retention-days: 14
+      - name: Deploy and verify HostMizbanFa release
+        if: ${{ github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && vars.HOST_DEPLOY_ENABLED == 'true' }}
+        env:
+          HOST_SSH_HOST: ${{ secrets.HOST_SSH_HOST }}
+          HOST_SSH_PORT: ${{ secrets.HOST_SSH_PORT }}
+          HOST_SSH_USER: ${{ secrets.HOST_SSH_USER }}
+          SSH_PRIVATE_KEY: ${{ secrets.HOST_SSH_PRIVATE_KEY }}
+          SSH_KNOWN_HOSTS: ${{ secrets.HOST_SSH_KNOWN_HOSTS }}
+          HOST_APP_DIR: ${{ vars.HOST_APP_DIR }}
+          HOST_HEALTHCHECK_URL: ${{ vars.HOST_HEALTHCHECK_URL }}
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          for name in HOST_SSH_HOST HOST_SSH_PORT HOST_SSH_USER SSH_PRIVATE_KEY SSH_KNOWN_HOSTS HOST_APP_DIR HOST_HEALTHCHECK_URL; do
+            case "$name" in
+              HOST_SSH_HOST) value="$HOST_SSH_HOST" ;;
+              HOST_SSH_PORT) value="$HOST_SSH_PORT" ;;
+              HOST_SSH_USER) value="$HOST_SSH_USER" ;;
+              SSH_PRIVATE_KEY) value="$SSH_PRIVATE_KEY" ;;
+              SSH_KNOWN_HOSTS) value="$SSH_KNOWN_HOSTS" ;;
+              HOST_APP_DIR) value="$HOST_APP_DIR" ;;
+              HOST_HEALTHCHECK_URL) value="$HOST_HEALTHCHECK_URL" ;;
+            esac
+            if [[ -z "$value" ]]; then
+              echo "::error::Automatic HostMizbanFa deployment is enabled but $name is missing."
+              exit 1
+            fi
+          done
+          [[ "$HOST_SSH_PORT" =~ ^[0-9]+$ ]] && (( HOST_SSH_PORT > 0 && HOST_SSH_PORT < 65536 )) || { echo "::error::HOST_SSH_PORT must be between 1 and 65535"; exit 1; }
+          [[ "$HOST_APP_DIR" =~ ^/[A-Za-z0-9._/-]+$ && "$HOST_APP_DIR" != "/" && "$HOST_APP_DIR" != *".."* ]] || { echo "::error::HOST_APP_DIR must be a dedicated absolute path without spaces or '..' segments"; exit 1; }
+          node --input-type=module -e 'const u=new URL(process.argv[1]);if(u.protocol!=="https:"||u.pathname!=="/"||u.search||u.hash||u.username||u.password)process.exit(1)' "$HOST_HEALTHCHECK_URL" || { echo "::error::HOST_HEALTHCHECK_URL must be the HTTPS site origin, e.g. https://razsahra.ir"; exit 1; }
+          BASE_URL="$(node --input-type=module -e 'console.log(new URL(process.argv[1]).origin)' "$HOST_HEALTHCHECK_URL")"
+          test -s host-package/package-lock.json || { echo "::error::The generated Node package-lock.json is missing; refusing to deploy an unpinned dependency install."; exit 1; }
+
+          install -m 700 -d "$HOME/.ssh"
+          printf '%s\n' "$SSH_PRIVATE_KEY" > "$HOME/.ssh/id_ed25519"
+          chmod 600 "$HOME/.ssh/id_ed25519"
+          printf '%s\n' "$SSH_KNOWN_HOSTS" > "$HOME/.ssh/known_hosts"
+          chmod 600 "$HOME/.ssh/known_hosts"
+          ssh-keygen -y -f "$HOME/.ssh/id_ed25519" >/dev/null
+          ssh-keygen -F "$HOST_SSH_HOST" -f "$HOME/.ssh/known_hosts" >/dev/null || ssh-keygen -F "[$HOST_SSH_HOST]:$HOST_SSH_PORT" -f "$HOME/.ssh/known_hosts" >/dev/null || {
+            echo "::error::Pinned known_hosts does not contain HOST_SSH_HOST. Verify the fingerprint with HostMizbanFa before saving it."
+            exit 1
+          }
+
+          TARGET="$HOST_SSH_USER@$HOST_SSH_HOST"
+          APP_DIR_Q="$(printf '%q' "$HOST_APP_DIR")"
+          DEPLOY_SHA_Q="$(printf '%q' "$GITHUB_SHA")"
+          SSH_OPTS=(-i "$HOME/.ssh/id_ed25519" -p "$HOST_SSH_PORT" -o BatchMode=yes -o ConnectTimeout=10 -o StrictHostKeyChecking=yes -o UserKnownHostsFile="$HOME/.ssh/known_hosts" -o IdentitiesOnly=yes)
+          RSYNC_RSH="ssh -i $HOME/.ssh/id_ed25519 -p $HOST_SSH_PORT -o BatchMode=yes -o StrictHostKeyChecking=yes -o UserKnownHostsFile=$HOME/.ssh/known_hosts -o IdentitiesOnly=yes"
+
+          "${SSH_OPTS[@]}" "$TARGET" "APP_DIR=$APP_DIR_Q bash -s" <<'REMOTE'
+          set -euo pipefail
+          [[ "$APP_DIR" != "$HOME" ]] || { echo "HOST_APP_DIR cannot be the account home directory." >&2; exit 2; }
+          case "$APP_DIR" in "$HOME"/*) ;; *) echo "HOST_APP_DIR must be inside the SSH account home directory." >&2; exit 2 ;; esac
+          for command_name in node npm rsync tar curl; do
+            command -v "$command_name" >/dev/null || { echo "Missing required remote command: $command_name" >&2; exit 2; }
+          done
+          node -e 'if(Number(process.versions.node.split(".")[0])<20){console.error("Node.js 20+ required");process.exit(2)};console.log("Remote runtime:",process.version)'
+          test -d "$APP_DIR" || { echo "Application root does not exist: $APP_DIR" >&2; exit 3; }
+          test -w "$APP_DIR" || { echo "Application root is not writable by the deployment user" >&2; exit 4; }
+          REMOTE
+
+          # Store a code-only backup outside the app directory before the first mutation.
+          "${SSH_OPTS[@]}" "$TARGET" "APP_DIR=$APP_DIR_Q DEPLOY_SHA=$DEPLOY_SHA_Q bash -s" <<'REMOTE'
+          set -euo pipefail
+          BACKUP_DIR="$HOME/.razsahra-deploy-backups"
+          mkdir -p "$BACKUP_DIR"
+          chmod 700 "$BACKUP_DIR"
+          BACKUP_FILE="$BACKUP_DIR/razsahra-$DEPLOY_SHA.tar.gz"
+          tar -czf "$BACKUP_FILE" \
+            --exclude='./node_modules' --exclude='./node_modules/*' \
+            --exclude='./tmp' --exclude='./tmp/*' \
+            --exclude='./logs' --exclude='./logs/*' \
+            --exclude='./uploads' --exclude='./uploads/*' \
+            --exclude='./public/uploads' --exclude='./public/uploads/*' \
+            --exclude='./.env' --exclude='./.env.*' \
+            --exclude='./.htaccess' --exclude='./.well-known' --exclude='./.well-known/*' \
+            -C "$APP_DIR" .
+          test -s "$BACKUP_FILE"
+          REMOTE
+
+          DEPLOY_STARTED=1
+          rollback_on_failure() {
+            local rc=$?
+            trap - EXIT
+            if [[ "$rc" -ne 0 && "$DEPLOY_STARTED" == "1" ]]; then
+              echo "::warning::Deployment failed; attempting to restore the previous application files."
+              set +e
+              "${SSH_OPTS[@]}" "$TARGET" "APP_DIR=$APP_DIR_Q DEPLOY_SHA=$DEPLOY_SHA_Q bash -s" <<'ROLLBACK'
+          set -euo pipefail
+          BACKUP_FILE="$HOME/.razsahra-deploy-backups/razsahra-$DEPLOY_SHA.tar.gz"
+          RESTORE_DIR="$HOME/.razsahra-deploy-backups/restore-$DEPLOY_SHA"
+          if [[ ! -s "$BACKUP_FILE" ]]; then echo "No release backup found." >&2; exit 5; fi
+          rm -rf "$RESTORE_DIR"
+          mkdir -p "$RESTORE_DIR"
+          tar -xzf "$BACKUP_FILE" -C "$RESTORE_DIR"
+          rsync -a --delete \
+            --exclude='.env' --exclude='.env.*' --exclude='node_modules/' --exclude='tmp/' \
+            --exclude='logs/' --exclude='uploads/' --exclude='public/uploads/' \
+            --exclude='.htaccess' --exclude='.well-known/' \
+            "$RESTORE_DIR/" "$APP_DIR/"
+          rm -rf "$RESTORE_DIR"
+          cd "$APP_DIR"
+          if [[ -s package-lock.json && -s package.json ]]; then npm ci --omit=dev --no-audit --no-fund; fi
+          mkdir -p tmp
+          touch tmp/restart.txt
+          echo "Previous application code restored."
+          ROLLBACK
+              local rollback_rc=$?
+              if [[ "$rollback_rc" -ne 0 ]]; then
+                echo "::error::Automatic rollback failed. The previous code backup remains under ~/.razsahra-deploy-backups on the host."
+              else
+                echo "Automatic rollback command completed."
+              fi
+            fi
+            exit "$rc"
+          }
+          trap rollback_on_failure EXIT
+
+          rsync -az --delete --delay-updates -e "$RSYNC_RSH" \
+            --exclude='.env' --exclude='.env.*' --exclude='node_modules/' --exclude='tmp/' \
+            --exclude='logs/' --exclude='uploads/' --exclude='public/uploads/' \
+            --exclude='.htaccess' --exclude='.well-known/' \
+            host-package/ "$TARGET:$HOST_APP_DIR/"
+
+          "${SSH_OPTS[@]}" "$TARGET" "APP_DIR=$APP_DIR_Q bash -s" <<'REMOTE'
+          set -euo pipefail
+          cd "$APP_DIR"
+          npm ci --omit=dev --no-audit --no-fund
+          mkdir -p tmp
+          touch tmp/restart.txt
+          REMOTE
+
+          # Verify real HTTPS paths and the production MySQL API after restart.
+          HEALTH_FILE="$(mktemp)"
+          healthy=0
+          for attempt in $(seq 1 15); do
+            health_status="$(curl --silent --show-error --max-time 12 --output "$HEALTH_FILE" --write-out '%{http_code}' "$BASE_URL/api/health" 2>/dev/null)" || health_status="curl-error"
+            if [[ "$health_status" == "200" ]] && node -e 'const fs=require("node:fs");let x;try{x=JSON.parse(fs.readFileSync(process.argv[1],"utf8"))}catch{};if(!x||x.ok!==true||x.database!=="connected")process.exit(1)' "$HEALTH_FILE"; then
+              healthy=1
+              break
+            fi
+            sleep 4
+          done
+          if [[ "$healthy" != "1" ]]; then
+            echo "::error::The deployed host did not report a healthy Node/MySQL API. Rollback will be attempted."
+            head -c 300 "$HEALTH_FILE" || true
+            rm -f "$HEALTH_FILE"
+            exit 1
+          fi
+          rm -f "$HEALTH_FILE"
+
+          for route in "/" "/madar/" "/madar/app/home"; do
+            route_status="$(curl --silent --show-error --max-time 20 --output /dev/null --write-out '%{http_code}' "$BASE_URL$route")" || route_status="curl-error"
+            [[ "$route_status" == "200" ]] || { echo "::error::Post-deploy route check failed: $route returned HTTP $route_status"; exit 1; }
+          done
+
+          medar_file="$(mktemp)"
+          medar_status="$(curl --silent --show-error --max-time 20 --output "$medar_file" --write-out '%{http_code}' "$BASE_URL/api/medar/api/health")" || medar_status="curl-error"
+          if [[ "$medar_status" != "200" ]] || ! node -e 'const fs=require("node:fs");let x;try{x=JSON.parse(fs.readFileSync(process.argv[1],"utf8"))}catch{};if(!x||x.ok!==true)process.exit(1)' "$medar_file"; then
+            echo "::error::Post-deploy Medar API proxy health check failed (HTTP $medar_status)."
+            head -c 300 "$medar_file" || true
+            rm -f "$medar_file"
+            exit 1
+          fi
+          rm -f "$medar_file"
+
+          admin_status="$(curl --silent --show-error --max-time 15 --output /dev/null --write-out '%{http_code}' "$BASE_URL/api/admin/pages")" || admin_status="curl-error"
+          case "$admin_status" in
+            401|403) ;;
+            *) echo "::error::Unauthenticated CMS admin access was not denied (HTTP $admin_status)."; exit 1 ;;
+          esac
+
+          DEPLOY_STARTED=0
+          trap - EXIT
+          if ! "${SSH_OPTS[@]}" "$TARGET" "bash -s" <<'REMOTE'
+          set -euo pipefail
+          BACKUP_DIR="$HOME/.razsahra-deploy-backups"
+          find "$BACKUP_DIR" -maxdepth 1 -type f -name 'razsahra-*.tar.gz' -printf '%T@ %f\n' | sort -nr | tail -n +6 | cut -d' ' -f2- | while IFS= read -r name; do rm -f -- "$BACKUP_DIR/$name"; done
+          REMOTE
+          then
+            echo "::warning::Release is healthy, but old backup rotation did not finish."
+          fi
+          echo "HostMizbanFa deployment passed: homepage, Madar routes, MySQL health, Medar upstream proxy and protected CMS admin endpoint." >> "$GITHUB_STEP_SUMMARY"
+
       - name: State release limitation
         run: |
           echo "A staging ZIP with both Raz Sahara and the Medar web app was built. Medar API still proxies to the external operational Worker; do not treat as an independent Node/MySQL release. Host acceptance tests remain required." >> "$GITHUB_STEP_SUMMARY"

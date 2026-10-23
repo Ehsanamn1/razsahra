@@ -1,31 +1,35 @@
-# HostMizbanFa release gate
+# وضعیت استقرار راز صحرا + مدار در میزبان‌فا
 
-## Current state
+## وضعیت فعلی
+- ساخت بستهٔ ترکیبی راز صحرا و رابط مدار در مسیر `/madar/` در GitHub Actions اعتبارسنجی می‌شود.
+- workflow ساخت روی push به `main` اجرا می‌شود؛ انتشار Cloudflare Pages نیز با workflow خودش انجام می‌شود.
+- مسیر استقرار خودکار میزبان‌فا در همان workflow ساخته شده، اما **به‌صورت ایمن gated است** و تا زمانی که `HOST_DEPLOY_ENABLED=true` و اطلاعات اتصال واقعی ثبت نشوند، اجرا نمی‌شود.
+- بک‌اند CMS برای میزبان‌فا بر Node.js/MySQL است. API عملیاتی مدار همچنان از طریق proxy به Worker فعلی می‌رود و هنوز به Node.js/MySQL منتقل نشده است.
 
-This repository has a staging workflow for the combined Raz Sahara website and Madar web frontend. The staging package includes the Node.js/MySQL CMS baseline and proxies Madar API requests to the existing operational Medar Worker.
+## یک‌بار باقی‌مانده پس از خرید هاست
+1. برنامه Node.js را در پنل میزبان‌فا ایجاد کن (Node.js 20+، startup روی `app.js`) و پوشهٔ اختصاصی برنامه را داخل home حساب مشخص کن.
+2. دیتابیس MySQL، کاربر دیتابیس و متغیرهای محیطی برنامه را در پنل تنظیم کن؛ `ADMIN_BOOTSTRAP_SECRET` را فقط برای ایجاد مدیر اولیه نگه دار و بعد حذف کن.
+3. دامنه و HTTPS را فعال کن؛ آدرس سلامت `HOST_HEALTHCHECK_URL` باید مبدأ نهایی HTTPS باشد.
+4. SSH host/port/user/private key و `known_hosts` تأییدشده را در GitHub Secrets بگذار و این متغیرها را در GitHub Variables تنظیم کن: `HOST_APP_DIR`, `HOST_HEALTHCHECK_URL`.
+5. workflow **HostMizbanFa connection preflight** را اجرا کن. این بررسی وجود Node.js 20+، npm، rsync، tar، unzip، curl و دسترسی پوشه را نیز کنترل می‌کند. تا زمانی که این بررسی موفق نشده، `HOST_DEPLOY_ENABLED` را روی `true` نگذار.
+6. پس از موفقیت preflight، `HOST_DEPLOY_ENABLED=true` را فعال کن و یک deployment از `main` را اجرا/منتظر بمان.
 
-**This is not a standalone production release.** The Madar operational API has not been ported to Node.js/MySQL. Do not describe deployment as complete until the target-host acceptance checklist below passes.
+## خودکارسازی پس از فعال‌سازی
+- هر push/ادغام به `main` workflow ساخت سایت، اجرای تست‌های برنامه، تست MySQL موقت و ساخت بستهٔ انتشار را اجرا می‌کند.
+- اگر تمام تست‌ها موفق باشند و متغیر فعال‌سازی روشن باشد، با SSH فایل‌های نسخهٔ جدید همگام می‌شوند؛ `.env` و فایل‌های پیکربندی میزبانی حفظ می‌شوند؛ dependencies از lockfile نصب و Passenger با `tmp/restart.txt` restart می‌شود.
+- workflow سپس `/api/health`, صفحهٔ اصلی، `/madar/`, `/madar/app/home`, proxy سلامت مدار و عدم دسترسی ناشناس به API مدیریت را روی دامنهٔ واقعی بررسی می‌کند.
+- پیش از جایگزینی، نسخهٔ قبلی کد در `~/.razsahra-deploy-backups` backup می‌شود. اگر تست پس از انتشار شکست بخورد، workflow تلاش می‌کند فایل‌های قبلی را بازیابی کند.
+- انتشار میزبان‌فا هیچ migration یا تغییر خودکار روی دیتابیس واقعی اجرا نمی‌کند. برای تغییرهای schema باید migration جدا، backup و آزمون صریح اضافه شود.
+- در نبود اطلاعات اتصال واقعی، deploy میزبان‌فا خاموش می‌ماند؛ نبود secrets سبب شکست deployment نمی‌شود تا زمانی که فعال‌سازی صریح انجام نشده باشد.
 
-## Before deployment
+## چک‌لیست پذیرش واقعی
+- [ ] `GET /api/health` پاسخ سالم با `database: "connected"` می‌دهد.
+- [ ] ایجاد مدیر اولیه فقط یک‌بار ممکن است؛ پس از آن secret حذف شود.
+- [ ] ورود/خروج مدیر و نقش‌ها و محدودیت API مدیریت صحیح است.
+- [ ] اطلاعات CMS و درخواست‌های تماس در MySQL پس از restart باقی می‌مانند.
+- [ ] `/madar/` و `/madar/app/home` پس از refresh بارگذاری می‌شوند.
+- [ ] proxy مسیر `/api/medar/*` و عملیات authenticated مدار سالم است.
+- [ ] HTTPS، cookieها، logها، restart برنامه و backup/restore در حساب واقعی تأیید شده‌اند.
 
-1. Confirm the HostMizbanFa plan supports a persistent Node.js 20+ application, the required start command, environment variables, and MySQL access from the application.
-2. Configure secrets only in the hosting control panel: database credentials and a long random `ADMIN_BOOTSTRAP_SECRET`. Never commit them.
-3. Set `MEDAR_API_ORIGIN` to the verified operational Medar API origin.
-4. Run the GitHub Actions workflow **Build domestic host bundle (staging)** and download the artifact named `raz-sahra-host-package-staging`. Confirm the run is successful and the artifact exists before using it.
-5. Run the host preflight workflow after the SSH host, port, user, private key, pinned known-hosts entry, and absolute app directory are configured. Verify the SSH host key with the hosting provider; do not disable strict host-key checking.
-
-## Target-host acceptance checklist
-
-- [ ] `GET /api/health` returns `ok: true` and `database: "connected"`.
-- [ ] First administrator bootstrap succeeds once; a second attempt is rejected.
-- [ ] Administrator login/logout and session invalidation work.
-- [ ] Non-admin accounts are denied access to admin APIs.
-- [ ] CMS edits and contact inquiries persist in MySQL after application restart.
-- [ ] `/madar/` and a deep link such as `/madar/app/home` load after refresh.
-- [ ] Same-origin `/api/medar/*` proxy works and authenticated Madar operations are tested.
-- [ ] HTTPS, cookie security, logs, restart behavior, and backup/restore are verified on the real domain.
-- [ ] Remove `ADMIN_BOOTSTRAP_SECRET` immediately after the initial administrator is provisioned.
-
-## Remaining external dependency
-
-The real HostMizbanFa account and domain are not accessible to CI. Therefore the actual Node application configuration, DNS/HTTPS, and end-to-end acceptance must be verified on the purchased account. The Madar backend remains hosted on the existing operational Worker until a separately tested migration is completed.
+## محدودیت باقی‌مانده
+حساب میزبان‌فا هنوز به این pipeline متصل نشده است؛ بنابراین deployment واقعی به آن شروع نشده. بک‌اند مدار هنوز API عملیاتی Worker خودش را استفاده می‌کند. این ساختار برای استقرار خودکار سایت و رابط مدار آماده می‌شود، اما جایگزین انتقال کامل بک‌اند مدار نیست.
